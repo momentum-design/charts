@@ -1,0 +1,4 @@
+site/* linguist-documentation
+
+tools/* linguist-vendored
+_templates/* linguist-vendored
