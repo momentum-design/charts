@@ -24,7 +24,7 @@ A UI library based on web components that is for building dashboards.
 
     - The style file should be placed with component code and imported in **src/styles/main.scss**.
 
-1. Commit your changes and push them to your forked repo, and submit a Pull Request.
+1. Commit your changes and push them to your forked repo, and submit a Pull Request to **main** branch.
 
 ### Commit Message Guidelines
 
@@ -37,11 +37,7 @@ Format as:
   │       │             │
   │       │             └─⫸ Summary in present tense. Not capitalized. No period at the end.
   │       │
-  │       └─⫸ Commit Scope: animations|bazel|benchpress|common|compiler|compiler-cli|core|
-  │                          elements|forms|http|language-service|localize|platform-browser|
-  │                          platform-browser-dynamic|platform-server|router|service-worker|
-  │                          upgrade|zone.js|packaging|changelog|docs-infra|migrations|
-  │                          devtools
+  │       └─⫸ Commit Scope: <component-name>
   │
   └─⫸ Commit Type: build|ci|docs|feat|fix|perf|refactor|test
 ```
