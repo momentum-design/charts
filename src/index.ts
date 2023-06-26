@@ -1,3 +1,3 @@
 import './styles/main.scss';
 
-export * from './components/hi';
+export * from './components';
