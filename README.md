@@ -20,7 +20,14 @@ A UI library based on web components that is for building dashboards.
 
 1. Now, run `npm start` to start your work.
 
-    - The component code should be placed to **src/scripts**.
+    - The component code should be placed to **src/components**. The new component should be structured as below:
+
+      ```
+      new-component
+        ├─ index.ts                 // should export all public members
+        ├─ new-component.ts         // the component code
+        └─ new-component.types.ts   // all types definitions
+      ```
 
     - The style file should be placed with component code and imported in **src/styles/main.scss**.
 
