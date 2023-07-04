@@ -6,6 +6,8 @@ export class HelloWorld extends LitElement {
   static styles = css`
     p {
       color: blue;
+      border: solid 1px #efefef;
+      padding: 0.5rem;
     }
   `;
 
@@ -13,6 +15,6 @@ export class HelloWorld extends LitElement {
   name = 'Somebody';
 
   render() {
-    return html`<p>Hello, ${this.name}!</p>`;
+    return html`<p>Hello, ${this.name}! This is a web component.</p>`;
   }
 }
