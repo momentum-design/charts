@@ -25,6 +25,7 @@
     "semantic-release": "semantic-release",
     "precommit": "lint-staged",
     "republish": "ts-node tools/prepare-republish.ts",
+    "data": "ts-node tools/data.ts",
     "init": "ts-node tools/init.ts"
   },
   "keywords": [
@@ -54,6 +55,7 @@
     "@bndynet/typedoc-default-themes": "^0.5.1",
     "@bndynet/typedoc-theme": "^0.0.1",
     "@commitlint/cli": "^7.1.2",
+    "@faker-js/faker": "^8.0.2",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^25.0.0",
     "@rollup/plugin-json": "^6.0.0",

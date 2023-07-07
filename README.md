@@ -51,3 +51,6 @@ Format as:
 
 The `<type>` and `<summary>` fields are mandatory, the `(<scope>)` field is optional.
 
+### Useful Commands
+
+`npm run data` will print the random data which is predefined in **./tools/data.ts** and can be used to test your component.
