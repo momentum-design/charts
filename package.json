@@ -1,16 +1,16 @@
 {
-  "name": "@webex/analyzer-dashboard-ui",
+  "name": "@webex/dashboard-ui",
   "version": "0.0.0-dev",
   "description": "ui components for building dashboards",
-  "main": "dist/analyzer-dashboard-ui.umd.js",
-  "module": "dist/analyzer-dashboard-ui.es5.js",
+  "main": "dist/dashboard-ui.umd.js",
+  "module": "dist/dashboard-ui.es5.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
     "lint": "eslint ./src/**/*.ts",
-    "prebuild": "rimraf dist docs",
+    "prebuild": "rimraf dist docs coverage",
     "build": "tsc && rollup --config ./rollup.config.ts --configPlugin typescript --bundleConfigAsCjs && npm run docs",
     "docs": "typedoc",
     "test": "jest --coverage",
@@ -42,7 +42,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/webex/analyzer-dashboard-ui.git"
+    "url": "https://github.com/webex/dashboard-ui.git"
   },
   "publishConfig": {
     "access": "public"

@@ -1,4 +1,4 @@
-# Dashboard UI
+# @webex/dashboard-ui
 
 A UI library based on web components that is for building dashboards.
 
@@ -31,6 +31,8 @@ A UI library based on web components that is for building dashboards.
 
     - The style file should be placed with component code and imported in **src/styles/main.scss**.
 
+    - Also export the new component in **src/components/index.ts** file.
+
 1. Commit your changes and push them to your forked repo, and submit a Pull Request to **main** branch.
 
 ### Commit Message Guidelines
@@ -53,4 +55,4 @@ The `<type>` and `<summary>` fields are mandatory, the `(<scope>)` field is opti
 
 ### Useful Commands
 
-`npm run data` will print the random data which is predefined in **./tools/data.ts** and can be used to test your component.
+- `npm run data` will print the random data which is predefined in **./tools/data.ts** and can be used to test your component. For example, `npm run data -- --pie --default --5`
