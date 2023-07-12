@@ -26,7 +26,9 @@ A UI library based on web components that is for building dashboards.
       new-component
         ├─ index.ts                 // should export all public members
         ├─ new-component.ts         // the component code
-        └─ new-component.types.ts   // all types definitions
+        ├─ new-component.spec.ts    // unit tests
+        ├─ new-component.types.ts   // all types definitions
+        └─ new-component.plugins.ts // plugins of chart.js if need
       ```
 
     - The style file should be placed with component code and imported in **src/styles/main.scss**.
