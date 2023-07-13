@@ -1,10 +1,43 @@
 # @webex/dashboard-ui
 
-A UI library based on web components that is for building dashboards.
+A pure ui library based on web components that is for building dashboards.
 
 ## Getting Started
 
-*// TODO: we will provide the CDN files and npm package*
+```bash
+$ npm i @webex/dashboard-ui
+```
+
+### Use with Angular
+
+1. Import library and enable web component support in **src/app/app.module.ts**.
+
+    ```diff
+    import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+    import { BrowserModule } from '@angular/platform-browser';
+    +import '@webex/dashboard-ui';
+
+    import { AppComponent } from './app.component';
+
+    @NgModule({
+      declarations: [
+        AppComponent,
+      ],
+      imports: [
+        BrowserModule
+      ],
+      providers: [],
+      bootstrap: [AppComponent],
+    +  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    })
+    export class AppModule { }
+    ```
+
+1. Use the components in your HTML template.
+
+    ```html
+    <wc-hello-world [name]="who"></wc-hello-world>
+    ```
 
 ## Contributing
 
