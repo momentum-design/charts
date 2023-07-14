@@ -5,7 +5,7 @@
 
 ## Screenshots
 
-- [x] This PR does not have any UI modifications <!-- remove this line and attach the screenshots if you have any ui changes --> 
+- [x] This PR does not have any UI modifications <!-- remove this line and attach the screenshots if you have any UI changes --> 
 
 
 ## Type of change
@@ -20,5 +20,5 @@
 
 - [ ] My code follows the style guidelines of this project
 - [ ] I have performed a self-review of my code
-- [ ] I have commented my code, particularly in hard-to-understand areas
+- [ ] I have commented on my code, particularly in hard-to-understand areas
 - [ ] I have made corresponding changes to the documentation and example
