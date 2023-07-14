@@ -1,6 +1,6 @@
 {
   "name": "@webex/dashboard-ui",
-  "version": "0.0.0-dev",
+  "version": "0.1.0",
   "description": "ui components for building dashboards",
   "main": "dist/dashboard-ui.umd.js",
   "module": "dist/dashboard-ui.es5.js",
@@ -29,10 +29,10 @@
     "init": "ts-node tools/init.ts"
   },
   "keywords": [
-    "typescript",
-    "library",
-    "sass",
-    "typescript library",
+    "web components",
+    "chart.js",
+    "chart",
+    "dashboard",
     "UMD",
     "ES5"
   ],
