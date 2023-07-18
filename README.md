@@ -70,6 +70,23 @@ $ npm i @webex/dashboard-ui
 
 1. Commit your changes and push them to your forked repo, and submit a Pull Request to **main** branch.
 
+
+### Styles Guides
+
+- [Coding guidelines](https://github.com/microsoft/TypeScript/wiki/Coding-guidelines)
+
+    - **Names**
+        - Use PascalCase for type names.
+        - Do not use `I` as a prefix for interface names.
+        - Use PascalCase for enum values.
+        - Use camelCase for function names.
+        - Use camelCase for property names and local variables.
+        - Do not use `_` as a prefix for private properties.
+        - Use whole words in names when possible.
+
+- [Documentation Guide](https://typedoc.org/guides/overview/)
+
+
 ### Commit Message Guidelines
 
 All commit message MUST follow [Angular Commit Message Format](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#commit).
