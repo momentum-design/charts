@@ -84,7 +84,8 @@
       </p>
       <hr class="my-4" />
       <p>Try to run <code>npm run prebuild && npm run build && npm run predeploy-gh-pages</code> to view the final
-        <b>docs</b> directory for <b>gh-pages</b>.</p>
+        <b>docs</b> directory for <b>gh-pages</b>.
+      </p>
       <a class="btn btn-primary btn-lg" href="https://github.com/webex/dashboard-ui.git" role="button">
         Fork me on GitHub
       </a>
@@ -105,9 +106,27 @@
       <fieldset>
         <legend>Hello Chart</legend>
         <div>
-          <wc-hello-chart style="height: 200px;"></wc-hello-chart>
+          <wc-hello-chart style="width: 500px"></wc-hello-chart>
         </div>
       </fieldset>
+
+      <fieldset>
+        <legend>Gauge Chart</legend>
+        <div>
+          <wc-gauge style="width: 500px;"
+          data='{
+              "data": [13, 17, 8, 10, 40, 24],
+              "value": 40
+            }'
+          options='{
+              "cutout": "90%",
+              "theme": "qualitative-colors-tertiary"
+            }'
+          label='[1, 2, 3, 4, 5, 6]'
+          ></wc-gauge>
+        </div>
+      </fieldset>
+
     </section>
 
     <section id="changelog">
