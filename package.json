@@ -1,7 +1,7 @@
 {
-  "name": "@webex/dashboard-ui",
+  "name": "@momentum-design/widgets",
   "version": "1.0.0-alpha.2",
-  "description": "ui components for building dashboards",
+  "description": "widgets for building dashboards",
   "main": "dist/dashboard-ui.umd.js",
   "module": "dist/dashboard-ui.es5.js",
   "types": "dist/types/index.d.ts",

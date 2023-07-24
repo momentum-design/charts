@@ -1,11 +1,11 @@
-# @webex/dashboard-ui
+# @momentum-design/widgets
 
 A pure ui library based on web components that is for building dashboards.
 
 ## Getting Started
 
 ```bash
-$ npm i @webex/dashboard-ui
+$ npm i @momentum-design/widgets
 ```
 
 ### Use with Angular
@@ -15,7 +15,7 @@ $ npm i @webex/dashboard-ui
     ```diff
     import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
     import { BrowserModule } from '@angular/platform-browser';
-    +import '@webex/dashboard-ui';
+    +import '@momentum-design/widgets';
 
     import { AppComponent } from './app.component';
 
