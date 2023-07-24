@@ -66,10 +66,10 @@ jobs:
             core.setFailed('Nothing to release')
 
 
-      - name: Publish to NPM
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # - name: Publish to NPM
+      #   run: npm publish
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Set up registry for GitHub
         uses: actions/setup-node@v3
