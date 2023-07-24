@@ -1,3 +1,10 @@
+# [1.0.0-alpha.2](https://github.com/webex/dashboard-ui/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2023-07-24)
+
+
+### Bug Fixes
+
+* **style:** remove global body styles ([0ae888f](https://github.com/webex/dashboard-ui/commit/0ae888fd1761b3c06409700960b9d8bc6e6c2242))
+
 # 1.0.0-alpha.1 (2023-07-24)
 
 

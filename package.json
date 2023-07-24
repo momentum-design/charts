@@ -1,6 +1,6 @@
 {
   "name": "@webex/dashboard-ui",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "ui components for building dashboards",
   "main": "dist/dashboard-ui.umd.js",
   "module": "dist/dashboard-ui.es5.js",
