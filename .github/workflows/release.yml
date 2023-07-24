@@ -1,6 +1,11 @@
 name: Release & Deploy Site
 
 on:
+  workflow_dispatch:
+    inputs:
+      logLevel: 
+        required: true
+        default: 'warning'
   push:
     branches:
       - main
