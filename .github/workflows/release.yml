@@ -56,7 +56,7 @@ jobs:
         run: npm run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_CISCO_MD }}
 
       - name: Nothing to release
         if: ${{ env.NEXT_RELEASE_VERSION == '' }}
