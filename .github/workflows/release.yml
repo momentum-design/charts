@@ -1,4 +1,4 @@
-name: release
+name: Release & Deploy Site
 
 on:
   push:
@@ -7,69 +7,101 @@ on:
       - alpha
       - beta
 
+permissions:
+  pages: write
+  issues: write
+  contents: write
+  id-token: write
+  packages: write
+  pull-requests: write
+
 env:
   NODE_VERION: 18.x
 
 jobs:
-  build:
-    name: release
+  release:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-        persist-credentials: false
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
 
-    - name: Use Node.js ${{ env.NODE_VERION }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ env.NODE_VERION }}
-        registry-url: https://registry.npmjs.org
+      - name: Use Node.js ${{ env.NODE_VERION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERION }}
+          registry-url: https://registry.npmjs.org
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Test and Build
-      run: |
-        npm run test:prod
-        npm run build --if-present
+      - name: Test and Build
+        run: |
+          npm run test:prod
+          npm run build --if-present
 
-    - name: Check version
-      run: npm run semantic-release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Check version
+        run: npm run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-    - name: Inject version
-      uses: bndynet/github-action-inject-copyright@v1
-      with:
-        dist: dist
+      - name: Nothing to release
+        if: ${{ env.NEXT_RELEASE_VERSION == '' }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.setFailed('Nothing to release')
 
-    - name: Publish to NPM
-      run: npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-    - name: Set up registry for GitHub
-      uses: actions/setup-node@v3
-      with:
-        registry-url: https://npm.pkg.github.com/
+      - name: Publish to NPM
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-    - name: Publish to GitHub
-      run: npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up registry for GitHub
+        uses: actions/setup-node@v3
+        with:
+          registry-url: https://npm.pkg.github.com/
 
-    - name: Prepare gh-pages...
-      run: |
-        npm run build
-        npm run predeploy-gh-pages
+      - name: Publish to GitHub
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Publish gh-pages
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        branch: gh-pages
-        folder: docs
-        clean: true
+      - name: Prepare site
+        run: |
+          npm run build:all
+          npm run predeploy-gh-pages
+
+      # require following steps if cross jobs
+      #- name: Archive site
+      #  uses: actions/upload-artifact@v3
+      #  with:
+      #    name: site
+      #    path: docs 
+
+      #- name: Download site
+      #  uses: actions/download-artifact@v3
+      #  with:
+      #    name: site
+      #    path: docs
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
