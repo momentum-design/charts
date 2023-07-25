@@ -83,7 +83,6 @@ jobs:
 
       - name: Prepare site
         run: |
-          npm run build:all
           npm run predeploy-gh-pages
 
       # require following steps if cross jobs

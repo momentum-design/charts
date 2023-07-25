@@ -1,9 +1,9 @@
 {
   "name": "@momentum-design/widgets",
   "version": "1.0.0-alpha.1",
-  "description": "widgets for building dashboards",
-  "main": "dist/dashboard-ui.umd.js",
-  "module": "dist/dashboard-ui.es5.js",
+  "description": "widgets based on Chart.js for building dashboards",
+  "main": "dist/widgets.umd.js",
+  "module": "dist/widgets.es5.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
