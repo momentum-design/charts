@@ -1,6 +1,7 @@
 import { Chart } from 'chart.js/auto';
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { ChartA11y } from '../../core/plugins';
 import { defaultGaugeChartOptions, gaugeChartData, themes } from './gauge-chart.options';
 import { GaugeNeedle } from './gauge-chart.plugins';
 import { GaugeChartData, GaugeChartOptions } from './gauge-chart.types';
@@ -17,7 +18,7 @@ class GaugeChart extends LitElement {
     }
   `;
 
-  @property({ type: Object })
+  @property({ type: Object, hasChanged: () => true })
   data: GaugeChartData | undefined = undefined;
 
   @property({ type: Object })
@@ -67,7 +68,7 @@ class GaugeChart extends LitElement {
           datasets: [chartDataset],
         },
         options: chartOptions,
-        plugins: [GaugeNeedle],
+        plugins: [GaugeNeedle, ChartA11y],
       });
     }
   }
