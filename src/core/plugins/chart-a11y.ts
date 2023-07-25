@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { KeyboardCode } from './plugins.types';
+import { KeyboardCode } from './plugin.types';
 
 interface State {
   currentState: {

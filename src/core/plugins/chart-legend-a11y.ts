@@ -1,6 +1,6 @@
 /* eslint-disable */
 import type { Chart } from 'chart.js/auto';
-import { KeyboardCode } from './plugins.types';
+import { KeyboardCode } from './plugin.types';
 
 const chartStates = new Map();
 
