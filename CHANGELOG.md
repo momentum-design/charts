@@ -1,3 +1,10 @@
+# [1.0.0-alpha.2](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2023-07-25)
+
+
+### Features
+
+* **a11y:** accessibility support for chart and chart legend ([#1](https://github.com/momentum-design/momentum-widgets/issues/1)) ([5070bf7](https://github.com/momentum-design/momentum-widgets/commit/5070bf7b3c71f5a956b3960030efc1177741cdd5))
+
 # 1.0.0-alpha.1 (2023-07-24)
 
 
