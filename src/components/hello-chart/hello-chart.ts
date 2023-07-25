@@ -1,6 +1,7 @@
 import { Chart } from 'chart.js/auto';
 import { css, html, LitElement, PropertyValueMap } from 'lit';
 import { customElement } from 'lit/decorators.js';
+import { ChartA11y, ChartLegendA11y } from '../../core/plugins';
 
 @customElement('wc-hello-chart')
 export class HelloChart extends LitElement {
@@ -35,6 +36,7 @@ export class HelloChart extends LitElement {
           },
         },
       },
+      plugins: [ChartA11y, ChartLegendA11y],
     });
   }
 }
