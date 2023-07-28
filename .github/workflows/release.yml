@@ -1,11 +1,7 @@
-name: Release & Deploy Site
+name: Release
 
 on:
   workflow_dispatch:
-    inputs:
-      logLevel: 
-        required: true
-        default: 'warning'
   push:
     branches:
       - main
@@ -13,10 +9,8 @@ on:
       - beta
 
 permissions:
-  pages: write
   issues: write
   contents: write
-  id-token: write
   packages: write
   pull-requests: write
 
@@ -24,19 +18,34 @@ env:
   NODE_VERION: 18.x
 
 jobs:
-  release:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  check-version:
+    uses: ./.github/workflows/_check-version.yml
 
+  next-version:
     runs-on: ubuntu-latest
+    needs: check-version
+    steps:
+      - run: |
+          echo "next version: ${{ needs.check-version.outputs.NEXT_RELEASE_VERSION }}"
 
+  build:
+    uses: ./.github/workflows/_build.yml
+    needs: check-version
+    if: ${{ needs.check-version.outputs.NEXT_RELEASE_VERSION != '' }}
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [check-version, build]
+    if: ${{ needs.check-version.outputs.NEXT_RELEASE_VERSION != '' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Download dist
+        uses: actions/cache/restore@v3
         with:
-          fetch-depth: 0
-          persist-credentials: false
+          path: ./dist
+          key: dist
 
       - name: Use Node.js ${{ env.NODE_VERION }}
         uses: actions/setup-node@v3
@@ -44,32 +53,10 @@ jobs:
           node-version: ${{ env.NODE_VERION }}
           registry-url: https://registry.npmjs.org
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Test and Build
-        run: |
-          npm run test:prod
-          npm run build --if-present
-
-      - name: Check version
-        run: npm run semantic-release
+      - name: Publish to NPM
+        run: npm publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_CISCO_MD }}
-
-      - name: Nothing to release
-        if: ${{ env.NEXT_RELEASE_VERSION == '' }}
-        uses: actions/github-script@v6
-        with:
-          script: |
-            core.setFailed('Nothing to release')
-
-
-      # - name: Publish to NPM
-      #   run: npm publish
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Set up registry for GitHub
         uses: actions/setup-node@v3
@@ -80,32 +67,15 @@ jobs:
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Prepare site
-        run: |
-          npm run predeploy-gh-pages
-
-      # require following steps if cross jobs
-      #- name: Archive site
-      #  uses: actions/upload-artifact@v3
-      #  with:
-      #    name: site
-      #    path: docs 
-
-      #- name: Download site
-      #  uses: actions/download-artifact@v3
-      #  with:
-      #    name: site
-      #    path: docs
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+          
+      - name: Send notification
+        uses: bndynet/github-action-webex@v1
         with:
-          path: docs
+          action: message
+          token: ${{ secrets.WX_TOKEN }}
+          server: ${{ secrets.WX_SERVER }}
+          room-id: ${{ secrets.WX_ROOMID }}
+          message: "**${{ github.repository }}** v${{ needs.check-version.outputs.NEXT_RELEASE_VERSION }} has been released"
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+      - run: |
+          echo "v${{ needs.check-version.outputs.NEXT_RELEASE_VERSION }} released" >> $GITHUB_STEP_SUMMARY

@@ -30,7 +30,7 @@
       [
         "@semantic-release/exec",
         {
-          "verifyReleaseCmd": "echo \"NEXT_RELEASE_VERSION=${nextRelease.version}\" >> $GITHUB_ENV"
+          "verifyReleaseCmd": "echo \"NEXT_RELEASE_VERSION=${nextRelease.version}\" >> $GITHUB_OUTPUT"
         }
       ],
       "@semantic-release/release-notes-generator",
@@ -43,7 +43,7 @@
       [
         "@semantic-release/npm",
         {
-          "npmPublish": true
+          "npmPublish": false
         }
       ],
       "@semantic-release/github",

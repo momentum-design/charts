@@ -1,0 +1,36 @@
+name: _build-site
+
+on: 
+  workflow_call:
+
+env:
+  NODE_VERION: 18.x
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Use Node.js ${{ env.NODE_VERION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERION }}
+          registry-url: https://registry.npmjs.org
+
+      - name: Build site
+        run: |
+          npm run build
+          npm run predeploy-gh-pages
+
+      - name: Cache
+        id: cache-site
+        uses: actions/cache@v3
+        with:
+          path: ./docs
+          key: docs

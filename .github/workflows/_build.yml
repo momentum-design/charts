@@ -1,0 +1,45 @@
+name: _build
+
+on: 
+  workflow_call:
+
+env:
+  NODE_VERION: 18.x
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Use Node.js ${{ env.NODE_VERION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERION }}
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm run test:prod
+
+      - name: Build
+        run: npm run build --if-present
+
+      - name: Inject version
+        uses: bndynet/github-action-inject-copyright@v1
+        with:
+          dist: dist
+
+      - name: Cache
+        id: cache-dist
+        uses: actions/cache@v3
+        with:
+          path: ./dist
+          key: dist
