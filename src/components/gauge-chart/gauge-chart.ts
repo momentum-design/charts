@@ -11,10 +11,12 @@ class GaugeChart extends LitElement {
   static styles = css`
     :host {
       display: block;
+      position: relative;
     }
 
     canvas {
       width: 100%;
+      height: 100%;
     }
   `;
 
@@ -25,9 +27,15 @@ class GaugeChart extends LitElement {
   options: GaugeChartOptions | undefined = undefined;
 
   @property({ type: Array })
-  label: unknown[] | undefined = [];
+  label: string[] | undefined = [];
 
-  chartInstance: Chart | any = null;
+  private chartInstance: Chart | any = null;
+  private chartOptions!: GaugeChartOptions;
+
+  constructor() {
+    super();
+    this.handleWindowResize = this.handleWindowResize.bind(this);
+  }
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -40,9 +48,7 @@ class GaugeChart extends LitElement {
   }
 
   handleWindowResize(): void {
-    if (this.chartInstance) {
-      this.chartInstance.resize();
-    }
+    this.chartInstance?.resize();
   }
 
   updated(changedProperties: Map<PropertyKey, unknown>): void {
@@ -56,8 +62,22 @@ class GaugeChart extends LitElement {
     const canvas = this.renderRoot.querySelector('canvas') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
 
+    this.chartOptions = {
+      responsive: true,
+      circumference: this.options?.circumference ?? defaultGaugeChartOptions.circumference,
+      rotation: this.options?.rotation ?? defaultGaugeChartOptions.rotation,
+      cutout: this.options?.cutout ?? defaultGaugeChartOptions.cutout,
+      theme: this.options?.theme ?? defaultGaugeChartOptions.theme,
+      aspectRatio: this.options?.aspectRatio ?? defaultGaugeChartOptions.aspectRatio,
+      layout: this.options?.layout ?? defaultGaugeChartOptions.layout,
+      plugins: {
+        legend: {
+          display: this.options?.plugins?.legend?.display ?? defaultGaugeChartOptions.plugins?.legend?.display,
+        },
+      },
+    };
+
     const chartDataset = this.handleChartDataset();
-    const chartOptions = Object.assign(defaultGaugeChartOptions, this.options);
     const chartLabel = this.label;
 
     if (ctx) {
@@ -67,18 +87,18 @@ class GaugeChart extends LitElement {
           labels: chartLabel,
           datasets: [chartDataset],
         },
-        options: chartOptions,
+        options: this.chartOptions,
         plugins: [GaugeNeedle, ChartA11y],
       });
     }
   }
 
   private handleChartDataset(): GaugeChartData {
-    const chartDataset = Object.assign(gaugeChartData, this.data);
-    const chartOptions = Object.assign(defaultGaugeChartOptions, this.options);
-    if (typeof chartOptions?.theme === 'string') {
-      chartDataset.backgroundColor = themes[chartOptions?.theme as keyof typeof themes];
-    }
+    const chartDataset: GaugeChartData = {
+      data: this.data?.data || gaugeChartData.data,
+      value: this.data?.value || gaugeChartData.value,
+      backgroundColor: typeof this.chartOptions.theme === 'string' ? themes[this.chartOptions?.theme as keyof typeof themes] : this.options?.theme,
+    };
     return chartDataset;
   }
 
