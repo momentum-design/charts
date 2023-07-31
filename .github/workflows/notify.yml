@@ -1,0 +1,37 @@
+name: Notify
+
+on:
+  push:
+  issues:
+    types: [opened, edited, milestoned]
+  pull_request:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set message content
+        id: set-message
+        run: |
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          MSG=$(cat << $EOF
+          ### [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
+          Event: ${{ github.event_name }} ${{ github.event.action }}
+          $EOF
+          )
+          echo "MESSAGE<<$EOF" >> $GITHUB_ENV
+          echo "$MSG" >> $GITHUB_ENV
+          echo "$EOF" >> $GITHUB_ENV
+
+      - name: Print message content
+        run:
+          echo "${{ env.MESSAGE }}"
+
+      - name: Send notification
+        uses: bndynet/github-action-webex@v1
+        with:
+          action: message
+          token: ${{ secrets.WX_TOKEN }}
+          server: ${{ secrets.WX_SERVER }}
+          room-id: ${{ secrets.WX_ROOMID }}
+          message: ${{ env.MESSAGE }}
