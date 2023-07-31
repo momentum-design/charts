@@ -113,17 +113,24 @@
       <fieldset>
         <legend>Gauge Chart</legend>
         <div>
-          <wc-gauge style="width: 500px;"
-          data='{
+          <wc-gauge style="width: 40%;" data='{
               "data": [13, 17, 8, 10, 40, 24],
-              "value": 40
-            }'
-          options='{
-              "cutout": "90%",
+              "value": 46
+            }' options='{
+              "cutout": "95%",
               "theme": "qualitative-colors-tertiary"
-            }'
-          label='[1, 2, 3, 4, 5, 6]'
-          ></wc-gauge>
+            }' label='["1", "2", "3", "4", "5", "6", "7"]'></wc-gauge>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Pie Chart</legend>
+        <div>
+          <wc-pie style="width: 40%;" data='{
+            "data": [13, 17, 8, 10, 40, 24, 67]
+          }' options='{
+              "theme": "diverging-colors-alerts",
+            }' label='["A", "B", "C", "D", "E", "E", "G"]'></wc-pie>
         </div>
       </fieldset>
 
