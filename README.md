@@ -4,6 +4,15 @@ A pure ui library based on web components that is for building dashboards.
 
 ## Getting Started
 
+Using unpkg CDN:
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/@momentum-design/widgets/dist/widgets.css">
+<script src="https://unpkg.com/@momentum-design/widgets/dist/widgets.umd.js"></script>
+```
+
+Using npm:
+
 ```bash
 $ npm i @momentum-design/widgets
 ```
