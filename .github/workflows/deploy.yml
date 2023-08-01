@@ -25,7 +25,7 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: ./docs
-          key: docs
+          key: docs-${{ needs.build-site.outputs.version }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v3

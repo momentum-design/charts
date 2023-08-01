@@ -7,8 +7,12 @@ env:
   NODE_VERION: 18.x
 
 jobs:
+  get-info:
+    uses: ./.github/workflows/_get-info.yml
+  
   build:
     runs-on: ubuntu-latest
+    needs: get-info
 
     steps:
       - name: Checkout code
@@ -16,6 +20,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          ref: ${{ github.ref }}
 
       - name: Use Node.js ${{ env.NODE_VERION }}
         uses: actions/setup-node@v3
@@ -42,4 +47,4 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ./dist
-          key: dist
+          key: dist-${{ needs.get-info.outputs.version }}

@@ -20,6 +20,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          ref: ${{ github.ref }}
 
       - name: Install dependencies
         run: npm ci

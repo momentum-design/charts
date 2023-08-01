@@ -1,0 +1,33 @@
+name: _get-info
+
+on: 
+  workflow_call:
+    outputs:
+      version:
+        description: 'The version is from package.json'
+        value: ${{ jobs.get-info.outputs.version }}
+
+jobs:
+  get-info:
+    runs-on: ubuntu-latest
+
+    outputs:
+      version: ${{ steps.version.outputs.value }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ github.ref }}
+
+      - name: Get version from package.json
+        uses: sergeysova/jq-action@v2
+        id: version
+        with:
+          cmd: 'jq .version package.json -r'
+          
+      - name: Print current version
+        run: |
+          echo "current version: ${{ steps.version.outputs.value }}"
