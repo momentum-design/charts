@@ -1,3 +1,10 @@
+# [1.0.0-alpha.3](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2023-08-01)
+
+
+### Bug Fixes
+
+* **ci:** cannot get the latest code ([3ea3248](https://github.com/momentum-design/momentum-widgets/commit/3ea3248d75bb967b6454e2d0a631a6a0641e86e8))
+
 # [1.0.0-alpha.2](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2023-07-25)
 
 
