@@ -1,8 +1,10 @@
 import { Chart } from 'chart.js/auto';
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { merge } from 'lodash-es';
+import { globalStyleOptions, themes } from '../../core/common/global-style';
 import { ChartA11y } from '../../core/plugins';
-import { defaultGaugeChartOptions, gaugeChartData, themes } from './gauge-chart.options';
+import { defaultGaugeChartOptions, gaugeChartData } from './gauge-chart.options';
 import { GaugeNeedle } from './gauge-chart.plugins';
 import { GaugeChartData, GaugeChartOptions } from './gauge-chart.types';
 
@@ -61,24 +63,10 @@ class GaugeChart extends LitElement {
   private initializeChart(): void {
     const canvas = this.renderRoot.querySelector('canvas') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
-
-    this.chartOptions = {
-      responsive: true,
-      circumference: this.options?.circumference ?? defaultGaugeChartOptions.circumference,
-      rotation: this.options?.rotation ?? defaultGaugeChartOptions.rotation,
-      cutout: this.options?.cutout ?? defaultGaugeChartOptions.cutout,
-      theme: this.options?.theme ?? defaultGaugeChartOptions.theme,
-      aspectRatio: this.options?.aspectRatio ?? defaultGaugeChartOptions.aspectRatio,
-      layout: this.options?.layout ?? defaultGaugeChartOptions.layout,
-      plugins: {
-        legend: {
-          display: this.options?.plugins?.legend?.display ?? defaultGaugeChartOptions.plugins?.legend?.display,
-        },
-      },
-    };
-
-    const chartDataset = this.handleChartDataset();
     const chartLabel = this.label;
+
+    this.chartOptions = merge({}, defaultGaugeChartOptions, globalStyleOptions, this.options);
+    const chartDataset = this.handleChartDataset();
 
     if (ctx) {
       this.chartInstance = new Chart(ctx, {
@@ -94,11 +82,10 @@ class GaugeChart extends LitElement {
   }
 
   private handleChartDataset(): GaugeChartData {
-    const chartDataset: GaugeChartData = {
-      data: this.data?.data || gaugeChartData.data,
-      value: this.data?.value || gaugeChartData.value,
-      backgroundColor: typeof this.chartOptions.theme === 'string' ? themes[this.chartOptions?.theme as keyof typeof themes] : this.options?.theme,
-    };
+    const chartDataset = merge({}, gaugeChartData.data, this.data);
+    if (typeof this.chartOptions?.theme === 'string') {
+      chartDataset.backgroundColor = themes[this.chartOptions?.theme as keyof typeof themes];
+    }
     return chartDataset;
   }
 

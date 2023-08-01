@@ -3,14 +3,16 @@ import { PieChartData, PieChartOptions } from './pie-chart.types';
 
 const pieChartData: PieChartData = {
   data: [],
-  label: 'Dataset',
+  label: '',
+  centerValue: '',
 };
 
 const defaultPieChartOptions: PieChartOptions = {
+  type: 'pie',
   responsive: true,
   cutout: '0',
   theme: 'color-health',
-  aspectRatio: 1.6,
+  aspectRatio: 2,
   plugins: {
     legend: {
       display: true,
@@ -18,8 +20,8 @@ const defaultPieChartOptions: PieChartOptions = {
       onClick: legendClickHandler,
     },
   },
-  isLegendFilter: false,
-  legendFilterCallback: undefined,
+  isLegendClick: false,
+  legendClickCallback: undefined,
 };
 
 export { pieChartData, defaultPieChartOptions };

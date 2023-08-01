@@ -5,3 +5,8 @@ export enum KeyboardCode {
   ArrowUp = 'ArrowUp',
   Enter = 'Enter',
 }
+
+export interface LegendClickData {
+  key?: string;
+  value?: string;
+}

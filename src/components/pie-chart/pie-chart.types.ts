@@ -1,10 +1,13 @@
 import { ChartDataset, ChartOptions } from 'chart.js/auto';
 
-export interface PieChartData extends ChartDataset<'pie', number[]> {}
+export interface PieChartData extends ChartDataset<'pie', number[]> {
+  centerValue?: string | number;
+}
 
 export interface PieChartOptions extends ChartOptions<'pie'> {
+  type?: string;
   theme?: string | [];
-  isLegendFilter?: boolean;
+  isLegendClick?: boolean;
   // eslint-disable-next-line @typescript-eslint/ban-types
-  legendFilterCallback?: Function;
+  legendClickCallback?: Function;
 }

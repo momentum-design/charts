@@ -49,9 +49,13 @@ class ChartLegendManager {
     const activateFocusBox = (e: KeyboardEvent | MouseEvent) => {
       const index = Number(focusBox.getAttribute('data-legend-index'));
       if (['pie', 'doughnut'].includes(this.chart.config.type)) {
-        // TODO: support Contextual Filter
-        if (this.chart.config.options.isLegendFilter) {
-          this.chart.config.options.legendFilterCallback(this.chart.config.data.labels[index]);
+        // TODO: support Filter Click
+        if (this.chart.config.options.isLegendClick) {
+          const legendObj = {
+            key: this.chart.config.data.labels[index],
+            value: this.chart.config.data.datasets[0].data[index as number],
+          };
+          this.chart.config.options.legendClickCallback(legendObj);
         } else {
           this.chart.toggleDataVisibility(index);
           const isVisible = this.chart.getDataVisibility(index);
