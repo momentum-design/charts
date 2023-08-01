@@ -5,6 +5,7 @@ on:
   workflow_run:
     workflows: [Release]
     types: [completed]
+    branches: [main, alpha, beta]
 
 permissions:
   pages: write
@@ -25,7 +26,7 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: ./docs
-          key: docs-${{ needs.build-site.outputs.version }}
+          key: docs-${{ needs.build-site.outputs.version }}-${{ github.run_id }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v3

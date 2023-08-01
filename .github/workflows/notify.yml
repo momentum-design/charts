@@ -1,7 +1,6 @@
 name: Notify
 
 on:
-  push:
   issues:
     types: [opened, edited, milestoned]
   pull_request:

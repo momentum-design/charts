@@ -80,7 +80,7 @@ jobs:
           token: ${{ secrets.WX_TOKEN }}
           server: ${{ secrets.WX_SERVER }}
           room-id: ${{ secrets.WX_ROOMID }}
-          message: "${{ github.repository }} v${{ needs.check-version.outputs.NEXT_RELEASE_VERSION }} has been released"
+          message: "[${{ github.repository }}](${{ github.server_url }}/${{ github.repository }}) v${{ needs.check-version.outputs.NEXT_RELEASE_VERSION }} has been released"
 
       - run: |
           echo "v${{ needs.check-version.outputs.NEXT_RELEASE_VERSION }} released" >> $GITHUB_STEP_SUMMARY
