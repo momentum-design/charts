@@ -1,6 +1,9 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
+/**
+ * @ignore
+ */
 @customElement('wc-hello-world')
 export class HelloWorld extends LitElement {
   static styles = css`
