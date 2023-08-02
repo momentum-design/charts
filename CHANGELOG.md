@@ -1,3 +1,10 @@
+# [1.0.0-alpha.4](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2023-08-02)
+
+
+### Features
+
+* **pie:**  pie chart type and legend clickable ([#3](https://github.com/momentum-design/momentum-widgets/issues/3)) ([862414a](https://github.com/momentum-design/momentum-widgets/commit/862414ae79172421d7f52365f861e9159f74c1af))
+
 # [1.0.0-alpha.3](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2023-08-01)
 
 
