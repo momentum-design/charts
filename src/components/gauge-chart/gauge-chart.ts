@@ -1,12 +1,16 @@
-import { Chart } from 'chart.js/auto';
+import { Chart, ChartDataset, ChartOptions } from 'chart.js/auto';
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { merge } from 'lodash-es';
-import { globalStyleOptions, themes } from '../../core/common/global-style';
+import { chartOptions, themes } from '../../core/common/chart.types';
 import { ChartA11y } from '../../core/plugins';
-import { defaultGaugeChartOptions, gaugeChartData } from './gauge-chart.options';
+import { defaultGaugeChartOptions } from './gauge-chart.options';
 import { GaugeNeedle } from './gauge-chart.plugins';
 import { GaugeChartData, GaugeChartOptions } from './gauge-chart.types';
+
+interface ChartJsDataset extends ChartDataset<'doughnut', number[]> {
+  value?: number;
+}
 
 @customElement('wc-gauge')
 class GaugeChart extends LitElement {
@@ -65,28 +69,58 @@ class GaugeChart extends LitElement {
     const ctx = canvas.getContext('2d');
     const chartLabel = this.label;
 
-    this.chartOptions = merge({}, defaultGaugeChartOptions, globalStyleOptions, this.options);
-    const chartDataset = this.handleChartDataset();
+    this.chartOptions = merge({}, chartOptions, defaultGaugeChartOptions, this.options);
+    const chartJsDataset = this.handleChartDataset();
+    const chartJsOptions = this.handleChartOptions();
 
     if (ctx) {
       this.chartInstance = new Chart(ctx, {
         type: 'doughnut',
         data: {
           labels: chartLabel,
-          datasets: [chartDataset],
+          datasets: [chartJsDataset],
         },
-        options: this.chartOptions,
+        options: chartJsOptions,
         plugins: [GaugeNeedle, ChartA11y],
       });
     }
   }
 
-  private handleChartDataset(): GaugeChartData {
-    const chartDataset = merge({}, gaugeChartData.data, this.data);
-    if (typeof this.chartOptions?.theme === 'string') {
-      chartDataset.backgroundColor = themes[this.chartOptions?.theme as keyof typeof themes];
+  private handleChartOptions(): ChartOptions<'doughnut'> {
+    const chartOptions: ChartOptions<'doughnut'> = {
+      responsive: this.chartOptions.responsive,
+      cutout: this.chartOptions.cutout,
+      aspectRatio: this.chartOptions.aspectRatio,
+      circumference: this.chartOptions.circumference,
+      rotation: this.chartOptions.rotation,
+      layout: {
+        padding: {
+          left: this.chartOptions.paddingLeft,
+          right: this.chartOptions.paddingRight,
+        },
+      },
+      plugins: {
+        legend: {
+          display: this.chartOptions.legendDisplay,
+        },
+      },
+    };
+    return chartOptions;
+  }
+
+  private handleChartDataset(): ChartJsDataset {
+    if (this.data) {
+      const chartDataset: ChartJsDataset = {
+        data: this.data.data,
+        value: this.data.value,
+        backgroundColor: typeof this.chartOptions?.theme === 'string' ? themes[this.chartOptions?.theme as keyof typeof themes] : this.chartOptions?.theme,
+      };
+      return chartDataset;
+    } else {
+      return {
+        data: [],
+      };
     }
-    return chartDataset;
   }
 
   updateChart(): void {

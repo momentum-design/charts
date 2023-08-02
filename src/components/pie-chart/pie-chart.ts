@@ -1,13 +1,18 @@
-import { Chart } from 'chart.js/auto';
+import { Chart, ChartOptions } from 'chart.js/auto';
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { merge } from 'lodash-es';
-import { globalStyleOptions, themes } from '../../core/common/global-style';
-import { ChartA11y, ChartLegendA11y } from '../../core/plugins';
+import { chartOptions, themes } from '../../core/common/chart.types';
+import { ChartA11y, ChartLegendA11y, legendClickHandler } from '../../core/plugins';
 import { LegendClickData } from '../../core/plugins/plugin.types';
-import { defaultPieChartOptions, pieChartData } from './pie-chart.options';
+import { defaultPieChartOptions } from './pie-chart.options';
 import { CenterValue } from './pie-chart.plugins';
 import { PieChartData, PieChartOptions } from './pie-chart.types';
+
+interface PieChartJsOptions extends ChartOptions<'pie'> {
+  isLegendClick?: boolean;
+  onLegendClick?: (legendItem: { label: string | number; value: string | number }) => void;
+}
 
 @customElement('wc-pie')
 class PieChart extends LitElement {
@@ -66,29 +71,24 @@ class PieChart extends LitElement {
     const ctx = canvas.getContext('2d');
     const chartLabel = this.label;
 
-    this.chartOptions = {
-      legendClickCallback: (selectedItem: LegendClickData) => {
-        this.legendClickCallback(selectedItem);
-      },
-    };
-    this.chartOptions = merge(this.chartOptions, defaultPieChartOptions, globalStyleOptions, this.options);
-
-    const chartDataset = this.handleChartDataset();
+    this.chartOptions = merge({}, chartOptions, defaultPieChartOptions, this.options);
+    const chartJsDataset = this.handleChartDataset();
+    const chartJsOptions = this.handleChartOptions();
 
     if (ctx) {
       this.chartInstance = new Chart(ctx, {
         type: 'pie',
         data: {
           labels: chartLabel,
-          datasets: [chartDataset],
+          datasets: [chartJsDataset],
         },
-        options: this.chartOptions,
+        options: chartJsOptions,
         plugins: [ChartA11y, ChartLegendA11y, CenterValue],
       });
     }
   }
 
-  private legendClickCallback(selectedItem: LegendClickData): void {
+  private onLegendClick(selectedItem: LegendClickData): void {
     const options = {
       detail: { selectedItem },
       bubbles: true,
@@ -97,12 +97,40 @@ class PieChart extends LitElement {
     this.dispatchEvent(new CustomEvent('legendClick', options));
   }
 
+  private handleChartOptions(): PieChartJsOptions {
+    const chartOptions: PieChartJsOptions = {
+      responsive: this.chartOptions.responsive,
+      cutout: this.chartOptions.cutout,
+      aspectRatio: this.chartOptions.aspectRatio,
+      isLegendClick: this.chartOptions.isLegendClick,
+      onLegendClick: (selectedItem: LegendClickData): void => {
+        this.onLegendClick(selectedItem);
+      },
+      plugins: {
+        legend: {
+          display: this.chartOptions.legendDisplay,
+          position: this.chartOptions.legendPosition,
+          onClick: legendClickHandler,
+        },
+      },
+    };
+    return chartOptions;
+  }
+
   private handleChartDataset(): PieChartData {
-    const chartDataset = merge({}, this.data, pieChartData.data);
-    if (typeof this.chartOptions?.theme === 'string') {
-      chartDataset.backgroundColor = themes[this.chartOptions?.theme as keyof typeof themes];
+    if (this.data) {
+      const chartDataset: PieChartData = {
+        data: this.data.data,
+        label: this.data.label,
+        centerLabel: this.data.centerLabel,
+        backgroundColor: typeof this.chartOptions?.theme === 'string' ? themes[this.chartOptions?.theme as keyof typeof themes] : this.chartOptions?.theme,
+      };
+      return chartDataset;
+    } else {
+      return {
+        data: [],
+      };
     }
-    return chartDataset;
   }
 
   updateChart(): void {

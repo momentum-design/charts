@@ -7,6 +7,6 @@ export enum KeyboardCode {
 }
 
 export interface LegendClickData {
-  key?: string;
-  value?: string;
+  label?: string | number;
+  value?: string | number;
 }

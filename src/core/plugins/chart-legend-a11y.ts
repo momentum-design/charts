@@ -55,7 +55,7 @@ class ChartLegendManager {
             key: this.chart.config.data.labels[index],
             value: this.chart.config.data.datasets[0].data[index as number],
           };
-          this.chart.config.options.legendClickCallback(legendObj);
+          this.chart.config.options.onLegendClick(legendObj);
         } else {
           this.chart.toggleDataVisibility(index);
           const isVisible = this.chart.getDataVisibility(index);

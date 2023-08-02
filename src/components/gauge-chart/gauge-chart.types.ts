@@ -1,9 +1,13 @@
-import { ChartDataset, ChartOptions } from 'chart.js/auto';
+import { ChartOptions } from '../../core/common/chart.types';
 
-export interface GaugeChartData extends ChartDataset<'doughnut', number[]> {
+export interface GaugeChartData {
+  data: number[];
   value?: number;
+  backgroundColor?: string[];
 }
 
-export interface GaugeChartOptions extends ChartOptions<'doughnut'> {
-  theme?: string | [];
+export interface GaugeChartOptions extends ChartOptions {
+  cutout?: string;
+  circumference: number;
+  rotation: number;
 }

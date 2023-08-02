@@ -10,7 +10,7 @@ const legendClickHandler = (evt: ChartEvent, item: LegendItem, legend: any): voi
         key: item.text,
         value: legend.chart.config.data.datasets[0].data[index as number],
       };
-      legend.chart.config.options.legendClickCallback(legendObj);
+      legend.chart.config.options.onLegendClick(legendObj);
     }
   } else {
     if (['pie', 'doughnut'].includes(legend.chart.config.type)) {

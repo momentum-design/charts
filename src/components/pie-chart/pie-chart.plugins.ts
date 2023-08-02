@@ -9,7 +9,7 @@ export const CenterValue = {
     const fontColor = chart.config.options.fontColor;
     const fontFamily = chart.config.options.fontFamily;
     let fontSize = 30;
-    const centerValue = chart.config.data.datasets[0].centerValue;
+    const centerLabel = chart.config.data.datasets[0].centerLabel;
     ctx.save();
 
     // Font
@@ -21,11 +21,11 @@ export const CenterValue = {
       fontSize = Math.floor((chart.width / 600) * 30);
     }
 
-    if (centerValue) {
+    if (centerLabel) {
       ctx.font = `${fontSize}px ${fontFamily}`;
       ctx.fillStyle = fontColor;
       ctx.textAlign = 'center';
-      ctx.fillText(centerValue, cx, cy);
+      ctx.fillText(centerLabel, cx, cy);
       ctx.restore();
     }
   },

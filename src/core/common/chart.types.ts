@@ -1,5 +1,3 @@
-import { ChartOptions } from 'chart.js/auto';
-
 const themes = {
   'color-health': ['#00CF64', '#FFC14F', '#D4371C', '#643ABD', '#F0677E', '#EBD460', '#00A3B5'],
   'qualitative-colors-primary': ['#643ABD', '#F0677E', '#EBD460', '#00A3B5', '#93C437', '#7D7A18', '#99DDFF'],
@@ -15,14 +13,29 @@ const themes = {
   'diverging-colors-green-to-red': ['#008672', '#4BA28C', '#8CBBAC', '#CCD2CE', '#E19D79', '#C3411D', '#990000'],
 };
 
-export interface GlobalStyleOptions extends ChartOptions {
+export type LayoutPosition = 'left' | 'top' | 'right' | 'bottom' | 'center' | 'chartArea' | { [scaleId: string]: number };
+
+export interface ChartOptions {
+  responsive?: boolean;
+  theme?: string | [];
   fontColor?: string;
   fontFamily?: string;
+  aspectRatio?: number;
+  isLegendClick?: boolean;
+  legendDisplay?: boolean;
+  legendPosition?: LayoutPosition;
+  paddingLeft?: number;
+  paddingRight?: number;
+  paddingTop?: number;
+  paddingBottom?: number;
 }
 
-const globalStyleOptions: GlobalStyleOptions = {
+const chartOptions: ChartOptions = {
+  responsive: true,
+  theme: 'color-health',
   fontColor: '#000',
   fontFamily: 'Helvetica',
+  aspectRatio: 1.6,
 };
 
-export { themes, globalStyleOptions };
+export { themes, chartOptions };
