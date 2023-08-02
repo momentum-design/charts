@@ -12,8 +12,11 @@ export const GaugeNeedle = {
     const chartValue = args.meta._dataset.value;
     const averageValue = dataTotal / 2;
     const angle = Math.PI + (1 / dataTotal) * chartValue * Math.PI;
-    const cy = chart._metasets[0].data[0].y;
-    const cx = chart.width / 2;
+
+    const cx = chart.getDatasetMeta(0).data[0].x;
+    const cy = chart.getDatasetMeta(0).data[0].y;
+    const fontColor = chart.config.options.fontColor;
+    const fontFamily = chart.config.options.fontFamily;
     ctx.save();
 
     // Needle
@@ -33,12 +36,12 @@ export const GaugeNeedle = {
     ctx.restore();
 
     // Font
-    ctx.font = '16px Helvetica';
-    ctx.fillStyle = '#000';
+    ctx.font = `16px ${fontFamily}`;
+    ctx.fillStyle = fontColor;
     ctx.textAlign = 'center';
-    ctx.fillText(chartValue.toString(), cx, cy + 30);
+    ctx.fillText(chartValue.toString(), cx, cy + 20);
     ctx.textAlign = 'center';
-    ctx.fillText(averageValue.toString(), cx, 30);
+    ctx.fillText(averageValue.toString(), cx, 40);
     ctx.textAlign = 'left';
     ctx.fillText('0', left - 20, cy);
     ctx.textAlign = 'right';

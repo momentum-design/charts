@@ -1,19 +1,21 @@
-import { Chart, ChartDataset, ChartOptions } from 'chart.js/auto';
+import { Chart, ChartOptions } from 'chart.js/auto';
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { merge } from 'lodash-es';
 import { chartOptions, themes } from '../../core/common/chart.types';
-import { ChartA11y } from '../../core/plugins';
-import { defaultGaugeChartOptions } from './gauge-chart.options';
-import { GaugeNeedle } from './gauge-chart.plugins';
-import { GaugeChartData, GaugeChartOptions } from './gauge-chart.types';
+import { ChartA11y, ChartLegendA11y, legendClickHandler } from '../../core/plugins';
+import { LegendClickData } from '../../core/plugins/plugin.types';
+import { defaultPieChartOptions } from './pie-chart.options';
+import { CenterValue } from './pie-chart.plugins';
+import { PieChartData, PieChartOptions } from './pie-chart.types';
 
-interface ChartJsDataset extends ChartDataset<'doughnut', number[]> {
-  value?: number;
+interface PieChartJsOptions extends ChartOptions<'pie'> {
+  isLegendClick?: boolean;
+  onLegendClick?: (legendItem: { label: string | number; value: string | number }) => void;
 }
 
-@customElement('wc-gauge')
-class GaugeChart extends LitElement {
+@customElement('wc-pie')
+class PieChart extends LitElement {
   static styles = css`
     :host {
       display: block;
@@ -27,16 +29,16 @@ class GaugeChart extends LitElement {
   `;
 
   @property({ type: Object, hasChanged: () => true })
-  data: GaugeChartData | undefined = undefined;
+  data: PieChartData | undefined = undefined;
 
   @property({ type: Object })
-  options: GaugeChartOptions | undefined = undefined;
+  options: PieChartOptions | undefined = undefined;
 
   @property({ type: Array })
   label: string[] | undefined = [];
 
   private chartInstance: Chart | any = null;
-  private chartOptions!: GaugeChartOptions;
+  private chartOptions!: PieChartOptions;
 
   constructor() {
     super();
@@ -69,50 +71,58 @@ class GaugeChart extends LitElement {
     const ctx = canvas.getContext('2d');
     const chartLabel = this.label;
 
-    this.chartOptions = merge({}, chartOptions, defaultGaugeChartOptions, this.options);
+    this.chartOptions = merge({}, chartOptions, defaultPieChartOptions, this.options);
     const chartJsDataset = this.handleChartDataset();
     const chartJsOptions = this.handleChartOptions();
 
     if (ctx) {
       this.chartInstance = new Chart(ctx, {
-        type: 'doughnut',
+        type: 'pie',
         data: {
           labels: chartLabel,
           datasets: [chartJsDataset],
         },
         options: chartJsOptions,
-        plugins: [GaugeNeedle, ChartA11y],
+        plugins: [ChartA11y, ChartLegendA11y, CenterValue],
       });
     }
   }
 
-  private handleChartOptions(): ChartOptions<'doughnut'> {
-    const chartOptions: ChartOptions<'doughnut'> = {
+  private onLegendClick(selectedItem: LegendClickData): void {
+    const options = {
+      detail: { selectedItem },
+      bubbles: true,
+      composed: true,
+    };
+    this.dispatchEvent(new CustomEvent('legendClick', options));
+  }
+
+  private handleChartOptions(): PieChartJsOptions {
+    const chartOptions: PieChartJsOptions = {
       responsive: this.chartOptions.responsive,
       cutout: this.chartOptions.cutout,
       aspectRatio: this.chartOptions.aspectRatio,
-      circumference: this.chartOptions.circumference,
-      rotation: this.chartOptions.rotation,
-      layout: {
-        padding: {
-          left: this.chartOptions.paddingLeft,
-          right: this.chartOptions.paddingRight,
-        },
+      isLegendClick: this.chartOptions.isLegendClick,
+      onLegendClick: (selectedItem: LegendClickData): void => {
+        this.onLegendClick(selectedItem);
       },
       plugins: {
         legend: {
           display: this.chartOptions.legendDisplay,
+          position: this.chartOptions.legendPosition,
+          onClick: legendClickHandler,
         },
       },
     };
     return chartOptions;
   }
 
-  private handleChartDataset(): ChartJsDataset {
+  private handleChartDataset(): PieChartData {
     if (this.data) {
-      const chartDataset: ChartJsDataset = {
+      const chartDataset: PieChartData = {
         data: this.data.data,
-        value: this.data.value,
+        label: this.data.label,
+        centerLabel: this.data.centerLabel,
         backgroundColor: typeof this.chartOptions?.theme === 'string' ? themes[this.chartOptions?.theme as keyof typeof themes] : this.chartOptions?.theme,
       };
       return chartDataset;
@@ -143,4 +153,4 @@ class GaugeChart extends LitElement {
   }
 }
 
-export { GaugeChart };
+export { PieChart };

@@ -41,7 +41,6 @@ class ChartLegendManager {
     focusBox.setAttribute('data-legend-index', '0');
     focusBox.setAttribute('role', 'option');
     focusBox.setAttribute('aria-selected', 'true');
-    focusBox.style.position = 'absolute';
 
     const hideFocusBox = () => {
       focusBox.style.left = '-1000px';
@@ -50,9 +49,18 @@ class ChartLegendManager {
     const activateFocusBox = (e: KeyboardEvent | MouseEvent) => {
       const index = Number(focusBox.getAttribute('data-legend-index'));
       if (['pie', 'doughnut'].includes(this.chart.config.type)) {
-        this.chart.toggleDataVisibility(index);
-        const isVisible = this.chart.getDataVisibility(index);
-        focusBox.setAttribute('aria-selected', String(isVisible));
+        // TODO: support Filter Click
+        if (this.chart.config.options.isLegendClick) {
+          const legendObj = {
+            key: this.chart.config.data.labels[index],
+            value: this.chart.config.data.datasets[0].data[index as number],
+          };
+          this.chart.config.options.onLegendClick(legendObj);
+        } else {
+          this.chart.toggleDataVisibility(index);
+          const isVisible = this.chart.getDataVisibility(index);
+          focusBox.setAttribute('aria-selected', String(isVisible));
+        }
       } else {
         if (this.chart.isDatasetVisible(index)) {
           this.chart.hide(index);
@@ -103,10 +111,12 @@ class ChartLegendManager {
       }
       const box = this.canvas.getBoundingClientRect();
       const { left, top, width, height, text } = this.hitBoxes[index];
-      focusBox.style.left = `${box.x + left - this.focusBoxMargin - window.pageXOffset}px`;
-      focusBox.style.top = `${box.y + top - this.focusBoxMargin + window.pageYOffset}px`;
-      focusBox.style.width = `${width + 2 * this.focusBoxMargin}px`;
-      focusBox.style.height = `${height + 2 * this.focusBoxMargin}px`;
+
+      const newLeft = `${left - this.focusBoxMargin - window.pageXOffset}px`;
+      const newTop = `${top - this.focusBoxMargin + window.pageYOffset}px`;
+      const newWidth = `${width + 2 * this.focusBoxMargin}px`;
+      const newHeight = `${height + 2 * this.focusBoxMargin}px`;
+      focusBox.setAttribute('style', `position:absolute; left: ${newLeft}; top:${newTop}; width:${newWidth}; height:${newHeight}`);
       focusBox.setAttribute('aria-label', `${text}, ${index + 1} of ${this.hitBoxes.length}`);
     };
 
@@ -157,7 +167,7 @@ export const ChartLegendA11y = {
     const manager = initialize(chart, options.margin);
     updateForLegends(chart, manager);
   },
-  beforeDraw: (chart: Chart, options: any): void => {
+  beforeDraw: (chart: Chart, args: any, options: any): void => {
     let manager = chartStates.get(chart);
     if (manager === undefined) {
       manager = initialize(chart, options.margin);
@@ -166,7 +176,7 @@ export const ChartLegendA11y = {
       return manager.suppressFocusBox();
     }
     manager.reviveFocusBox();
-    manager.focusBoxMargin = options.margin;
+    manager.focusBoxMargin = options.margin || 4;
     updateForLegends(chart, manager);
   },
   afterDestroy(chart: Chart): void {

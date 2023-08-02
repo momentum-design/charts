@@ -8,6 +8,7 @@ export class HelloChart extends LitElement {
   public static styles = css`
     :host {
       display: block;
+      position: relative;
     }
   `;
 
@@ -16,7 +17,6 @@ export class HelloChart extends LitElement {
   }
 
   protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
-    console.log(this.children);
     const chart = new Chart(this.renderRoot.querySelector('canvas') as HTMLCanvasElement, {
       type: 'bar',
       data: {
