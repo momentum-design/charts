@@ -1,4 +1,4 @@
-import { Chart, ChartOptions } from 'chart.js/auto';
+import { Chart, ChartDataset, ChartOptions } from 'chart.js/auto';
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { merge } from 'lodash-es';
@@ -7,10 +7,12 @@ import { ChartA11y, ChartLegendA11y, legendClickHandler } from '../../core/plugi
 import { LegendClickData } from '../../core/plugins/plugin.types';
 import { defaultPieChartOptions } from './pie-chart.options';
 import { CenterValue } from './pie-chart.plugins';
-import { PieChartData, PieChartOptions } from './pie-chart.types';
+import { PieChartOptions } from './pie-chart.types';
 
 interface PieChartJsOptions extends ChartOptions<'pie'> {
   isLegendClick?: boolean;
+  centerLabel?: string | number;
+  chartLabel?: string | number | string[];
   onLegendClick?: (legendItem: { label: string | number; value: string | number }) => void;
 }
 
@@ -22,16 +24,21 @@ class PieChart extends LitElement {
       position: relative;
     }
 
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
     canvas {
       width: 100%;
       height: 100%;
     }
   `;
 
-  @property({ type: Object, hasChanged: () => true })
-  data: PieChartData | undefined = undefined;
+  @property({ type: Array, hasChanged: () => true })
+  data: Record<string, unknown>[] | Record<string, unknown> | undefined = [];
 
-  @property({ type: Object })
+  @property({ type: Object, hasChanged: () => true })
   options: PieChartOptions | undefined = undefined;
 
   @property({ type: Array })
@@ -69,8 +76,8 @@ class PieChart extends LitElement {
   private initializeChart(): void {
     const canvas = this.renderRoot.querySelector('canvas') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
-    const chartLabel = this.label;
 
+    const chartLabel = Array.isArray(this.data) ? Object.keys(this.data[0]) : Object.keys(this.data as Record<string, unknown>);
     this.chartOptions = merge({}, chartOptions, defaultPieChartOptions, this.options);
     const chartJsDataset = this.handleChartDataset();
     const chartJsOptions = this.handleChartOptions();
@@ -80,7 +87,7 @@ class PieChart extends LitElement {
         type: 'pie',
         data: {
           labels: chartLabel,
-          datasets: [chartJsDataset],
+          datasets: chartJsDataset,
         },
         options: chartJsOptions,
         plugins: [ChartA11y, ChartLegendA11y, CenterValue],
@@ -100,7 +107,9 @@ class PieChart extends LitElement {
   private handleChartOptions(): PieChartJsOptions {
     const chartOptions: PieChartJsOptions = {
       responsive: this.chartOptions.responsive,
+      centerLabel: this.chartOptions.centerLabel,
       cutout: this.chartOptions.cutout,
+      chartLabel: this.chartOptions.chartLabel,
       aspectRatio: this.chartOptions.aspectRatio,
       isLegendClick: this.chartOptions.isLegendClick,
       onLegendClick: (selectedItem: LegendClickData): void => {
@@ -110,6 +119,10 @@ class PieChart extends LitElement {
         legend: {
           display: this.chartOptions.legendDisplay,
           position: this.chartOptions.legendPosition,
+          labels: {
+            boxWidth: this.chartOptions.legendLabelsWidth,
+            boxHeight: this.chartOptions.legendLabelsHeight,
+          },
           onClick: legendClickHandler,
         },
       },
@@ -117,26 +130,38 @@ class PieChart extends LitElement {
     return chartOptions;
   }
 
-  private handleChartDataset(): PieChartData {
-    if (this.data) {
-      const chartDataset: PieChartData = {
-        data: this.data.data,
-        label: this.data.label,
-        centerLabel: this.data.centerLabel,
-        backgroundColor: typeof this.chartOptions?.theme === 'string' ? themes[this.chartOptions?.theme as keyof typeof themes] : this.chartOptions?.theme,
-      };
+  private handleChartDataset(): ChartDataset<'pie', number[]>[] {
+    const chartDataset: ChartDataset<'pie', number[]>[] = [];
+    if (!this.data) {
       return chartDataset;
+    }
+
+    if (Array.isArray(this.data)) {
+      this.data?.forEach((data, index) => {
+        chartDataset.push({
+          data: Object.values(data) as number[],
+          label: typeof this.chartOptions.chartLabel === 'string' ? this.chartOptions.chartLabel : (this.chartOptions.chartLabel as string[])[index],
+          backgroundColor: this.getBackgroundColor(this.chartOptions),
+        });
+      });
     } else {
-      return {
-        data: [],
+      chartDataset[0] = {
+        data: Object.values(this.data) as number[],
+        label: this.chartOptions.chartLabel as string,
+        backgroundColor: this.getBackgroundColor(this.chartOptions),
       };
     }
+    return chartDataset;
+  }
+
+  private getBackgroundColor(chartOptions: PieChartOptions): string[] | undefined {
+    return typeof chartOptions?.theme === 'string' ? themes[chartOptions?.theme as keyof typeof themes] : chartOptions?.theme;
   }
 
   updateChart(): void {
     if (this.chartInstance) {
       const chartDataset = this.handleChartDataset();
-      this.chartInstance.data.datasets = [chartDataset];
+      this.chartInstance.data.datasets = chartDataset;
       this.chartInstance.update();
     }
   }

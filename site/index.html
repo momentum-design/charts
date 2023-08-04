@@ -113,13 +113,17 @@
       <fieldset>
         <legend>Gauge Chart</legend>
         <div>
-          <wc-gauge style="width: 40%;" data='{
-              "data": [13, 17, 8, 10, 40, 24],
-              "value": 46
-            }' options='{
+          <wc-gauge style="width: 40%;" data='[{
+            "A":"13",
+            "B":"17",
+            "C":"8",
+            "D":"10",
+            "E":"40"
+          }]' options='{
               "cutout": "95%",
+              "value": 51,
               "theme": "qualitative-colors-tertiary"
-            }' label='["1", "2", "3", "4", "5", "6", "7"]'></wc-gauge>
+            }'></wc-gauge>
         </div>
       </fieldset>
 
@@ -127,23 +131,38 @@
         <legend>Pie Chart</legend>
         <div>
           <wc-pie style="width: 40%;" data='{
-            "data": [13, 17, 8, 10, 40, 24, 67]
+            "A":"13",
+            "B":"17",
+            "C":"8",
+            "D":"10",
+            "E":"40",
+            "F":"51",
+            "G":"31"
           }' options='{
-              "theme": "diverging-colors-alerts",
-            }' label='["A", "B", "C", "D", "E", "E", "G"]'></wc-pie>
+              "chartLabel":"Label D",
+              "theme": "diverging-colors-alerts"
+            }'></wc-pie>
         </div>
       </fieldset>
 
       <fieldset>
         <legend>Doughnut Chart</legend>
         <div>
-          <wc-pie style="width: 40%;" data='{
-          "data": [17, 19, 18, 12, 30, 24, 77]
-          }' options='{
-          "theme": "diverging-colors-alerts",
-          "isLegendClick": true,
-          "cutout": "50%"
-          }' label='["A", "B", "C", "D", "E", "F", "G"]'>
+          <wc-pie style="width: 40%;" data='
+          [{
+            "A":"13", "B":"17", "C":"8","D":"10", "E":"40", "F":"51", "G":"31"
+          },
+          {
+            "A":"14",  "B":"15",  "C":"2", "D":"36",  "E":"72", "F":"43", "G":"23"
+          },
+          {
+            "A":"19","B":"25", "C":"23", "D":"6",  "E":"22",  "F":"73",  "G":"13"
+          }]' options='{
+            "theme": "diverging-colors-alerts",
+            "chartLabel": ["Label1","Label2","Label3"],
+            "cutout": "80%",
+            "centerLabel": "<h3>123123123</h3><em>total</em>"
+          }'>
           </wc-pie>
         </div>
       </fieldset>
