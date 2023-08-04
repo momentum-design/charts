@@ -17,6 +17,7 @@ export type LayoutPosition = 'left' | 'top' | 'right' | 'bottom' | 'center' | 'c
 
 export interface ChartOptions {
   responsive?: boolean;
+  chartLabel?: string | number | string[];
   theme?: string | [];
   fontColor?: string;
   fontFamily?: string;
@@ -24,6 +25,8 @@ export interface ChartOptions {
   isLegendClick?: boolean;
   legendDisplay?: boolean;
   legendPosition?: LayoutPosition;
+  legendLabelsHeight?: number;
+  legendLabelsWidth?: number;
   paddingLeft?: number;
   paddingRight?: number;
   paddingTop?: number;
@@ -32,10 +35,13 @@ export interface ChartOptions {
 
 const chartOptions: ChartOptions = {
   responsive: true,
+  chartLabel: '',
   theme: 'color-health',
   fontColor: '#000',
   fontFamily: 'Helvetica',
   aspectRatio: 1.6,
+  legendLabelsHeight: 12,
+  legendLabelsWidth: 12,
 };
 
 export { themes, chartOptions };

@@ -9,7 +9,7 @@ export const GaugeNeedle = {
     } = chart;
 
     const dataTotal = args.meta.total;
-    const chartValue = args.meta._dataset.value;
+    const chartValue = chart.config.options.value;
     const averageValue = dataTotal / 2;
     const angle = Math.PI + (1 / dataTotal) * chartValue * Math.PI;
 

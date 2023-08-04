@@ -6,9 +6,9 @@ import { chartOptions, themes } from '../../core/common/chart.types';
 import { ChartA11y } from '../../core/plugins';
 import { defaultGaugeChartOptions } from './gauge-chart.options';
 import { GaugeNeedle } from './gauge-chart.plugins';
-import { GaugeChartData, GaugeChartOptions } from './gauge-chart.types';
+import { GaugeChartOptions } from './gauge-chart.types';
 
-interface ChartJsDataset extends ChartDataset<'doughnut', number[]> {
+interface ChartJsOptions extends ChartOptions<'doughnut'> {
   value?: number;
 }
 
@@ -26,8 +26,8 @@ class GaugeChart extends LitElement {
     }
   `;
 
-  @property({ type: Object, hasChanged: () => true })
-  data: GaugeChartData | undefined = undefined;
+  @property({ type: Array || Object, hasChanged: () => true })
+  data: Record<string, unknown>[] | Record<string, unknown> | undefined = [];
 
   @property({ type: Object })
   options: GaugeChartOptions | undefined = undefined;
@@ -67,8 +67,8 @@ class GaugeChart extends LitElement {
   private initializeChart(): void {
     const canvas = this.renderRoot.querySelector('canvas') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
-    const chartLabel = this.label;
 
+    const chartLabel = Array.isArray(this.data) ? Object.keys(this.data[0]) : Object.keys(this.data as Record<string, unknown>);
     this.chartOptions = merge({}, chartOptions, defaultGaugeChartOptions, this.options);
     const chartJsDataset = this.handleChartDataset();
     const chartJsOptions = this.handleChartOptions();
@@ -78,7 +78,7 @@ class GaugeChart extends LitElement {
         type: 'doughnut',
         data: {
           labels: chartLabel,
-          datasets: [chartJsDataset],
+          datasets: chartJsDataset,
         },
         options: chartJsOptions,
         plugins: [GaugeNeedle, ChartA11y],
@@ -86,9 +86,10 @@ class GaugeChart extends LitElement {
     }
   }
 
-  private handleChartOptions(): ChartOptions<'doughnut'> {
-    const chartOptions: ChartOptions<'doughnut'> = {
+  private handleChartOptions(): ChartJsOptions {
+    const chartOptions: ChartJsOptions = {
       responsive: this.chartOptions.responsive,
+      value: this.chartOptions.value,
       cutout: this.chartOptions.cutout,
       aspectRatio: this.chartOptions.aspectRatio,
       circumference: this.chartOptions.circumference,
@@ -108,25 +109,23 @@ class GaugeChart extends LitElement {
     return chartOptions;
   }
 
-  private handleChartDataset(): ChartJsDataset {
-    if (this.data) {
-      const chartDataset: ChartJsDataset = {
-        data: this.data.data,
-        value: this.data.value,
-        backgroundColor: typeof this.chartOptions?.theme === 'string' ? themes[this.chartOptions?.theme as keyof typeof themes] : this.chartOptions?.theme,
-      };
-      return chartDataset;
-    } else {
-      return {
-        data: [],
-      };
+  private handleChartDataset(): ChartDataset<'doughnut', number[]>[] {
+    const chartDataset: ChartDataset<'doughnut', number[]>[] = [];
+    if (!this.data) {
+      return [];
     }
+    const chartJsData = Array.isArray(this.data) ? Object.values(this.data[0]) : Object.values(this.data);
+    chartDataset[0] = {
+      data: chartJsData as number[],
+      backgroundColor: typeof this.chartOptions?.theme === 'string' ? themes[this.chartOptions?.theme as keyof typeof themes] : this.chartOptions?.theme,
+    };
+    return chartDataset;
   }
 
   updateChart(): void {
     if (this.chartInstance) {
       const chartDataset = this.handleChartDataset();
-      this.chartInstance.data.datasets = [chartDataset];
+      this.chartInstance.data.datasets = chartDataset;
       this.chartInstance.update();
     }
   }

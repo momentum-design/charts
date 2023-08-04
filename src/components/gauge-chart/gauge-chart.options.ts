@@ -1,12 +1,8 @@
-import { GaugeChartData, GaugeChartOptions } from './gauge-chart.types';
-
-const gaugeChartData: GaugeChartData = {
-  data: [],
-  value: 0,
-};
+import { GaugeChartOptions } from './gauge-chart.types';
 
 const defaultGaugeChartOptions: GaugeChartOptions = {
   responsive: true,
+  value: 0,
   aspectRatio: 1.6,
   cutout: '90%',
   circumference: 180,
@@ -16,4 +12,4 @@ const defaultGaugeChartOptions: GaugeChartOptions = {
   legendDisplay: false,
 };
 
-export { defaultGaugeChartOptions, gaugeChartData };
+export { defaultGaugeChartOptions };

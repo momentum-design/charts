@@ -1,13 +1,9 @@
-import { PieChartData, PieChartOptions } from './pie-chart.types';
-
-const pieChartData: PieChartData = {
-  data: [],
-  label: '',
-  centerLabel: '',
-};
+import { PieChartOptions } from './pie-chart.types';
 
 const defaultPieChartOptions: PieChartOptions = {
   responsive: true,
+  centerLabel: '',
+  chartLabel: '',
   cutout: '0',
   theme: 'color-health',
   aspectRatio: 2,
@@ -16,4 +12,4 @@ const defaultPieChartOptions: PieChartOptions = {
   isLegendClick: false,
 };
 
-export { pieChartData, defaultPieChartOptions };
+export { defaultPieChartOptions };
