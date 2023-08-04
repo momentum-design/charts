@@ -1,10 +1,11 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { COMPONENT_PREFIX } from '../../core';
 
 /**
  * @ignore
  */
-@customElement('wc-hello-world')
+@customElement(`${COMPONENT_PREFIX}-hello-world`)
 export class HelloWorld extends LitElement {
   static styles = css`
     p {

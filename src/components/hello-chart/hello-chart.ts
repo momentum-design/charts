@@ -1,12 +1,13 @@
 import { Chart } from 'chart.js/auto';
 import { css, html, LitElement, PropertyValueMap } from 'lit';
 import { customElement } from 'lit/decorators.js';
+import { COMPONENT_PREFIX } from '../../core';
 import { ChartA11y, ChartLegendA11y } from '../../core/plugins';
 
 /**
  * @ignore
  */
-@customElement('wc-hello-chart')
+@customElement(`${COMPONENT_PREFIX}-hello-chart`)
 export class HelloChart extends LitElement {
   public static styles = css`
     :host {

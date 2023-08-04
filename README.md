@@ -82,16 +82,17 @@ $ npm i @momentum-design/widgets
 
 ### Styles Guides
 
-- [Coding guidelines](https://github.com/microsoft/TypeScript/wiki/Coding-guidelines)
+- [Coding guidelines](https://google.github.io/styleguide/tsguide.html)
 
     - **Names**
-        - Use PascalCase for type names.
+        - Use `PascalCase` for type names.
         - Do not use `I` as a prefix for interface names.
-        - Use PascalCase for enum values.
-        - Use camelCase for function names.
-        - Use camelCase for property names and local variables.
+        - Use `PascalCase` for enum values.
+        - Use `camelCase` for function names.
+        - Use `camelCase` for property names and local variables.
         - Do not use `_` as a prefix for private properties.
         - Use whole words in names when possible.
+        - Use `CONSTANT_CASE` for the constants that is immutable.
 
 - [Documentation Guide](https://typedoc.org/guides/overview/)
 

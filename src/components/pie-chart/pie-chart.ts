@@ -2,9 +2,10 @@ import { Chart, ChartDataset, ChartOptions } from 'chart.js/auto';
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { merge } from 'lodash-es';
-import { chartOptions, themes } from '../../core/common/chart.types';
+import { COMPONENT_PREFIX } from '../../core';
 import { ChartA11y, ChartLegendA11y, legendClickHandler } from '../../core/plugins';
 import { LegendClickData } from '../../core/plugins/plugin.types';
+import { chartOptions, themes } from '../../types';
 import { defaultPieChartOptions } from './pie-chart.options';
 import { CenterValue } from './pie-chart.plugins';
 import { PieChartOptions } from './pie-chart.types';
@@ -16,7 +17,7 @@ interface PieChartJsOptions extends ChartOptions<'pie'> {
   onLegendClick?: (legendItem: { label: string | number; value: string | number }) => void;
 }
 
-@customElement('wc-pie')
+@customElement(`${COMPONENT_PREFIX}-pie`)
 class PieChart extends LitElement {
   static styles = css`
     :host {

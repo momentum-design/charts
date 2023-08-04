@@ -1,4 +1,4 @@
-import { ChartOptions } from '../../core/common/chart.types';
+import { ChartOptions } from '../../types';
 
 export interface GaugeChartOptions extends ChartOptions {
   cutout?: string;

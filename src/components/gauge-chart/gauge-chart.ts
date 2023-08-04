@@ -2,8 +2,9 @@ import { Chart, ChartDataset, ChartOptions } from 'chart.js/auto';
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { merge } from 'lodash-es';
-import { chartOptions, themes } from '../../core/common/chart.types';
+import { COMPONENT_PREFIX } from '../../core';
 import { ChartA11y } from '../../core/plugins';
+import { chartOptions, themes } from '../../types';
 import { defaultGaugeChartOptions } from './gauge-chart.options';
 import { GaugeNeedle } from './gauge-chart.plugins';
 import { GaugeChartOptions } from './gauge-chart.types';
@@ -12,7 +13,7 @@ interface ChartJsOptions extends ChartOptions<'doughnut'> {
   value?: number;
 }
 
-@customElement('wc-gauge')
+@customElement(`${COMPONENT_PREFIX}-gauge`)
 class GaugeChart extends LitElement {
   static styles = css`
     :host {
