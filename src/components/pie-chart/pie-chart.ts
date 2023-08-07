@@ -2,10 +2,10 @@ import { Chart, ChartDataset, ChartOptions } from 'chart.js/auto';
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { merge } from 'lodash-es';
-import { COMPONENT_PREFIX } from '../../core';
+import { COMPONENT_PREFIX, ThemeKey, themes } from '../../core';
 import { ChartA11y, ChartLegendA11y, legendClickHandler } from '../../core/plugins';
 import { LegendClickData } from '../../core/plugins/plugin.types';
-import { chartOptions, themes } from '../../types';
+import { chartOptions } from '../../types';
 import { defaultPieChartOptions } from './pie-chart.options';
 import { CenterValue } from './pie-chart.plugins';
 import { PieChartOptions } from './pie-chart.types';
@@ -156,7 +156,7 @@ class PieChart extends LitElement {
   }
 
   private getBackgroundColor(chartOptions: PieChartOptions): string[] | undefined {
-    return typeof chartOptions?.theme === 'string' ? themes[chartOptions?.theme as keyof typeof themes] : chartOptions?.theme;
+    return typeof chartOptions?.theme === 'string' ? themes.get(chartOptions?.theme as keyof typeof ThemeKey) : chartOptions?.theme;
   }
 
   updateChart(): void {

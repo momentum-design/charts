@@ -5,7 +5,6 @@ const defaultPieChartOptions: PieChartOptions = {
   centerLabel: '',
   chartLabel: '',
   cutout: '0',
-  theme: 'color-health',
   aspectRatio: 2,
   legendPosition: 'right',
   legendDisplay: true,
