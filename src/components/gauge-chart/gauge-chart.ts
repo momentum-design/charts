@@ -2,9 +2,10 @@ import { Chart, ChartDataset, ChartOptions } from 'chart.js/auto';
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { merge } from 'lodash-es';
-import { COMPONENT_PREFIX } from '../../core';
+import { COMPONENT_PREFIX, ThemeKey, themes } from '../../core';
+import { chartOptions } from '../../core/chart-options';
 import { ChartA11y } from '../../core/plugins';
-import { chartOptions, themes } from '../../types';
+import { getCurrentTheme } from '../../core/utils';
 import { defaultGaugeChartOptions } from './gauge-chart.options';
 import { GaugeNeedle } from './gauge-chart.plugins';
 import { GaugeChartOptions } from './gauge-chart.types';
@@ -118,7 +119,7 @@ class GaugeChart extends LitElement {
     const chartJsData = Array.isArray(this.data) ? Object.values(this.data[0]) : Object.values(this.data);
     chartDataset[0] = {
       data: chartJsData as number[],
-      backgroundColor: typeof this.chartOptions?.theme === 'string' ? themes[this.chartOptions?.theme as keyof typeof themes] : this.chartOptions?.theme,
+      backgroundColor: typeof this.chartOptions?.theme === 'string' ? themes.get(this.chartOptions?.theme as keyof typeof ThemeKey) : getCurrentTheme().colors,
     };
     return chartDataset;
   }
