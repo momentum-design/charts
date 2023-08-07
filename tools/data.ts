@@ -9,6 +9,9 @@ const countries: string[] = faker.helpers.multiple(faker.location.country, { cou
 const states: string[] = faker.helpers.multiple(faker.location.state, { count: 10 });
 
 const d = {
+  number: {
+    default: () => faker.number.int({ min: 0, max: 10000 }),
+  },
   pie: {
     default: () => ({
       country: faker.location.country(),
@@ -96,8 +99,8 @@ function start() {
     return;
   }
 
-  const count = parseInt(args.find(a => !isNaN(a as any)) || '10');
-  args = args.filter(a => isNaN(a as any));
+  const count = parseInt(args.find((a) => !isNaN(a as any)) || '10');
+  args = args.filter((a) => isNaN(a as any));
 
   g(args[0], args[1] || 'default', count);
 }

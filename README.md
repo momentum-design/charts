@@ -123,4 +123,4 @@ The `<type>` and `<summary>` fields are mandatory, the `(<scope>)` field is opti
 
 ### Useful Commands
 
-- `npm run data` will print the random data which is predefined in **./tools/data.ts** and can be used to test your component. For example, `npm run data -- --pie --default --5`
+- `npm run data` will print the random data which is predefined in **./tools/data.ts** and can be used to test your component. For example, `npm run data -- --pie --default --5`, `npm run data -- --number --10` to get 10 random numbers.
