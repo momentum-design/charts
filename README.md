@@ -77,6 +77,12 @@ $ npm i @momentum-design/widgets
 
     - Also export the new component in **src/components/index.ts** file.
 
+    - The internal folder dependency should be as below. That means we should not import anything from **core** folder into **types** folder or **components** into **core** folder.
+
+      ```
+      components ─⫸ core ─⫸ types
+      ```
+
 1. Commit your changes and push them to your forked repo, and submit a Pull Request to **main** branch.
 
 
