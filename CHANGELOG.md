@@ -1,3 +1,10 @@
+# [1.0.0-alpha.5](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2023-08-07)
+
+
+### Bug Fixes
+
+* **pie:** code change for chart get global theme ([#5](https://github.com/momentum-design/momentum-widgets/issues/5)) ([dfed1ed](https://github.com/momentum-design/momentum-widgets/commit/dfed1ed1cf82a1e2fe79c2c41a56c775092a3d93))
+
 # [1.0.0-alpha.4](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2023-08-02)
 
 

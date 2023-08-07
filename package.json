@@ -1,6 +1,6 @@
 {
   "name": "@momentum-design/widgets",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "widgets based on Chart.js for building dashboards",
   "main": "dist/widgets.umd.js",
   "module": "dist/widgets.es5.js",
