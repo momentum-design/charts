@@ -28,6 +28,13 @@ export interface Settings {
 
 /**
  * The default settings, you can use `set({...})` method to change the global default settings.
+ * And the parameter should be partial {@link Settings}.
+ *
+ * @example
+ * The following code will show you how to add new theme and set it as global default theme.
+ * ```ts
+ * settings.addTheme('new-theme', ['#ff0000', '#00ff00']).set({theme: 'new-theme'});
+ * ```
  */
 export const settings: Settings = {
   theme: defaultTheme,
