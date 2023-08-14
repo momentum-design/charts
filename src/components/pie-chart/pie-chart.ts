@@ -4,9 +4,11 @@ import { customElement, property } from 'lit/decorators.js';
 import { merge } from 'lodash-es';
 import { COMPONENT_PREFIX, ThemeKey, themes } from '../../core';
 import { chartOptions } from '../../core/chart-options';
-import { ChartA11y, ChartLegendA11y, legendClickHandler } from '../../core/plugins';
+import { ChartA11y, ChartLegendA11y, legendClickHandler, legendHandleHover, legendHandleLeave } from '../../core/plugins';
+import { externalTooltipHandler } from '../../core/plugins/chart-tooltip';
 import { LegendClickData } from '../../core/plugins/plugin.types';
 import { getCurrentTheme } from '../../core/utils';
+import { internalStyles } from '../../styles/internal-style';
 import { defaultPieChartOptions } from './pie-chart.options';
 import { CenterValue } from './pie-chart.plugins';
 import { PieChartOptions } from './pie-chart.types';
@@ -15,27 +17,40 @@ interface PieChartJsOptions extends ChartOptions<'pie'> {
   isLegendClick?: boolean;
   centerLabel?: string | number;
   chartLabel?: string | number | string[];
+  isMultipleSeries?: boolean;
+  seriesTooltipHead?: string;
+  seriesTooltipBody?: string;
+  seriesTooltipFooter?: string;
+  seriesTooltipFloor?: number;
+  isMultipleLegend?: boolean;
+  legendTooltipHead?: string;
+  legendTooltipBody?: string;
+  legendTooltipFooter?: string;
+  legendTooltipFloor?: number;
   onLegendClick?: (legendItem: { label: string | number; value: string | number }) => void;
 }
 
 @customElement(`${COMPONENT_PREFIX}-pie`)
 class PieChart extends LitElement {
-  static styles = css`
-    :host {
-      display: block;
-      position: relative;
-    }
+  static styles = [
+    internalStyles,
+    css`
+      :host {
+        display: block;
+        position: relative;
+      }
 
-    * {
-      padding: 0;
-      margin: 0;
-    }
+      * {
+        padding: 0;
+        margin: 0;
+      }
 
-    canvas {
-      width: 100%;
-      height: 100%;
-    }
-  `;
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
+    `,
+  ];
 
   @property({ type: Array, hasChanged: () => true })
   data: Record<string, unknown>[] | Record<string, unknown> | undefined = [];
@@ -56,6 +71,7 @@ class PieChart extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
+
     window.addEventListener('resize', this.handleWindowResize);
   }
 
@@ -113,19 +129,36 @@ class PieChart extends LitElement {
       cutout: this.chartOptions.cutout,
       chartLabel: this.chartOptions.chartLabel,
       aspectRatio: this.chartOptions.aspectRatio,
-      isLegendClick: this.chartOptions.isLegendClick,
+      isLegendClick: this.chartOptions.legend?.isLegendClick,
+      isMultipleSeries: this.chartOptions.tooltip?.isMultipleSeries,
+      seriesTooltipFloor: this.chartOptions.tooltip?.seriesTooltipFloor,
+      seriesTooltipFooter: this.chartOptions.tooltip?.seriesTooltipFooter,
+      seriesTooltipHead: this.chartOptions.tooltip?.seriesTooltipHead,
+      seriesTooltipBody: this.chartOptions.tooltip?.seriesTooltipBody,
+      isMultipleLegend: this.chartOptions.tooltip?.isMultipleLegend,
+      legendTooltipHead: this.chartOptions.tooltip?.legendTooltipHead,
+      legendTooltipBody: this.chartOptions.tooltip?.legendTooltipBody,
+      legendTooltipFooter: this.chartOptions.tooltip?.legendTooltipFooter,
+      legendTooltipFloor: this.chartOptions.tooltip?.legendTooltipFloor,
       onLegendClick: (selectedItem: LegendClickData): void => {
         this.onLegendClick(selectedItem);
       },
       plugins: {
         legend: {
-          display: this.chartOptions.legendDisplay,
-          position: this.chartOptions.legendPosition,
+          display: this.chartOptions.legend?.legendDisplay,
+          position: this.chartOptions.legend?.legendPosition,
           labels: {
-            boxWidth: this.chartOptions.legendLabelsWidth,
-            boxHeight: this.chartOptions.legendLabelsHeight,
+            boxWidth: this.chartOptions.legend?.legendLabelsWidth,
+            boxHeight: this.chartOptions.legend?.legendLabelsHeight,
           },
           onClick: legendClickHandler,
+          onHover: legendHandleHover,
+          onLeave: legendHandleLeave,
+        },
+        tooltip: {
+          enabled: false,
+          position: 'nearest',
+          external: externalTooltipHandler,
         },
       },
     };

@@ -9,12 +9,12 @@ const getCenterValue = (chart: Chart | any, centerLabel: any, cx: number, cy: nu
     centerContent.innerHTML = centerLabel;
     centerContent.style.position = 'absolute';
     chart.canvas.parentNode.appendChild(centerContent);
-    const styles = window.getComputedStyle(centerContent);
-    const offsetWidth = parseInt(styles.width, 10);
-    const offsetHeight = parseInt(styles.height, 10);
-    centerContent.style.left = cx - offsetWidth / 2 + 'px';
-    centerContent.style.top = cy - offsetHeight / 2 + 'px';
   }
+  const styles = window.getComputedStyle(centerContent);
+  const offsetWidth = parseInt(styles.width, 10);
+  const offsetHeight = parseInt(styles.height, 10);
+  centerContent.style.left = cx - offsetWidth / 2 + 'px';
+  centerContent.style.top = cy - offsetHeight / 2 + 'px';
   return centerContent;
 };
 
