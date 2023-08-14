@@ -9,7 +9,9 @@ const defaultGaugeChartOptions: GaugeChartOptions = {
   rotation: 270,
   paddingLeft: 30,
   paddingRight: 30,
-  legendDisplay: false,
+  legend: {
+    legendDisplay: false,
+  },
 };
 
 export { defaultGaugeChartOptions };

@@ -104,7 +104,7 @@ class GaugeChart extends LitElement {
       },
       plugins: {
         legend: {
-          display: this.chartOptions.legendDisplay,
+          display: this.chartOptions.legend?.legendDisplay,
         },
       },
     };

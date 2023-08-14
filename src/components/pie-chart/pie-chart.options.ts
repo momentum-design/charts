@@ -6,9 +6,11 @@ const defaultPieChartOptions: PieChartOptions = {
   chartLabel: '',
   cutout: '0',
   aspectRatio: 2,
-  legendPosition: 'right',
-  legendDisplay: true,
-  isLegendClick: false,
+  legend: {
+    legendPosition: 'right',
+    legendDisplay: true,
+    isLegendClick: false,
+  },
 };
 
 export { defaultPieChartOptions };
