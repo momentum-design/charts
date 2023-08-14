@@ -1,3 +1,10 @@
+# [1.0.0-alpha.6](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2023-08-14)
+
+
+### Features
+
+* **tooltip:** support customize chart tooltip and legend tooltip ([#6](https://github.com/momentum-design/momentum-widgets/issues/6)) ([fb64a39](https://github.com/momentum-design/momentum-widgets/commit/fb64a39bf0a837e82e26b31a355b7cf06693689c))
+
 # [1.0.0-alpha.5](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2023-08-07)
 
 
