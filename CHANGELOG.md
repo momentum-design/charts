@@ -1,3 +1,10 @@
+# [1.0.0-alpha.7](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.6...v1.0.0-alpha.7) (2023-08-16)
+
+
+### Bug Fixes
+
+* **tooltip:** adjust default tooptip templete ([#7](https://github.com/momentum-design/momentum-widgets/issues/7)) ([f367899](https://github.com/momentum-design/momentum-widgets/commit/f367899ddc63b6c3a63667f45ed9b331084f2670))
+
 # [1.0.0-alpha.6](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2023-08-14)
 
 
