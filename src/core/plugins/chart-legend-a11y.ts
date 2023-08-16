@@ -161,8 +161,8 @@ const initialize = (chart: Chart, margin: number): ChartLegendManager => {
   return manager;
 };
 
-export const ChartLegendA11y = {
-  id: 'ChartLegendA11y',
+export const chartLegendA11y = {
+  id: 'chartLegendA11y',
   afterInit: (chart: Chart, options: any): void => {
     const manager = initialize(chart, options.margin);
     updateForLegends(chart, manager);

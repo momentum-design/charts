@@ -268,8 +268,8 @@ const onKeyDown = (event: any, chart: any): void => {
   }
 };
 
-export const ChartA11y = {
-  id: 'ChartA11y',
+export const chartA11y = {
+  id: 'chartA11y',
   start: (chart: any, options: any): void => {
     // add event listeners
     chart.canvas.addEventListener('focus', () => onFocus(chart));

@@ -1,7 +1,7 @@
 import { Chart } from 'chart.js/auto';
 
-export const GaugeNeedle = {
-  id: 'GaugeNeedle',
+export const gaugeNeedle = {
+  id: 'gaugeNeedle',
   afterDatasetDraw: (chart: Chart | any, args: any) => {
     const {
       ctx,

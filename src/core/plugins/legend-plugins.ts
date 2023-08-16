@@ -8,7 +8,7 @@ const getOrCreateTooltip = (chart: any) => {
   if (!tooltipEl) {
     tooltipEl = document.createElement('div');
     tooltipEl.setAttribute('class', 'legend-tooltip');
-    tooltipEl.style.background = 'rgba(0, 0, 0, 0.5)';
+    tooltipEl.style.background = '#000';
     tooltipEl.style.borderRadius = '5px';
     tooltipEl.style.opacity = 1;
     tooltipEl.style.minWidth = '100px';
@@ -31,7 +31,7 @@ const getOrCreateTooltip = (chart: any) => {
     triangle.style.borderStyle = 'solid';
     triangle.style.borderColor = 'transparent';
     triangle.style.borderWidth = '8px';
-    triangle.style.borderLeftColor = 'rgba(0, 0, 0, 0.5)';
+    triangle.style.borderLeftColor = '#000';
     triangle.style.borderLeftWidth = '8px';
     triangle.style.position = 'absolute';
     triangle.style.top = '50%';
@@ -145,7 +145,8 @@ const legendHandleHover = (evt: ChartEvent, item: LegendItem, legend: any): void
   if (body) {
     tooltipBody = customizeTooltipBody(legend, item, legendTooltip);
   } else {
-    legendTooltip.body = '<div class=flex-x-between><p style=min-width:60px><span>${colorBlock}${seriesName}:</span><span>${value}</span></p><span>(${percentage})</span></div>';
+    legendTooltip.body = '<div>${colorBlock}${seriesName}</div><div class=flex-x-between><p style=min-width:100px>Percentage</p><span>${percentage}</span></p></div><div class=flex-x-between><p style=min-width:100px>Total</p><span>${value}</span></p></div> ';
+
     tooltipBody = customizeTooltipBody(legend, item, legendTooltip);
   }
 

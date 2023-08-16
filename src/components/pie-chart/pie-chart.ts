@@ -4,13 +4,13 @@ import { customElement, property } from 'lit/decorators.js';
 import { merge } from 'lodash-es';
 import { COMPONENT_PREFIX, ThemeKey, themes } from '../../core';
 import { chartOptions } from '../../core/chart-options';
-import { ChartA11y, ChartLegendA11y, legendClickHandler, legendHandleHover, legendHandleLeave } from '../../core/plugins';
+import { chartA11y, chartLegendA11y, chartSeriesClick, legendClickHandler, legendHandleHover, legendHandleLeave } from '../../core/plugins';
 import { externalTooltipHandler } from '../../core/plugins/chart-tooltip';
 import { LegendClickData } from '../../core/plugins/plugin.types';
 import { getCurrentTheme } from '../../core/utils';
 import { internalStyles } from '../../styles/internal-style';
 import { defaultPieChartOptions } from './pie-chart.options';
-import { CenterValue } from './pie-chart.plugins';
+import { centerValue } from './pie-chart.plugins';
 import { PieChartOptions } from './pie-chart.types';
 
 interface PieChartJsOptions extends ChartOptions<'pie'> {
@@ -108,7 +108,7 @@ class PieChart extends LitElement {
           datasets: chartJsDataset,
         },
         options: chartJsOptions,
-        plugins: [ChartA11y, ChartLegendA11y, CenterValue],
+        plugins: [chartA11y, chartLegendA11y, centerValue],
       });
     }
   }
@@ -143,6 +143,7 @@ class PieChart extends LitElement {
       onLegendClick: (selectedItem: LegendClickData): void => {
         this.onLegendClick(selectedItem);
       },
+      onClick: chartSeriesClick,
       plugins: {
         legend: {
           display: this.chartOptions.legend?.legendDisplay,
@@ -162,6 +163,7 @@ class PieChart extends LitElement {
         },
       },
     };
+
     return chartOptions;
   }
 
@@ -186,6 +188,7 @@ class PieChart extends LitElement {
         backgroundColor: this.getBackgroundColor(this.chartOptions),
       };
     }
+
     return chartDataset;
   }
 

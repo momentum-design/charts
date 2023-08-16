@@ -4,10 +4,10 @@ import { customElement, property } from 'lit/decorators.js';
 import { merge } from 'lodash-es';
 import { COMPONENT_PREFIX, ThemeKey, themes } from '../../core';
 import { chartOptions } from '../../core/chart-options';
-import { ChartA11y } from '../../core/plugins';
+import { chartA11y } from '../../core/plugins';
 import { getCurrentTheme } from '../../core/utils';
 import { defaultGaugeChartOptions } from './gauge-chart.options';
-import { GaugeNeedle } from './gauge-chart.plugins';
+import { gaugeNeedle } from './gauge-chart.plugins';
 import { GaugeChartOptions } from './gauge-chart.types';
 
 interface ChartJsOptions extends ChartOptions<'doughnut'> {
@@ -83,7 +83,7 @@ class GaugeChart extends LitElement {
           datasets: chartJsDataset,
         },
         options: chartJsOptions,
-        plugins: [GaugeNeedle, ChartA11y],
+        plugins: [gaugeNeedle, chartA11y],
       });
     }
   }
