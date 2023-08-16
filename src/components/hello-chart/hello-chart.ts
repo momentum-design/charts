@@ -2,7 +2,7 @@ import { Chart } from 'chart.js/auto';
 import { css, html, LitElement, PropertyValueMap } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { COMPONENT_PREFIX } from '../../core';
-import { ChartA11y, ChartLegendA11y } from '../../core/plugins';
+import { chartA11y, chartLegendA11y } from '../../core/plugins';
 import { getColor, getCurrentTheme } from '../../core/utils';
 
 /**
@@ -78,7 +78,7 @@ export class HelloChart extends LitElement {
           },
         },
       },
-      plugins: [ChartA11y, ChartLegendA11y],
+      plugins: [chartA11y, chartLegendA11y],
     });
   }
 }

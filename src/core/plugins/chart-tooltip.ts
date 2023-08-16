@@ -5,7 +5,7 @@ const getOrCreateTooltip = (chart: any) => {
   if (!tooltipEl) {
     tooltipEl = document.createElement('div');
     tooltipEl.setAttribute('class', 'series-tooltip');
-    tooltipEl.style.background = 'rgba(0, 0, 0, 0.5)';
+    tooltipEl.style.background = '#000';
     tooltipEl.style.borderRadius = '5px';
     tooltipEl.style.opacity = 1;
     tooltipEl.style.pointerEvents = 'none';
@@ -26,7 +26,7 @@ const getOrCreateTooltip = (chart: any) => {
     triangle.style.borderStyle = 'solid';
     triangle.style.borderColor = 'transparent';
     triangle.style.borderWidth = '8px';
-    triangle.style.borderBottomColor = 'rgba(0, 0, 0, 0.5)';
+    triangle.style.borderBottomColor = '#000';
     triangle.style.borderBottomWidth = '8px';
     triangle.style.position = 'absolute';
     triangle.style.top = '-16px';
@@ -48,43 +48,6 @@ const colorBlock = (colors: { backgroundColor: string; borderColor: string }) =>
   boxSpan.style.width = '10px';
   boxSpan.style.display = 'inline-block';
   return boxSpan;
-};
-
-// default tooltip body (no seriesTooltipBody parameter)
-const defaultTooltipBody = (tooltip: any, seriesTooltip: any) => {
-  // body
-  const tooltipBody = document.createElement('ul');
-  tooltipBody.style.color = '#fff';
-  tooltipBody.style.padding = '5px 0';
-  tooltipBody.style.width = '100%';
-  seriesTooltip.bodyLines.forEach((body: any, i: any) => {
-    const colors = tooltip.labelColors[i];
-    const boxSpan = colorBlock(colors);
-
-    const liBox = document.createElement('li');
-    liBox.style.backgroundColor = 'inherit';
-    liBox.style.display = 'flex';
-
-    const pBox = document.createElement('p');
-    pBox.style.minWidth = '100px';
-    const valueSpan = document.createElement('span');
-    const parsedValue = tooltip.dataPoints[0].parsed;
-    valueSpan.innerText = `${seriesTooltip.titleLines}:${parsedValue}`;
-
-    pBox.appendChild(boxSpan);
-    pBox.appendChild(valueSpan);
-
-    const proportionBox = document.createElement('span');
-    const percentage = ((Math.floor(tooltip.dataPoints[0].formattedValue) / seriesTooltip.totalData) * 100).toFixed(seriesTooltip.floorNumber) + '%';
-    const percentageHandel = `(${percentage})`;
-    proportionBox.innerText = percentageHandel;
-
-    liBox.appendChild(pBox);
-    liBox.appendChild(proportionBox);
-    tooltipBody.appendChild(liBox);
-  });
-
-  return tooltipBody;
 };
 
 const customizeTooltipBody = (tooltip: any, seriesTooltip: any) => {
@@ -162,7 +125,7 @@ const externalTooltipHandler = (context: any) => {
     if (body) {
       tooltipBody = customizeTooltipBody(tooltip, seriesTooltip);
     } else {
-      seriesTooltip.body = '<div class=flex-x-between><p style=min-width:100px><span>${colorBlock}${seriesName}:</span><span>${value}</span></p><span>(${percentage})</span></div>';
+      seriesTooltip.body = '<div>${colorBlock}${seriesName}</div><div class=flex-x-between><p style=min-width:100px>Percentage</p><span>${percentage}</span></p></div><div class=flex-x-between><p style=min-width:100px>Total</p><span>${value}</span></p></div> ';
       tooltipBody = customizeTooltipBody(tooltip, seriesTooltip);
     }
 

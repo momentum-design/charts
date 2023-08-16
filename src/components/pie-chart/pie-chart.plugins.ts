@@ -18,8 +18,8 @@ const getCenterValue = (chart: Chart | any, centerLabel: any, cx: number, cy: nu
   return centerContent;
 };
 
-export const CenterValue = {
-  id: 'CenterValue',
+export const centerValue = {
+  id: 'centerValue',
   afterDatasetDraw: (chart: Chart | any) => {
     const { ctx } = chart;
     const cx = chart.getDatasetMeta(0).data[0]?.x;
