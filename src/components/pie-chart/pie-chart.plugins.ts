@@ -6,10 +6,10 @@ const getCenterValue = (chart: Chart | any, centerLabel: any, cx: number, cy: nu
     centerContent = document.createElement('div');
     centerContent.setAttribute('class', 'centerContent');
     centerContent.style.textAlign = 'center';
-    centerContent.innerHTML = centerLabel;
     centerContent.style.position = 'absolute';
     chart.canvas.parentNode.appendChild(centerContent);
   }
+  centerContent.innerHTML = centerLabel;
   const styles = window.getComputedStyle(centerContent);
   const offsetWidth = parseInt(styles.width, 10);
   const offsetHeight = parseInt(styles.height, 10);
