@@ -1,4 +1,5 @@
 import { Chart, ChartDataset, ChartOptions } from 'chart.js/auto';
+import html2canvas from 'html2canvas';
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { merge } from 'lodash-es';
@@ -27,7 +28,8 @@ interface PieChartJsOptions extends ChartOptions<'pie'> {
   legendTooltipBody?: string;
   legendTooltipFooter?: string;
   legendTooltipFloor?: number;
-  onLegendClick?: (legendItem: { label: string | number; value: string | number }) => void;
+  selectedLegends?: string[];
+  onLegendClick?: (legendItem: { label: string | number; value: string | number }[]) => void;
 }
 
 @customElement(`${COMPONENT_PREFIX}-pie`)
@@ -38,11 +40,18 @@ class PieChart extends LitElement {
       :host {
         display: block;
         position: relative;
+        box-sizing: border-box;
       }
 
       * {
         padding: 0;
         margin: 0;
+      }
+
+      .container {
+        width: 100%;
+        height: 100%;
+        position: relative;
       }
 
       canvas {
@@ -63,6 +72,7 @@ class PieChart extends LitElement {
 
   private chartInstance: Chart | any = null;
   private chartOptions!: PieChartOptions;
+  private pieChartJsOptions: PieChartJsOptions | undefined;
 
   constructor() {
     super();
@@ -71,8 +81,20 @@ class PieChart extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
-
     window.addEventListener('resize', this.handleWindowResize);
+  }
+
+  toCanvas(): Promise<HTMLCanvasElement> {
+    return new Promise((resolve, reject) => {
+      const rootElement = this.renderRoot.querySelector(':first-child') as HTMLElement;
+      html2canvas(rootElement)
+        .then((canvas) => {
+          resolve(canvas);
+        })
+        .catch(() => {
+          reject(new Error('Failed to convert chart to canvas.'));
+        });
+    });
   }
 
   disconnectedCallback(): void {
@@ -81,7 +103,7 @@ class PieChart extends LitElement {
   }
 
   handleWindowResize(): void {
-    this.chartInstance?.resize();
+    this.chartInstance.resize();
   }
 
   updated(changedProperties: Map<PropertyKey, unknown>): void {
@@ -92,13 +114,19 @@ class PieChart extends LitElement {
   }
 
   private initializeChart(): void {
-    const canvas = this.renderRoot.querySelector('canvas') as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d');
-
+    const container = this.renderRoot.querySelector('.container');
     const chartLabel = Array.isArray(this.data) ? Object.keys(this.data[0]) : Object.keys(this.data as Record<string, unknown>);
     this.chartOptions = merge({}, chartOptions, defaultPieChartOptions, this.options);
     const chartJsDataset = this.handleChartDataset();
-    const chartJsOptions = this.handleChartOptions();
+    this.pieChartJsOptions = this.handleChartOptions();
+    const canvas = this.renderRoot.querySelector('canvas') as HTMLCanvasElement;
+    if (container) {
+      this.pieChartJsOptions.maintainAspectRatio = false;
+      this.pieChartJsOptions.aspectRatio = this.clientWidth / this.clientHeight;
+      canvas.width = this.clientWidth;
+      canvas.height = this.clientHeight;
+    }
+    const ctx = canvas.getContext('2d');
 
     if (ctx) {
       this.chartInstance = new Chart(ctx, {
@@ -107,15 +135,15 @@ class PieChart extends LitElement {
           labels: chartLabel,
           datasets: chartJsDataset,
         },
-        options: chartJsOptions,
+        options: this.pieChartJsOptions,
         plugins: [chartA11y, chartLegendA11y, centerValue],
       });
     }
   }
 
-  private onLegendClick(selectedItem: LegendClickData): void {
+  private onLegendClick(selectedItem: LegendClickData[]): void {
     const options = {
-      detail: { selectedItem },
+      detail: { selectedItem: selectedItem },
       bubbles: true,
       composed: true,
     };
@@ -140,7 +168,8 @@ class PieChart extends LitElement {
       legendTooltipBody: this.chartOptions.tooltip?.legendTooltipBody,
       legendTooltipFooter: this.chartOptions.tooltip?.legendTooltipFooter,
       legendTooltipFloor: this.chartOptions.tooltip?.legendTooltipFloor,
-      onLegendClick: (selectedItem: LegendClickData): void => {
+      selectedLegends: [],
+      onLegendClick: (selectedItem: LegendClickData[]): void => {
         this.onLegendClick(selectedItem);
       },
       onClick: chartSeriesClick,
@@ -172,7 +201,6 @@ class PieChart extends LitElement {
     if (!this.data) {
       return chartDataset;
     }
-
     if (Array.isArray(this.data)) {
       this.data?.forEach((data, index) => {
         chartDataset.push({
@@ -200,7 +228,8 @@ class PieChart extends LitElement {
     if (this.chartInstance) {
       const chartDataset = this.handleChartDataset();
       this.chartInstance.data.datasets = chartDataset;
-      this.chartInstance.update();
+      this.chartInstance.destroy();
+      this.initializeChart();
     }
   }
 
@@ -212,7 +241,7 @@ class PieChart extends LitElement {
   }
 
   render(): TemplateResult {
-    return html`<canvas></canvas>`;
+    return html`<div class="container"><canvas></canvas></div>`;
   }
 }
 

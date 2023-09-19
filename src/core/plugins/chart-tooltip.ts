@@ -77,8 +77,8 @@ const customizeTooltipBody = (tooltip: any, seriesTooltip: any) => {
     const colors = tooltip.labelColors[0];
     const boxSpan = colorBlock(colors);
     const splitBody = seriesTooltip.bodyLines[0][0].split(':');
-    const label = splitBody[0].trim();
-    const value = splitBody[1].trim();
+    const label = splitBody[0]?.trim();
+    const value = splitBody[1]?.trim();
 
     replacedTemplate = `${seriesTooltip.body}`.replace('${colorBlock}', boxSpan.outerHTML).replace('${seriesName}', seriesTooltip.titleLines).replace('${percentage}', percentage).replace('${label}', label).replace('${value}', value).replace('${total}', totalData);
   }

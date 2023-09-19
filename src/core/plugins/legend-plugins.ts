@@ -51,7 +51,15 @@ const legendClickHandler = (evt: ChartEvent, item: LegendItem, legend: any): voi
         label: item.text,
         value: legend.chart.config.data.datasets[0].data[index as number],
       };
-      legend.chart.config.options.onLegendClick(legendObj);
+
+      const selectedLegends = legend.chart.config.options?.selectedLegends ?? [];
+      const legendIndex = selectedLegends?.findIndex((data: LegendClickData) => data.label === item.text);
+      if (legendIndex !== -1) {
+        selectedLegends.splice(legendIndex, 1);
+      } else {
+        selectedLegends.push(legendObj);
+      }
+      legend.chart.config.options.onLegendClick(selectedLegends);
     }
   } else {
     if (['pie', 'doughnut'].includes(legend.chart.config.type)) {
