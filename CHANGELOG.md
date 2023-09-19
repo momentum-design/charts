@@ -1,3 +1,10 @@
+# [1.0.0-alpha.8](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.7...v1.0.0-alpha.8) (2023-09-19)
+
+
+### Bug Fixes
+
+* **pie:** support converting the entire chart to canvas ([#8](https://github.com/momentum-design/momentum-widgets/issues/8)) ([3cc28d7](https://github.com/momentum-design/momentum-widgets/commit/3cc28d7c77218dc70dd47e090948f913931ba0dc))
+
 # [1.0.0-alpha.7](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.6...v1.0.0-alpha.7) (2023-08-16)
 
 
