@@ -19,7 +19,8 @@ const FeatureList = [
     svgClassName: 'chartjs',
     description: (
       <>
-        Simple yet flexible JavaScript charting library for the modern web
+        Simple yet flexible JavaScript charting library for the modern web.
+        It is currently the most popular one according to GitHub stars (~60,000) and npm downloads (~2,400,000 weekly).
       </>
     ),
   },
@@ -29,8 +30,9 @@ const FeatureList = [
     svgClassName: 'canvas',
     description: (
       <>
-        Chart.js renders chart elements on an HTML5 canvas unlike several others,
+        Renders chart elements on an HTML5 canvas unlike several others,
         mostly D3.js-based, charting libraries that render as SVG.
+        It makes rendering quite fast.
       </>
     ),
   },

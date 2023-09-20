@@ -82,9 +82,11 @@ export default {
 function copyDistToWebsite() {
   return {
 		name: 'copyDistToWebsite',
-		generateBundle() {
+		writeBundle() {
+      const dtw = './website/static/dist-lib/';
 			console.log('copying dist to website...');
-      sh.cp('-R', './dist', './website/static/dist-lib');
+      sh.rm('-rf', dtw);
+      sh.cp('-R', './dist/', dtw);
 		},
 		onLog(level, log) {
 			if (log.plugin === 'copyDistToWebsite' && log.pluginCode === 'MY_CD2W') {

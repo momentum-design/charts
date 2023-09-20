@@ -11,10 +11,7 @@
 }
 
 .chartjs {
-  height: 200px;
-  width: 200px;
-  position: relative;
-  top: -10px;
+  scale: 1.2;
 }
 
 .canvas {

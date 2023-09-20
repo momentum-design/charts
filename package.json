@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "lint": "eslint ./src/**/*.ts",
-    "prebuild": "rimraf dist docs api coverage",
+    "prebuild": "rimraf dist docs api coverage website/build website/static/dist-lib",
     "build": "tsc && rollup --config ./rollup.config.ts --configPlugin typescript --bundleConfigAsCjs && npm run docs",
     "docs": "typedoc",
     "api": "typedoc",

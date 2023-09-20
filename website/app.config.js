@@ -2,7 +2,7 @@ module.exports = {
   url: 'https://momentum-design.github.io',
   baseUrl: '/', //'/momentum-widgets',
   logoUrl: '/img/logo.png',
-  name: 'Widgets',
+  name: 'WIDGETS',
   title: 'Widgets by Momentum Design',
   tagline: 'A component-based widget library includes some charts based on Chart.js which can be used in any front-end framework.',
   githubUser: 'momentum-design',
