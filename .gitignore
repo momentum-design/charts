@@ -1,7 +1,12 @@
+/api
+/website/blog/*-CHANGELOG.md
 .DS_Store
 .rpt2_cache
+.docusaurus
 node_modules
 dist
-docs
+dist-lib
 coverage
 false
+build
+coverage-report

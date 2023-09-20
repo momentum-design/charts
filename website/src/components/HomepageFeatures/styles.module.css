@@ -1,0 +1,22 @@
+.features {
+  display: flex;
+  align-items: center;
+  padding: 3rem 0;
+  width: 100%;
+}
+
+.featureSvg {
+  height: 160px;
+  width: 160px;
+}
+
+.chartjs {
+  height: 200px;
+  width: 200px;
+  position: relative;
+  top: -10px;
+}
+
+.canvas {
+  scale: 0.85;
+}

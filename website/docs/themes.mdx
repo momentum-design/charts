@@ -1,0 +1,22 @@
+# Themes
+
+We provide some built-in themes. You can set global theme via below code.
+
+```js
+mdw.settings.set({
+  theme: 'material'
+});
+```
+
+The following is the built-in themes:
+
+<wc-themes></wc-themes>
+
+## Customize Theme
+
+Also, we support the function to customize your theme. Once you added a theme as below, you do not need to set it.
+That will be set the global theme.
+
+```js
+mdw.settings.addTheme('my-theme', ['#00ff00', '#ff0000', '#0000ff']);
+```

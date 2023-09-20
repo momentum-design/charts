@@ -10,6 +10,7 @@ import autoprefixer from 'autoprefixer';
 import postcss from 'postcss';
 import terser from '@rollup/plugin-terser';
 
+const sh = require('shelljs');
 const pkg = require('./package.json');
 
 const libraryName = pkg.name.indexOf('/') > 0 ? pkg.name.split('/')[1].toLocaleLowerCase() : pkg.name.toLocaleLowerCase();
@@ -19,7 +20,7 @@ export default {
   output: [
     {
       file: pkg.main,
-      name: libraryName,
+      name: 'mdw',
       format: 'umd',
       sourcemap: true,
       globals: {
@@ -73,5 +74,26 @@ export default {
 
     // Resolve source maps to the original source
     sourcemaps(),
+
+    copyDistToWebsite(),
   ],
 };
+
+function copyDistToWebsite() {
+  return {
+		name: 'copyDistToWebsite',
+		generateBundle() {
+			console.log('copying dist to website...');
+      sh.cp('-R', './dist', './website/static/dist-lib');
+		},
+		onLog(level, log) {
+			if (log.plugin === 'copyDistToWebsite' && log.pluginCode === 'MY_CD2W') {
+				// We turn logs into warnings based on their code. This warnings
+				// will not be passed back to the same plugin to avoid an
+				// infinite loop, but other plugins will still receive it.
+				console.warn(log);
+				return false;
+			}
+		}
+	};
+}

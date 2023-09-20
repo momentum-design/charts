@@ -11,6 +11,8 @@ Using unpkg CDN:
 <script src="https://unpkg.com/@momentum-design/widgets/dist/widgets.umd.js"></script>
 ```
 
+That will append a global object **mdw** to **window**. 
+
 Using npm:
 
 ```bash
