@@ -32,9 +32,17 @@
 }
 
 /* existing styles */
+.footer {
+  padding-bottom: 1rem;
+}
+
 .footer__copyright {
   font-size: 0.85rem;
   opacity: 0.5;
+}
+
+.footer img {
+  filter: drop-shadow(1000px 0 0 #fff); transform: translate(-1000px);
 }
 
 /* my styles */

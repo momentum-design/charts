@@ -2,8 +2,9 @@ module.exports = {
   url: 'https://momentum-design.github.io',
   baseUrl: '/', //'/momentum-widgets',
   logoUrl: '/img/logo.png',
+  footerLogoUrl: '/img/md-logo.svg',
   name: 'WIDGETS',
-  title: 'Widgets by Momentum Design',
+  title: 'Widgets from Momentum Design',
   tagline: 'A component-based widget library includes some charts based on Chart.js which can be used in any front-end framework.',
   githubUser: 'momentum-design',
   githubRepo: 'momentum-widgets',
@@ -30,11 +31,24 @@ module.exports = {
   get footerLinks() {
     return [
       {
-        title: 'Docs',
+        items: [{
+          html: `<img src="${this.footerLogoUrl}" style="height: 60px; position: relative; top: 20px;" />`,
+        }],
+      },
+      {
+        title: 'This Site',
         items: [
           {
             label: this.docMenuLabel,
             to: '/docs/getting-started',
+          },
+          {
+            label: 'Blog',
+            to: '/blog',
+          },
+          {
+            label: 'GitHub',
+            href: `https://github.com/${this.githubUser}/${this.githubRepo}`,
           },
         ],
       },
@@ -59,13 +73,13 @@ module.exports = {
         title: 'More',
         items: [
           {
-            label: 'Blog',
-            to: '/blog',
-          },
+            label: 'Chart.js',
+            href: 'https://www.chartjs.org/',
+          }, 
           {
-            label: 'GitHub',
-            href: `https://github.com/${this.githubUser}/${this.githubRepo}`,
-          },
+            label: 'MDX',
+            href: 'https://mdxjs.com/',
+          }
         ],
       },
     ];
