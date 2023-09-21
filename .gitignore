@@ -1,5 +1,3 @@
-/api
-/website/blog/*-CHANGELOG.md
 .DS_Store
 .rpt2_cache
 .docusaurus
@@ -10,3 +8,6 @@ coverage
 false
 build
 coverage-report
+/api
+/website/docs/getting-started.md
+/website/blog/*-CHANGELOG.md

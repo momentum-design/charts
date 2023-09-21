@@ -4,5 +4,5 @@
   "plugin": ["@bndynet/typedoc-theme"],
   "theme": "my-theme",
   "hideGenerator": true,
-  "out": "docs/api"
+  "out": "api"
 }

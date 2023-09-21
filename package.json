@@ -23,7 +23,7 @@
     "website:start": "npm start --prefix website",
     "website:prepare": "ts-node tools/gh-pages-prepare-beta",
     "website:after-build": "ts-node tools/gh-pages-publish-beta",
-    "website:build": "npm run website:prepare && npm run build --prefix website && npm run api && npm run website:after-build",
+    "website:build": "npm run build && npm run website:prepare && npm run build --prefix website && npm run api",
     "test:watch": "jest --coverage --watch",
     "test:prod": "npm run lint && npm run test -- --no-cache",
     "predeploy-gh-pages": "ts-node tools/gh-pages-prepare",
