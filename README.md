@@ -47,7 +47,7 @@ $ npm i @momentum-design/widgets
 1. Use the components in your HTML template.
 
     ```html
-    <wc-hello-world [name]="who"></wc-hello-world>
+    <mdw-hello-world [name]="who"></mdw-hello-world>
     ```
 
 ## Contributing
