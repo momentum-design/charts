@@ -39,12 +39,11 @@ jobs:
 
       - name: Build site
         run: |
-          npm run build
-          npm run predeploy-gh-pages
+          npm run website:build
 
       - name: Cache
         id: cache-site
         uses: actions/cache@v3
         with:
-          path: ./docs
-          key: docs-${{ needs.get-info.outputs.version }}-${{ github.run_id }}
+          path: ./website/build
+          key: website-${{ needs.get-info.outputs.version }}-${{ github.run_id }}
