@@ -10,4 +10,4 @@ build
 coverage-report
 /api
 /website/docs/getting-started.md
-/website/blog/*-CHANGELOG.md
+/website/blog/CHANGELOG.md

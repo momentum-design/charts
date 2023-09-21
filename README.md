@@ -2,7 +2,7 @@
 
 A pure ui library based on web components that is for building dashboards.
 
-## Getting Started
+## How to Start
 
 Using unpkg CDN:
 

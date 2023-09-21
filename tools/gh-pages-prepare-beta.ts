@@ -17,7 +17,7 @@ sidebar_position: 1
 fs.writeFileSync(fileGettingStarted, data);
 
 
-const fileChangelog = `./website/blog/${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}-CHANGELOG.md`;
+const fileChangelog = `./website/blog/CHANGELOG.md`;
 sh.cp('CHANGELOG.md', fileChangelog);
 data = fs.readFileSync(fileChangelog, 'utf8');
 data = data.replace(/(#+\s)/gi, '#$1');
