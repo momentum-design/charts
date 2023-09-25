@@ -1,0 +1,19 @@
+# Gauge Chart
+
+```jsx live
+function showComponent() {
+  const data = [
+    {
+      Low: 10,
+      Normal: 80,
+      High: 10,
+    },
+  ];
+  const options = {
+    cutout: '90%',
+    value: 51,
+    theme: 'qualitative-colors-tertiary',
+  };
+  return <mdw-gauge style={{width: '50%'}} data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-gauge>;
+}
+```

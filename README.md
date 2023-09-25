@@ -54,7 +54,7 @@ $ npm i @momentum-design/widgets
 
 ### Prerequisites
 
-- Install [Node.js](https://nodejs.org/) which includes [Node Package Manager](https://docs.npmjs.com/getting-started). We recommend to use version 16.
+- Install [Node.js](https://nodejs.org/) which includes [Node Package Manager](https://docs.npmjs.com/getting-started). We recommend to use version 16 and above.
 
 ### Steps to Start
 

@@ -1,3 +1,4 @@
+const path = require('path');
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 const lightCodeTheme = require('prism-react-renderer/themes/github');
@@ -8,7 +9,7 @@ const getConfig = (app) => (
     title: app.title,
     tagline: app.tagline,
     favicon: 'img/favicon.ico',
-    staticDirectories: ['static', 'dist-lib'],
+    staticDirectories: app.staticDirectories,
 
     // Set the production url of your site here
     url: app.url,
@@ -112,11 +113,17 @@ const getConfig = (app) => (
       'plugin-image-zoom',
       'docusaurus-plugin-sass',
       '@cmfcmf/docusaurus-search-local',
+      ['docusaurus-plugin-typedoc', {
+        id: 'api',
+        entryPoints: ['../src/index.ts'],
+        tsconfig: '../tsconfig.json',
+        out: 'api',
+      }],
     ],
 
-    stylesheets: ['dist-lib/widgets.css'],
+    stylesheets: app.externalStylesheets,
 
-    scripts: ['dist-lib/widgets.umd.js'],
+    scripts: app.externalScripts,
   });
 
 module.exports = {

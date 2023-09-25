@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "lint": "eslint ./src/**/*.ts",
-    "prebuild": "rimraf dist docs api coverage website/build website/static/dist-lib",
+    "prebuild": "rimraf dist docs api coverage website/build website/docs/api website/static/dist-lib",
     "build": "tsc && rollup --config ./rollup.config.ts --configPlugin typescript --bundleConfigAsCjs && npm run docs",
     "docs": "typedoc",
     "api": "typedoc",
@@ -20,7 +20,7 @@
     "site-serv": "npm run docs && npm run test && lite-server",
 
     "dev": "concurrently --kill-others \"npm run watch\" \"npm run website:start\"",
-    "website:start": "npm start --prefix website",
+    "website:start": "npm run build && npm start --prefix website",
     "website:prepare": "ts-node tools/gh-pages-prepare-beta",
     "website:build": "npm run build && npm i --prefix website && npm run website:prepare && npm run build --prefix website && npm run api",
     "test:watch": "jest --coverage --watch",
