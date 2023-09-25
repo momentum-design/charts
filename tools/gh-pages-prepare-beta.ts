@@ -3,7 +3,7 @@ const sh = require('shelljs');
 
 sh.echo('⚑ gh-pages preparing...');
 
-const fileGettingStarted = './website/docs/getting-started.md';
+const fileGettingStarted = './website/docs/tutorials/getting-started.md';
 sh.cp('README.md', fileGettingStarted);
 let data = fs.readFileSync(fileGettingStarted, 'utf8');
 data = data.replace(
