@@ -46,8 +46,8 @@ const getConfig = (app) => (
             sidebarPath: require.resolve('./sidebars.js'),
             // Please change this to your repo.
             // Remove this to remove the "edit this page" links.
-            editUrl:
-              `https://github.com/${app.githubUser}/${app.githubRepo}/tree/main/website/`,
+            // editUrl:
+            //   `https://github.com/${app.githubUser}/${app.githubRepo}/tree/main/website/`,
           },
           blog: {
             showReadingTime: true,
@@ -118,6 +118,7 @@ const getConfig = (app) => (
         entryPoints: ['../src/index.ts'],
         tsconfig: '../tsconfig.json',
         out: 'api',
+        watch: process.env.TYPEDOC_WATCH,
       }],
     ],
 
