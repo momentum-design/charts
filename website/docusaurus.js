@@ -120,6 +120,22 @@ const getConfig = (app) => (
         out: 'api',
         watch: process.env.TYPEDOC_WATCH,
       }],
+      (context, options) => {
+        return {
+          name: 'my-dev-server',
+          configureWebpack(config, isServer, utils) {
+            return {
+              devServer: {
+                hot: false,
+                liveReload: true,
+                watchFiles: {
+                  paths: ['static/dist-lib/**'],
+                },
+              },
+            }
+          }
+        };
+      }
     ],
 
     stylesheets: app.externalStylesheets,
