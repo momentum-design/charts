@@ -1,6 +1,6 @@
-import { ChartOptions } from '../../types';
+import { DefaultOptions } from '../../types';
 
-export interface GaugeChartOptions extends ChartOptions {
+export interface GaugeChartOptions extends DefaultOptions {
   cutout?: string;
   value?: number;
   circumference?: number;

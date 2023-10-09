@@ -1,136 +1,244 @@
 <html>
+  <head>
+    <title>@momentum-design/widgets</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="apple-touch-icon" sizes="180x180" href="https://static.bndy.net/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="https://static.bndy.net/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="https://static.bndy.net/favicon-16x16.png" />
+    <link rel="mask-icon" href="https://static.bndy.net/safari-pinned-tab.svg" color="#5bbad5" />
+    <link rel="stylesheet" href="style.css" />
 
-<head>
-  <title>@momentum-design/widgets</title>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="apple-touch-icon" sizes="180x180" href="https://static.bndy.net/apple-touch-icon.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="https://static.bndy.net/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="https://static.bndy.net/favicon-16x16.png" />
-  <link rel="mask-icon" href="https://static.bndy.net/safari-pinned-tab.svg" color="#5bbad5" />
-  <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.slim.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/github-markdown-css/github-markdown.css" />
+    <script src="https://unpkg.com/showdown/dist/showdown.min.js"></script>
+    <!-- dev -->
+    <link href="../dist/widgets.css" rel="stylesheet" type="text/css" />
+    <script src="../dist/widgets.umd.js"></script>
+    <!-- /dev -->
 
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/github-markdown-css/github-markdown.css" />
-  <script src="https://unpkg.com/showdown/dist/showdown.min.js"></script>
-  <!-- dev -->
-  <link href="../dist/widgets.css" rel="stylesheet" type="text/css" />
-  <script src="../dist/widgets.umd.js"></script>
-  <!-- /dev -->
-
-  <!-- prod
+    <!-- prod
         <link href="https://unpkg.com/@momentum-design/widgets/dist/widgets.css" rel="stylesheet" type="text/css" />
         <script src="https://unpkg.com/@momentum-design/widgets/dist/widgets.umd.js"></script>
         -->
-</head>
+  </head>
 
-<body>
-  <a href="https://github.com/momentum-design/momentum-widgets.git" class="forkme">
-    <img width="149" height="149"
-      src="https://github.blog/wp-content/uploads/2008/12/forkme_right_red_aa0000.png?resize=149%2C149"
-      class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1">
-  </a>
-  <header>
-    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">@momentum-design/widgets</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+  <body>
+    <a href="https://github.com/momentum-design/momentum-widgets.git" class="forkme">
+      <img width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_red_aa0000.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1" />
+    </a>
+    <header>
+      <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">@momentum-design/widgets</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <!-- dev -->
-            <a class="nav-link" href="../docs/api" target="_blank">API Documentation</a>
-            <!-- /dev -->
-            <!-- prod
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <!-- dev -->
+              <a class="nav-link" href="../docs/api" target="_blank">API Documentation</a>
+              <!-- /dev -->
+              <!-- prod
                         <a class="nav-link" href="../api" target="_blank">API Documentation</a>
                         -->
-          </li>
-          <li class="nav-item">
-            <!-- dev -->
-            <a class="nav-link" href="../coverage/lcov-report/" target="_blank">Coverage Report</a>
-            <!-- /dev -->
+            </li>
+            <li class="nav-item">
+              <!-- dev -->
+              <a class="nav-link" href="../coverage/lcov-report/" target="_blank">Coverage Report</a>
+              <!-- /dev -->
 
-            <!-- prod
+              <!-- prod
                         <a class="nav-link" href="../coverage-report" target="_blank">Coverage Report</a>
                         -->
-          </li>
-        </ul>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <aside>
+      <div id="sub-navs" class="list-group">
+        <a class="list-group-item list-group-item-action" href="#readme">Read me</a>
+        <a class="list-group-item list-group-item-action" href="#example">Example</a>
+        <a class="list-group-item list-group-item-action" href="#changelog">Changelog</a>
       </div>
-    </nav>
-  </header>
+    </aside>
 
-  <aside>
-    <div id="sub-navs" class="list-group">
-      <a class="list-group-item list-group-item-action" href="#readme">Read me</a>
-      <a class="list-group-item list-group-item-action" href="#example">Example</a>
-      <a class="list-group-item list-group-item-action" href="#changelog">Changelog</a>
-    </div>
-  </aside>
+    <main data-spy="scroll" data-target="#sub-navs" data-offset="0">
+      <div class="jumbotron">
+        <h1 class="display-4">Dashboard UI for Analyzer</h1>
+        <p class="lead">A widgets library which can be used to build a dashboard. For example, some charts and KPI.</p>
+        <hr class="my-4" />
+        <p>Try to run <code>npm run prebuild && npm run build && npm run predeploy-gh-pages</code> to view the final <b>docs</b> directory for <b>gh-pages</b>.</p>
+        <a class="btn btn-primary btn-lg" href="https://github.com/momentum-design/momentum-widgets.git" role="button"> Fork me on GitHub </a>
+      </div>
 
-  <main data-spy="scroll" data-target="#sub-navs" data-offset="0">
-    <div class="jumbotron">
-      <h1 class="display-4">Dashboard UI for Analyzer</h1>
-      <p class="lead">
-        A widgets library which can be used to build a dashboard. For example, some charts and KPI.
-      </p>
-      <hr class="my-4" />
-      <p>Try to run <code>npm run prebuild && npm run build && npm run predeploy-gh-pages</code> to view the final
-        <b>docs</b> directory for <b>gh-pages</b>.
-      </p>
-      <a class="btn btn-primary btn-lg" href="https://github.com/momentum-design/momentum-widgets.git" role="button">
-        Fork me on GitHub
-      </a>
-    </div>
+      <section id="readme" class="markdown-body"></section>
 
-    <section id="readme" class="markdown-body"></section>
+      <section id="example">
+        <h1>Example</h1>
+        <fieldset>
+          <legend>XY Chart</legend>
+          <div>
+            <mdw-xy
+              type="line"
+              style="width: 40%"
+              data='{
+                "labels": ["a", "b", "c", "d", "e"],
+                "data": [{
+                  "label": "Line Chart",
+                  "data": [65, 59, 80, 81, 56]
+                }]
+              }'
+              options='{
+                "lineStyle": "dashed",
+                "xGridDisplay": false,
+                "title":"My First Line Chart",
+                "theme": "diverging-colors-alerts",
+                "legend":{
+                  "isLegendClick": false
+                }
+              }'
+            ></mdw-xy>
+          </div>
+          <div>
+            <mdw-xy
+              type="line"
+              style="width: 40%"
+              data='{
+                "labels": ["a", "b", "c", "d", "e"],
+                "data": [{
+                  "label": "Line Area Chart",
+                  "data": [65, 59, 80, 81, 56]
+                }]
+              }'
+              options='{
+                "visualStyle":"area",
+                "title":"My First Line Area Chart",
+                "theme": "material",
+                "legend":{
+                  "isLegendClick": true
+                }
+              }'
+            ></mdw-xy>
+          </div>
+          <div>
+            <mdw-xy
+              type="line"
+              style="width: 40%"
+              data='{
+                "labels": ["a", "b", "c", "d", "e"],
+                "data": [{
+                  "label": "Line Range Area Chart",
+                  "data": [65, 59, 80, 21, 56]
+                },{
+                  "label": "Line Range Area Chart 2",
+                  "data": [25, 29, 40, 51, 56]
+                }]
+              }'
+              options='{
+                "visualStyle": "range",
+                "title":"My First Line Range Area Chart",
+                "theme": "color-health"
+              }'
+            ></mdw-xy>
+          </div>
+          <div>
+            <mdw-xy
+              type="bar"
+              style="width: 40%"
+              data='{
+                "labels": ["a", "b", "c", "d", "e"],
+                "data": [{
+                  "label": "Column 1",
+                  "data": [65, 59, 80, 81, 56]
+                }]
+              }'
+              options='{
+                "multiColor": true,
+                "indexAxis": "y",
+                "title":"My First Column Chart",
+                "theme": "qualitative-colors-primary",
+                "legend":{
+                  "isLegendClick": false
+                }
+              }'
+            ></mdw-xy>
+          </div>
+          <div>
+            <mdw-xy
+              type="bar"
+              style="width: 40%"
+              data='{
+                "labels": ["a", "b", "c", "d", "e"],
+                "data": [{
+                  "label": "Column 1",
+                  "data": [65, 59, 80, 81, 56]
+                },{
+                  "label": "Column 2",
+                  "data": [35, 29, 50, 91, 76]
+                }]
+              }'
+              options='{
+                "indexAxis": "x",
+                "title":"My First Bar Chart",
+                "theme": "qualitative-colors-primary",
+                "legend":{
+                  "isLegendClick": true
+                }
+              }'
+            ></mdw-xy>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Hello World</legend>
+          <div>
+            <mdw-hello-world name="Bing Zhang"></mdw-hello-world>
+          </div>
+        </fieldset>
 
-    <section id="example">
-      <h1>Example</h1>
+        <fieldset>
+          <legend>Hello Chart</legend>
+          <div>
+            <mdw-hello-chart style="width: 500px"></mdw-hello-chart>
+          </div>
+        </fieldset>
 
-      <fieldset>
-        <legend>Hello World</legend>
-        <div>
-          <mdw-hello-world name="Bing Zhang"></mdw-hello-world>
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Hello Chart</legend>
-        <div>
-          <mdw-hello-chart style="width: 500px"></mdw-hello-chart>
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Gauge Chart</legend>
-        <div>
-          <mdw-gauge style="width: 40%;" data='[{
+        <fieldset>
+          <legend>Gauge Chart</legend>
+          <div>
+            <mdw-gauge
+              style="width: 40%"
+              data='[{
             "A":"13",
             "B":"17",
             "C":"8",
             "D":"10",
             "E":"40"
-          }]' options='{
+          }]'
+              options='{
               "cutout": "95%",
               "value": 51,
               "theme": "qualitative-colors-tertiary"
-            }'></mdw-gauge>
-        </div>
-      </fieldset>
+            }'
+            ></mdw-gauge>
+          </div>
+        </fieldset>
 
-      <fieldset>
-        <legend>Pie Chart</legend>
-        <div>
-          <mdw-pie style="width: 40%;" data='{
+        <fieldset>
+          <legend>Pie Chart</legend>
+          <div>
+            <mdw-pie
+              style="width: 40%"
+              data='{
             "A":"13",
             "B":"17",
             "C":"8",
@@ -138,20 +246,24 @@
             "E":"40",
             "F":"51",
             "G":"31"
-          }' options='{
+          }'
+              options='{
               "chartLabel":"Label D",
               "theme": "diverging-colors-alerts",
               "legend":{
                 "isLegendClick": true
               }
-            }'></mdw-pie>
-        </div>
-      </fieldset>
+            }'
+            ></mdw-pie>
+          </div>
+        </fieldset>
 
-      <fieldset>
-        <legend>Doughnut Chart</legend>
-        <div>
-          <mdw-pie style="width: 40%;" data='
+        <fieldset>
+          <legend>Doughnut Chart</legend>
+          <div>
+            <mdw-pie
+              style="width: 40%"
+              data='
             [
               {
                 "A": "13", "B": "17", "C": "8", "D": "10", "E": "40", "F": "51", "G": "31"
@@ -162,7 +274,8 @@
               {
                 "A": "19", "B": "25", "C": "23", "D": "6", "E": "22", "F": "73", "G": "13"
               }
-            ]' options='{
+            ]'
+              options='{
               "theme": "diverging-colors-alerts",
               "chartLabel": ["Label1", "Label2", "Label3333333333"],
               "cutout": "80%",
@@ -176,21 +289,20 @@
                 "legendTooltipFooter": "Click as filter",
                 "isMultipleLegend": true
               }
-            }'>
-          </mdw-pie>
+            }'
+            >
+            </mdw-pie>
+          </div>
+        </fieldset>
+      </section>
+
+      <section id="changelog">
+        <h1>Changelog</h1>
+        <div id="changelog-body" class="markdown-body">
+          <em>Generated by CI automatically.</em>
         </div>
-      </fieldset>
-
-    </section>
-
-    <section id="changelog">
-      <h1>Changelog</h1>
-      <div id="changelog-body" class="markdown-body">
-        <em>Generated by CI automatically.</em>
-      </div>
-    </section>
-  </main>
-  <script type="text/javascript" src="./script.js"></script>
-</body>
-
+      </section>
+    </main>
+    <script type="text/javascript" src="./script.js"></script>
+  </body>
 </html>

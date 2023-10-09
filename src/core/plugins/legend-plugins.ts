@@ -45,29 +45,36 @@ const getOrCreateTooltip = (chart: any) => {
 const legendClickHandler = (evt: ChartEvent, item: LegendItem, legend: any): void => {
   // TODO: support Filter Click
   if (legend.chart.config.options?.isLegendClick) {
+    let legendObj: LegendClickData = {};
     if (['pie', 'doughnut'].includes(legend.chart.config.type)) {
       const index = item.index;
-      const legendObj: LegendClickData = {
+      legendObj = {
         label: item.text,
         value: legend.chart.config.data.datasets[0].data[index as number],
       };
-
-      const selectedLegends = legend.chart.config.options?.selectedLegends ?? [];
-      const legendIndex = selectedLegends?.findIndex((data: LegendClickData) => data.label === item.text);
-      if (legendIndex !== -1) {
-        selectedLegends.splice(legendIndex, 1);
-      } else {
-        selectedLegends.push(legendObj);
-      }
-      legend.chart.config.options.onLegendClick(selectedLegends);
+    } else {
+      legendObj = {
+        label: item.text,
+        value: item.text,
+      };
     }
+    const selectedLegends = legend.chart.config.options?.selectedLegends ?? [];
+    const legendIndex = selectedLegends?.findIndex((data: LegendClickData) => data.label === item.text);
+    if (legendIndex !== -1) {
+      selectedLegends.splice(legendIndex, 1);
+    } else {
+      selectedLegends.push(legendObj);
+    }
+    legend.chart.config.options.onLegendClick(selectedLegends);
   } else {
+    const chart = legend.chart;
     if (['pie', 'doughnut'].includes(legend.chart.config.type)) {
       const index = item.index;
-      const chart = legend.chart;
       chart.toggleDataVisibility(index);
-      chart.update();
+    } else {
+      chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex));
     }
+    chart.update();
   }
 };
 

@@ -1,6 +1,6 @@
-import { ChartOptions } from '../../types';
+import { DefaultOptions } from '../../types';
 
-export interface PieChartOptions extends ChartOptions {
+export interface PieChartOptions extends DefaultOptions {
   cutout?: string;
   centerLabel?: string | number;
 }

@@ -1,6 +1,7 @@
 export type LayoutPosition = 'left' | 'top' | 'right' | 'bottom' | 'center' | 'chartArea' | { [scaleId: string]: number };
 
-export interface ChartOptions {
+export interface DefaultOptions {
+  title?: string;
   responsive?: boolean;
   chartLabel?: string | number | string[];
   theme?: string | [];
@@ -34,4 +35,11 @@ export interface TooltipOptions {
   legendTooltipBody?: string;
   legendTooltipFooter?: string;
   legendTooltipFloor?: number;
+}
+
+export enum ChartTypeEnum {
+  Bar = 'bar',
+  Line = 'line',
+  Pie = 'pie',
+  Doughnut = 'doughnut',
 }

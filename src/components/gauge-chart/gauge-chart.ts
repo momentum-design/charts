@@ -3,7 +3,7 @@ import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { merge } from 'lodash-es';
 import { COMPONENT_PREFIX, ThemeKey, themes } from '../../core';
-import { chartOptions } from '../../core/chart-options';
+import { defaultOptions } from '../../core/chart-options';
 import { chartA11y } from '../../core/plugins';
 import { getCurrentTheme } from '../../core/utils';
 import { defaultGaugeChartOptions } from './gauge-chart.options';
@@ -71,7 +71,7 @@ class GaugeChart extends LitElement {
     const ctx = canvas.getContext('2d');
 
     const chartLabel = Array.isArray(this.data) ? Object.keys(this.data[0]) : Object.keys(this.data as Record<string, unknown>);
-    this.chartOptions = merge({}, chartOptions, defaultGaugeChartOptions, this.options);
+    this.chartOptions = merge({}, defaultOptions, defaultGaugeChartOptions, this.options);
     const chartJsDataset = this.handleChartDataset();
     const chartJsOptions = this.handleChartOptions();
 
