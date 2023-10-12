@@ -188,8 +188,14 @@ const legendHandleHover = (evt: ChartEvent, item: LegendItem, legend: any): void
   tooltipFooter && tooltipRoot.appendChild(tooltipFooter);
 
   // tooltip position
-  const left = legend.left;
-  const top = legend.legendHitBoxes[item.index as number].top;
+  let index: number = 0;
+  if (['pie', 'doughnut'].includes(legend.chart.config.type)) {
+    index = item.index ?? 0;
+  } else {
+    index = item.datasetIndex ?? 0;
+  }
+  const top = legend.legendHitBoxes[index].top;
+  const left = legend.legendHitBoxes[index].left;
   tooltipEl.style.opacity = 1;
   tooltipEl.style.left = left + 'px';
   tooltipEl.style.top = top + 8 + 'px';

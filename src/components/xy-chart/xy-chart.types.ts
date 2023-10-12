@@ -1,3 +1,4 @@
+import { TimeUnit } from 'chart.js';
 import { DefaultOptions } from '../../types';
 
 /**
@@ -13,7 +14,33 @@ export interface XYChartOptions extends DefaultOptions {
   indexAxis?: 'x' | 'y';
   xTitle?: string;
   yTitle?: string;
-  stacked?: boolean | 'single';
+  xType?: 'linear' | 'logarithmic' | 'category' | 'time' | 'timeseries';
+  yType?: 'linear' | 'logarithmic' | 'category' | 'time' | 'timeseries';
+  categoryIsTime?: boolean;
+  categoryKey?: string;
+  timeOptions?: {
+    unit?: TimeUnit;
+    dateFormat?: string;
+  };
+  xStacked?: boolean;
+  yStacked?: boolean;
   xGridDisplay?: boolean;
   yGridDisplay?: boolean;
+}
+
+// export type DataTableLike = unknown[][] | { cols: unknown[]; rows?: unknown[][] };
+export type DataTableLike = unknown[][] | Record<string, string | number>[];
+export type DataView = {
+  category: { name?: string; labels?: unknown[] };
+  series: {
+    name?: string;
+    data?: number[];
+  }[];
+};
+
+export interface GenericDataModel {
+  categoryKey?: string;
+  data: {
+    [key: string]: string | number;
+  }[];
 }

@@ -22,6 +22,7 @@ export interface LegendOptions {
   legendPosition?: LayoutPosition;
   legendLabelsHeight?: number;
   legendLabelsWidth?: number;
+  legendBorderRadius?: number;
 }
 
 export interface TooltipOptions {

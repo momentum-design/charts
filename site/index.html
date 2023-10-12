@@ -91,15 +91,37 @@
             <mdw-xy
               type="line"
               style="width: 40%"
-              data='{
-                "labels": ["a", "b", "c", "d", "e"],
-                "data": [{
-                  "label": "Line Chart",
-                  "data": [65, 59, 80, 81, 56]
-                }]
-              }'
+              data='[
+              ["Date","Count"],
+              ["2013-11-10 00:53:44", 131],
+              ["2013-11-11 01:53:44", 228],
+              ["2013-11-12 02:53:44", 31],
+              ["2013-11-13 03:53:44", 80],
+              ["2013-11-14 04:53:44", 311],
+              ["2013-11-15 05:53:44", 230]
+              ]'
               options='{
+                "categoryIsTime": true,
+                "unit": "day",
+                "dateFormat":"LLLL",
                 "lineStyle": "dashed",
+                "xGridDisplay": false,
+                "title":"My First Line Chart",
+                "theme": "diverging-colors-alerts",
+                "legend":{
+                  "isLegendClick": false
+                }
+              }'
+            ></mdw-xy>
+            <mdw-xy
+              type="line"
+              style="width: 40%"
+              data='[{"dateTime":"2013-11-20T03:18:55.732Z","Arizona":5523,"Louisiana":5239,"Illinois":5539,"Tennessee":816,"Rhode Island":270},{"dateTime":"2013-12-20T03:18:55.732Z","Arizona":315,"Louisiana":3868,"Illinois":182,"Tennessee":1926,"Rhode Island":6734},{"dateTime":"2014-01-20T03:18:55.732Z","Arizona":4244,"Louisiana":2462,"Illinois":9486,"Tennessee":7565,"Rhode Island":4514},{"dateTime":"2014-02-20T03:18:55.732Z","Arizona":2234,"Louisiana":3857,"Illinois":888,"Tennessee":1364,"Rhode Island":1752},{"dateTime":"2014-03-20T03:18:55.732Z","Arizona":6484,"Louisiana":2907,"Illinois":8919,"Tennessee":1369,"Rhode Island":9925}]'
+              options='{
+                "categoryKey":"dateTime",
+                "categoryIsTime": true,
+                "unit": "day",
+                "dateFormat":"MMM D, hA",
                 "xGridDisplay": false,
                 "title":"My First Line Chart",
                 "theme": "diverging-colors-alerts",
@@ -113,14 +135,13 @@
             <mdw-xy
               type="line"
               style="width: 40%"
-              data='{
-                "labels": ["a", "b", "c", "d", "e"],
-                "data": [{
-                  "label": "Line Area Chart",
-                  "data": [65, 59, 80, 81, 56]
-                }]
-              }'
+              data='[["Year", "Things", "Stuff"],
+              ["2004", 1000, 400],
+              ["2005", 1170, 460],
+              ["2006", 660, 1120],
+              ["2007", 1030, 540]]'
               options='{
+                "categoryKey":"Things",
                 "visualStyle":"area",
                 "title":"My First Line Area Chart",
                 "theme": "material",
@@ -134,16 +155,11 @@
             <mdw-xy
               type="line"
               style="width: 40%"
-              data='{
-                "labels": ["a", "b", "c", "d", "e"],
-                "data": [{
-                  "label": "Line Range Area Chart",
-                  "data": [65, 59, 80, 21, 56]
-                },{
-                  "label": "Line Range Area Chart 2",
-                  "data": [25, 29, 40, 51, 56]
-                }]
-              }'
+              data='[["Year", "Things", "Stuff"],
+              ["2004", 1000, 400],
+              ["2005", 1170, 460],
+              ["2006", 660, 1120],
+              ["2007", 1030, 540]]'
               options='{
                 "visualStyle": "range",
                 "title":"My First Line Range Area Chart",
@@ -155,13 +171,11 @@
             <mdw-xy
               type="bar"
               style="width: 40%"
-              data='{
-                "labels": ["a", "b", "c", "d", "e"],
-                "data": [{
-                  "label": "Column 1",
-                  "data": [65, 59, 80, 81, 56]
-                }]
-              }'
+              data='[["Year", "Things"],
+              ["2004", 1000],
+              ["2005", 1170],
+              ["2006", 660],
+              ["2007", 1030]]'
               options='{
                 "multiColor": true,
                 "indexAxis": "y",
@@ -177,18 +191,15 @@
             <mdw-xy
               type="bar"
               style="width: 40%"
-              data='{
-                "labels": ["a", "b", "c", "d", "e"],
-                "data": [{
-                  "label": "Column 1",
-                  "data": [65, 59, 80, 81, 56]
-                },{
-                  "label": "Column 2",
-                  "data": [35, 29, 50, 91, 76]
-                }]
-              }'
+              data='[["Year", "Things", "Stuff"],
+              ["2004", 1000, 400],
+              ["2005", 1170, 460],
+              ["2006", 660, 1120],
+              ["2007", 1030, 540]]'
               options='{
                 "indexAxis": "x",
+                "xStacked": true,
+                "yStacked": true,
                 "title":"My First Bar Chart",
                 "theme": "qualitative-colors-primary",
                 "legend":{

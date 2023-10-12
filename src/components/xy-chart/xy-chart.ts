@@ -1,4 +1,5 @@
 import { Chart, ChartDataset, ChartOptions, ChartType } from 'chart.js/auto';
+import 'chartjs-adapter-moment';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { merge } from 'lodash-es';
@@ -9,7 +10,8 @@ import { externalTooltipHandler } from '../../core/plugins/chart-tooltip';
 import { LegendClickData } from '../../core/plugins/plugin.types';
 import { getCurrentTheme, transparentizeColor } from '../../core/utils';
 import { ChartTypeEnum } from '../../types';
-import { XYChartOptions } from './xy-chart.types';
+import { defaultXYChartOptions } from './xy-chart.options';
+import { DataTableLike, DataView, GenericDataModel, XYChartOptions } from './xy-chart.types';
 
 interface CurrentChartOptions extends ChartOptions<ChartType> {
   fill?: boolean;
@@ -45,10 +47,15 @@ export class XYChart extends LitElement {
   type: ChartTypeEnum = ChartTypeEnum.Line;
 
   @property({ type: Object, hasChanged: () => true })
-  data: { labels?: string[]; data?: [{ label: string; data: number[] }] } = {};
+  data: DataTableLike | string | undefined = undefined;
 
   @property({ type: Object, hasChanged: () => true })
   options: XYChartOptions = {};
+
+  /**
+   * Internal data displayed on the chart.
+   */
+  @property({ type: Object }) _data: DataView | undefined = undefined;
 
   private chartInstance: Chart | undefined;
   private chartOptions!: XYChartOptions;
@@ -74,24 +81,23 @@ export class XYChart extends LitElement {
   }
 
   updated(changedProperties: Map<PropertyKey, unknown>): void {
-    super.updated(changedProperties);
-    if ((changedProperties.has('data') || changedProperties.has('options')) && this.chartInstance) {
+    if (changedProperties.has('type')) this.typeChanged();
+    if (changedProperties.has('data')) this.dataChanged();
+    if (changedProperties.has('_data') || changedProperties.has('options')) {
       this.updateChart();
     }
   }
 
   updateChart(): void {
     if (this.chartInstance) {
-      const chartDataset = this.handleChartDataset();
-      this.chartInstance.data.datasets = chartDataset;
       this.chartInstance.destroy();
-      this.initializeChart();
     }
+    this.initializeChart();
   }
 
   firstUpdated(changedProperties: Map<PropertyKey, unknown>): void {
     super.updated(changedProperties);
-    if (changedProperties.has('data')) {
+    if (changedProperties.has('_data')) {
       this.initializeChart();
     }
   }
@@ -99,13 +105,22 @@ export class XYChart extends LitElement {
   protected render() {
     return html`<canvas></canvas>`;
   }
+  private typeChanged(): void {
+    if (this.chartInstance) {
+      this.chartInstance.destroy();
+      this.initializeChart();
+    }
+  }
 
   private initializeChart(): void {
     debugger;
+    if (!this._data) {
+      return;
+    }
     const container = this.renderRoot.querySelector('.container');
-    const chartLabels = this.data?.labels;
-    this.chartOptions = merge({}, defaultOptions, this.options);
-    const chartJsDataset = this.handleChartDataset();
+    const chartLabels = this._data.category.labels;
+    this.chartOptions = merge({}, defaultOptions, defaultXYChartOptions, this.options);
+    const chartDatasets = this.handleChartDataset();
     this.currentChartOptions = this.handleChartOptions();
     const canvas = this.renderRoot.querySelector('canvas') as HTMLCanvasElement;
     if (container) {
@@ -121,7 +136,7 @@ export class XYChart extends LitElement {
         type: this.type,
         data: {
           labels: chartLabels,
-          datasets: chartJsDataset,
+          datasets: chartDatasets,
         },
         options: this.currentChartOptions,
         plugins: [chartA11y, chartLegendA11y],
@@ -139,7 +154,7 @@ export class XYChart extends LitElement {
   }
 
   private handleChartOptions(): CurrentChartOptions {
-    return {
+    const options: CurrentChartOptions = {
       responsive: this.chartOptions.responsive,
       aspectRatio: this.chartOptions.aspectRatio,
       isLegendClick: this.chartOptions.legend?.isLegendClick,
@@ -170,6 +185,8 @@ export class XYChart extends LitElement {
           labels: {
             boxWidth: this.chartOptions.legend?.legendLabelsWidth,
             boxHeight: this.chartOptions.legend?.legendLabelsHeight,
+            useBorderRadius: !!this.chartOptions.legend?.legendBorderRadius,
+            borderRadius: this.chartOptions.legend?.legendBorderRadius,
           },
           onClick: legendClickHandler,
           onHover: legendHandleHover,
@@ -183,41 +200,53 @@ export class XYChart extends LitElement {
       },
       scales: {
         x: {
-          stacked: this.chartOptions.stacked ?? false,
+          stacked: this.chartOptions.xStacked ?? false,
           title: {
             display: !!this.chartOptions.xTitle,
             text: this.chartOptions.xTitle,
           },
           grid: {
-            display: this.chartOptions.xGridDisplay ?? true,
+            display: this.chartOptions.xGridDisplay,
           },
         },
         y: {
-          stacked: this.chartOptions.stacked ?? false,
+          stacked: this.chartOptions.yStacked ?? false,
           title: {
             display: !!this.chartOptions.yTitle,
             text: this.chartOptions.yTitle,
           },
           grid: {
-            display: this.chartOptions.yGridDisplay ?? true,
+            display: this.chartOptions.yGridDisplay,
           },
         },
       },
     };
+    if (this.chartOptions.categoryIsTime && options.scales?.x) {
+      options.scales.x.type = 'time';
+      if (options.scales.x.type === 'time' && this.chartOptions.timeOptions) {
+        options.scales.x.time = { unit: this.chartOptions.timeOptions.unit };
+        if (this.chartOptions.timeOptions.dateFormat) {
+          options.scales.x.time.displayFormats = {
+            [this.chartOptions.timeOptions.unit as string]: this.chartOptions.timeOptions.dateFormat,
+          };
+        }
+      }
+    }
+    return options;
   }
 
   private handleChartDataset(): ChartDataset<ChartType, number[]>[] {
     const chartDataset: ChartDataset<ChartType, number[]>[] = [];
-    if (!this.data?.data) {
+    if (!this._data) {
       return chartDataset;
     }
-    if (Array.isArray(this.data?.data)) {
+    if (Array.isArray(this._data.series)) {
       const colors = this.getBackgroundColor(this.chartOptions) ?? [];
-      this.data.data?.forEach((data, index) => {
+      this._data.series?.forEach((series, index) => {
         const colorIndex = index % colors.length;
         let dataset: ChartDataset<ChartType, number[]> = { data: [] };
-        dataset.data = Object.values(data.data) as number[];
-        dataset.label = data.label;
+        dataset.data = Object.values(series.data ?? []) as number[];
+        dataset.label = series.name;
         dataset.borderColor = this.chartOptions.multiColor ? colors : colors[colorIndex];
         dataset.backgroundColor = this.chartOptions.multiColor ? colors : colors[colorIndex];
 
@@ -228,7 +257,7 @@ export class XYChart extends LitElement {
           }
           if (this.chartOptions.visualStyle === 'area') {
             dataset.fill = { below: transparentizeColor(colors[colorIndex], 0.4), above: transparentizeColor(colors[colorIndex], 0.4), target: 'start' };
-          } else if (this.chartOptions.visualStyle === 'range' && this.data.data && index === this.data.data.length - 1) {
+          } else if (this.chartOptions.visualStyle === 'range' && this._data?.series && index === this._data.series.length - 1) {
             dataset.fill = { below: transparentizeColor(colors[colorIndex], 0.4), above: transparentizeColor(colors[colorIndex], 0.4), target: '-1' };
           }
         }
@@ -239,7 +268,89 @@ export class XYChart extends LitElement {
     return chartDataset;
   }
 
+  /**
+   * Handles changes to the `data` attribute.
+   */
+  private dataChanged() {
+    let data: DataTableLike = [];
+    if (!this.data) {
+      return;
+    }
+    try {
+      if (this.data instanceof String) {
+        data = JSON.parse(this.data as string) as DataTableLike;
+      } else if (this.data instanceof Array) {
+        data = this.data;
+      }
+
+      if (data.length > 0) {
+        const genericData = this.transformGenericData(data);
+        this._data = this.genericToDataView(genericData);
+      }
+    } catch (e) {}
+  }
+
   private getBackgroundColor(chartOptions: XYChartOptions): string[] | undefined {
     return typeof chartOptions?.theme === 'string' ? themes.get(chartOptions?.theme as keyof typeof ThemeKey) : getCurrentTheme().colors;
+  }
+
+  private transformGenericData(sourceData: DataTableLike): GenericDataModel {
+    const result: GenericDataModel = {
+      categoryKey: this.options?.categoryKey,
+      data: [],
+    };
+
+    if (typeof sourceData[0] === 'object' && !Array.isArray(sourceData[0])) {
+      const data = sourceData as Record<string, string | number>[];
+      result.categoryKey = result.categoryKey ?? Object.keys(data[0])[0];
+      result.data = data;
+    } else if (Array.isArray(sourceData[0])) {
+      const data = sourceData as unknown[][];
+      const columns = data[0] as string[];
+      const rows = data.slice(1);
+      result.categoryKey = result.categoryKey ?? columns[0];
+      rows.forEach((row: unknown[]) => {
+        const item: {
+          [key: string]: string | number;
+        } = {};
+        columns.forEach((column: string, index) => {
+          item[column] = row[index] as string | number;
+        });
+        if (result.data) {
+          result.data.push(item);
+        } else {
+          result.data = [item];
+        }
+      });
+    }
+    return result;
+  }
+
+  private genericToDataView(data: GenericDataModel): DataView {
+    const result: DataView = {
+      category: {
+        name: data.categoryKey ?? '',
+        labels: [],
+      },
+      series: [],
+    };
+
+    if (!data?.categoryKey) {
+      return result;
+    }
+    result.category.labels = data.data.map((item) => item[data.categoryKey as string]);
+    const seriesNames = Object.keys(data.data[0]).filter((key) => key !== data.categoryKey);
+
+    const seriesData = seriesNames.map((name) => {
+      return {
+        name: name,
+        data: data.data.map((item) => item[name] as number),
+      };
+    });
+
+    result.series = seriesData;
+    console.log('genericToDataView', result);
+
+    return result;
   }
 }

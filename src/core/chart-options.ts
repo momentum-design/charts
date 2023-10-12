@@ -9,6 +9,7 @@ const defaultOptions: DefaultOptions = {
   legend: {
     legendLabelsHeight: 12,
     legendLabelsWidth: 12,
+    legendBorderRadius: 2,
   },
   tooltip: {
     isMultipleLegend: false,
