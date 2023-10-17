@@ -119,6 +119,8 @@ const getConfig = (app) => (
         tsconfig: '../tsconfig.json',
         out: 'api',
         watch: process.env.TYPEDOC_WATCH,
+        // you can add typedoc options here
+        readme: 'none',
       }],
       (context, options) => {
         return {

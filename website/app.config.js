@@ -18,6 +18,12 @@ module.exports = {
         position: 'left',
         label: 'Tutorials',
       },
+      {
+        type: 'docSidebar',
+        sidebarId: 'api',
+        position: 'left',
+        label: 'API',
+      },
       { to: '/blog', label: 'Blog', position: 'left' },
       {
         href: `https://github.com/${this.githubUser}/${this.githubRepo}`,
@@ -40,6 +46,10 @@ module.exports = {
           {
             label: 'Tutorials',
             to: '/docs/tutorials',
+          },
+          {
+            label: 'API',
+            to: '/docs/api',
           },
           {
             label: 'Blog',
