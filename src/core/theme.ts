@@ -2,8 +2,8 @@
  * The keys of the built-in themes
  */
 export enum ThemeKey {
+  Default = 'default',
   Material = 'material',
-  AmCharts = 'amcharts',
   // following themes are from old version
   ColorHealth = 'color-health',
   QualitativeColorsPrimary = 'qualitative-colors-primary',
@@ -20,8 +20,8 @@ export enum ThemeKey {
 }
 
 export const themes = new Map<ThemeKey | string, string[]>([
+  [ThemeKey.Default, ['#3366CC', '#DC3912', '#FF9900', '#109618', '#990099', '#3B3EAC', '#0099C6', '#DD4477', '#66AA00', '#B82E2E', '#316395', '#994499', '#22AA99', '#AAAA11', '#6633CC', '#E67300', '#8B0707', '#329262', '#5574A6', '#3B3EAC']],
   [ThemeKey.Material, ['#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3', '#03A9F4', '#00BCD4', '#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800', '#FF5722', '#795548', '#9E9E9E', '#607D8B']],
-  [ThemeKey.AmCharts, ['#86ce86', '#0975da', '#0996f2', '#1fb0ff', '#41baff', '#5ec5ff', '#3db7ff']],
   [ThemeKey.ColorHealth, ['#00CF64', '#FFC14F', '#D4371C', '#643ABD', '#F0677E', '#EBD460', '#00A3B5']],
   [ThemeKey.QualitativeColorsPrimary, ['#643ABD', '#F0677E', '#EBD460', '#00A3B5', '#93C437', '#7D7A18', '#99DDFF']],
   [ThemeKey.QualitativeColorsSecondary, ['#0A78CC', '#16A693', '#FAC3F8', '#FF9D52', '#601E66', '#C7A5FA', '#D3DB7B']],
@@ -36,4 +36,4 @@ export const themes = new Map<ThemeKey | string, string[]>([
   [ThemeKey.DivergingColorsGreen2Red, ['#008672', '#4BA28C', '#8CBBAC', '#CCD2CE', '#E19D79', '#C3411D', '#990000']],
 ]);
 
-export const defaultTheme = ThemeKey.Material;
+export const defaultTheme = ThemeKey.Default;
