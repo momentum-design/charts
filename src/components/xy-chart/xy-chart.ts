@@ -200,6 +200,7 @@ export class XYChart extends LitElement {
       },
       scales: {
         x: {
+          position: this.chartOptions.xPosition,
           stacked: this.chartOptions.xStacked ?? false,
           title: {
             display: !!this.chartOptions.xTitle,
@@ -210,6 +211,7 @@ export class XYChart extends LitElement {
           },
         },
         y: {
+          position: this.chartOptions.yPosition,
           stacked: this.chartOptions.yStacked ?? false,
           title: {
             display: !!this.chartOptions.yTitle,

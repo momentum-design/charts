@@ -22,6 +22,8 @@ export interface XYChartOptions extends DefaultOptions {
     unit?: TimeUnit;
     dateFormat?: string;
   };
+  yPosition?: 'left' | 'right';
+  xPosition?: 'top' | 'bottom';
   xStacked?: boolean;
   yStacked?: boolean;
   xGridDisplay?: boolean;
