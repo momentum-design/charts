@@ -1,30 +1,21 @@
-import { Chart } from 'chart.js/auto';
-import { css, html, LitElement, PropertyValueMap } from 'lit';
+/* eslint-disable @typescript-eslint/no-empty-interface */
+import { ChartConfiguration, ChartConfigurationCustomTypesPerDataset } from 'chart.js/auto';
 import { customElement } from 'lit/decorators.js';
-import { COMPONENT_PREFIX } from '../../core';
+import { ChartElement, COMPONENT_PREFIX } from '../../core';
 import { chartA11y, chartLegendA11y } from '../../core/plugins';
 import { getColor, getCurrentTheme } from '../../core/utils';
+
+interface HelloChartData {}
+interface HelloChartOptions {}
 
 /**
  * @ignore
  */
 @customElement(`${COMPONENT_PREFIX}-hello-chart`)
-export class HelloChart extends LitElement {
-  public static styles = css`
-    :host {
-      display: block;
-      position: relative;
-    }
-  `;
-
-  protected render() {
-    return html`<canvas></canvas>`;
-  }
-
-  protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
+export class HelloChart extends ChartElement<HelloChartData, HelloChartOptions> {
+  protected getChartJSConfiguration(): ChartConfiguration | ChartConfigurationCustomTypesPerDataset {
     const theme = getCurrentTheme().name;
-    const colors = getCurrentTheme().colors || [];
-    const chart = new Chart(this.renderRoot.querySelector('canvas') as HTMLCanvasElement, {
+    return {
       type: 'bar',
       data: {
         labels: ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat'],
@@ -79,6 +70,6 @@ export class HelloChart extends LitElement {
         },
       },
       plugins: [chartA11y, chartLegendA11y],
-    });
+    };
   }
 }
