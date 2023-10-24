@@ -4,7 +4,7 @@ import { property } from 'lit/decorators.js';
 import { ChartOptions } from '../types';
 
 /**
- * A base class for all chart elements.
+ * A base class for all chart elements that extends {@link LitElement}.
  *
  * @example
  * You can implement a specific chart by following code.
@@ -40,28 +40,31 @@ export abstract class ChartElement<TOptions extends ChartOptions, TData> extends
   @property({ type: Object, hasChanged: () => true })
   options?: TOptions;
 
+  #boundResizeHandler: () => void;
+
   constructor() {
     super();
+    this.#boundResizeHandler = this.handleResize.bind(this);
   }
 
   firstUpdated(changedProperties: Map<PropertyKey, unknown>): void {
     this.initChart();
   }
 
-  /**
-   * @inheritDoc
-   */
   connectedCallback(): void {
     super.connectedCallback();
-    window.addEventListener('resize', this.resizeChart);
+    window.addEventListener('resize', this.#boundResizeHandler);
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
-    window.removeEventListener('resize', this.resizeChart);
+    window.removeEventListener('resize', this.#boundResizeHandler);
   }
 
   render(): TemplateResult {
+    if (this.id) {
+      return html`<canvas id="${this.id}_container"></canvas>`;
+    }
     return html`<canvas></canvas>`;
   }
 
@@ -73,18 +76,17 @@ export abstract class ChartElement<TOptions extends ChartOptions, TData> extends
   }
 
   /**
+   * Resizes the chart and something else that will be useful if the window changed.
+   */
+  protected handleResize(): void {
+    this.instance?.resize();
+  }
+
+  /**
    * Initializes and renders the chart.
    */
   protected initChart(): void {
     this.instance = new ChartJS(this.renderRoot.querySelector('canvas') as HTMLCanvasElement, this.getChartJSConfiguration());
-  }
-
-  /**
-   * Resizes the chart that will be useful if the window changed.
-   */
-  protected resizeChart(): void {
-    console.log('resize');
-    this.instance?.resize();
   }
 
   /**

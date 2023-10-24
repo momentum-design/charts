@@ -46,6 +46,7 @@ export const settings: Settings = {
 
   addTheme: function (themeKey: string, colors: string[]): Settings {
     this.themes.set(themeKey, colors);
+    this.set({ theme: themeKey as ThemeKey });
     return this;
   },
 };
