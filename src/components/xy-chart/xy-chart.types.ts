@@ -1,41 +1,46 @@
-import { TimeUnit } from 'chart.js';
-import { DefaultOptions } from '../../types';
-
 /**
  * The default options for xy chart.
  */
-export interface XYChartOptions extends DefaultOptions {
-  /**
-   * Enables multi-color mode for the chart where each data point can have a different color.
-   */
-  multiColor?: boolean;
-  visualStyle?: 'normal' | 'area' | 'range';
-  lineStyle?: 'solid' | 'dashed';
-  indexAxis?: 'x' | 'y';
-  xTitle?: string;
-  yTitle?: string;
-  xType?: 'linear' | 'logarithmic' | 'category' | 'time' | 'timeseries';
-  yType?: 'linear' | 'logarithmic' | 'category' | 'time' | 'timeseries';
-  categoryIsTime?: boolean;
-  categoryKey?: string;
-  timeOptions?: {
-    unit?: TimeUnit;
-    dateFormat?: string;
-  };
-  yPosition?: 'left' | 'right';
-  xPosition?: 'top' | 'bottom';
-  xStacked?: boolean;
-  yStacked?: boolean;
-  xGridDisplay?: boolean;
-  yGridDisplay?: boolean;
+import { TimeUnit } from 'chart.js';
+import { DefaultOptions } from '../../types';
+interface AxisOptions {
+  title?: string;
+  type?: 'category' | 'time';
+  position?: 'left' | 'right' | 'top' | 'bottom' | 'center';
+  stacked?: boolean;
+  display?: boolean;
+  gridDisplay?: boolean;
 }
 
+interface CategoryAxisOptions extends AxisOptions {
+  enableColor?: boolean;
+  dataKey: string;
+  timeUnit?: TimeUnit;
+  labelFormat?: string;
+  tooltipFormat?: string;
+}
+interface ValueAxisOptions extends AxisOptions {
+  unit?: string;
+}
+
+export interface XYChartOptions extends DefaultOptions {
+  seriesOptions?: {
+    styleMapping: {
+      [key: string]: {
+        type?: 'bar' | 'line';
+        lineStyle?: 'solid' | 'dashed';
+      };
+    };
+  };
+  categoryAxis?: CategoryAxisOptions;
+  valueAxis?: ValueAxisOptions;
+}
 // export type DataTableLike = unknown[][] | { cols: unknown[]; rows?: unknown[][] };
 export type DataTableLike = unknown[][] | Record<string, string | number>[];
 export type DataView = {
   category: { name?: string; labels?: unknown[] };
   series: {
-    name?: string;
+    name: string;
     data?: number[];
   }[];
 };

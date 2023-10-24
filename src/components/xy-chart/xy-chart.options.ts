@@ -1,12 +1,17 @@
 import { XYChartOptions } from './xy-chart.types';
 
 const defaultXYChartOptions: XYChartOptions = {
-  xStacked: false,
-  yStacked: false,
-  xPosition: 'bottom',
-  yPosition: 'left',
-  xGridDisplay: true,
-  yGridDisplay: true,
+  categoryAxis: {
+    gridDisplay: true,
+    display: true,
+    stacked: false,
+    dataKey: '',
+  },
+  valueAxis: {
+    gridDisplay: true,
+    display: true,
+    stacked: false,
+  },
   legend: {
     legendPosition: 'bottom',
     legendDisplay: true,

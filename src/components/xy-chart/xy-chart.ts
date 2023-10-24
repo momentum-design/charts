@@ -10,13 +10,10 @@ import { externalTooltipHandler } from '../../core/plugins/chart-tooltip';
 import { LegendClickData } from '../../core/plugins/plugin.types';
 import { getCurrentTheme, transparentizeColor } from '../../core/utils';
 import { ChartTypeEnum } from '../../types';
-import { defaultXYChartOptions } from './xy-chart.options';
-import { DataTableLike, DataView, GenericDataModel, XYChartOptions } from './xy-chart.types';
+import { defaultXYChartOptions, XYChartOptions } from './xy-chart.options';
+import { DataTableLike, DataView, GenericDataModel } from './xy-chart.types';
 
-interface CurrentChartOptions extends ChartOptions<ChartType> {
-  fill?: boolean;
-  indexAxis: 'x' | 'y';
-  customizeColor?: boolean;
+interface CurrentChartOptions extends XYChartOptions, ChartOptions<ChartType> {
   isLegendClick?: boolean;
   isMultipleSeries?: boolean;
   seriesTooltipHead?: string;
@@ -133,7 +130,7 @@ export class XYChart extends LitElement {
 
     if (ctx) {
       this.chartInstance = new Chart(ctx, {
-        type: this.type,
+        type: this.getChartType(),
         data: {
           labels: chartLabels,
           datasets: chartDatasets,
@@ -173,7 +170,7 @@ export class XYChart extends LitElement {
         this.onLegendClick(selectedItem);
       },
       onClick: chartSeriesClick,
-      indexAxis: this.chartOptions.indexAxis ?? 'x',
+      indexAxis: this.isHorizontal(),
       plugins: {
         title: {
           display: !!this.chartOptions.title,
@@ -199,41 +196,70 @@ export class XYChart extends LitElement {
         },
       },
       scales: {
-        x: {
-          position: this.chartOptions.xPosition,
-          stacked: this.chartOptions.xStacked ?? false,
-          title: {
-            display: !!this.chartOptions.xTitle,
-            text: this.chartOptions.xTitle,
-          },
-          grid: {
-            display: this.chartOptions.xGridDisplay,
-          },
-        },
-        y: {
-          position: this.chartOptions.yPosition,
-          stacked: this.chartOptions.yStacked ?? false,
-          title: {
-            display: !!this.chartOptions.yTitle,
-            text: this.chartOptions.yTitle,
-          },
-          grid: {
-            display: this.chartOptions.yGridDisplay,
-          },
-        },
+        categoryAxis: {},
+        valueAxis: {},
       },
     };
-    if (this.chartOptions.categoryIsTime && options.scales?.x) {
-      options.scales.x.type = 'time';
-      if (options.scales.x.type === 'time' && this.chartOptions.timeOptions) {
-        options.scales.x.time = { unit: this.chartOptions.timeOptions.unit };
-        if (this.chartOptions.timeOptions.dateFormat) {
-          options.scales.x.time.displayFormats = {
-            [this.chartOptions.timeOptions.unit as string]: this.chartOptions.timeOptions.dateFormat,
-          };
+
+    if (this.chartOptions.categoryAxis && this.chartOptions.valueAxis) {
+      if (!this.chartOptions.categoryAxis.position) {
+        this.chartOptions.categoryAxis.position = this.isHorizontal() === 'x' ? 'bottom' : 'left';
+      }
+      if (!this.chartOptions.valueAxis.position) {
+        this.chartOptions.valueAxis.position = this.isHorizontal() === 'x' ? 'left' : 'bottom';
+      }
+    }
+
+    if (this.chartOptions.valueAxis && options.scales?.valueAxis && (options.scales.valueAxis.type === 'category' || options.scales.valueAxis.type === 'time')) {
+      options.scales.valueAxis.position = this.chartOptions.valueAxis.position;
+    }
+
+    if (this.chartOptions.categoryAxis && options.scales?.categoryAxis) {
+      options.scales.categoryAxis = {
+        stacked: this.chartOptions.categoryAxis.stacked,
+        title: {
+          display: !!this.chartOptions.categoryAxis.title,
+          text: this.chartOptions.categoryAxis.title,
+        },
+        grid: {
+          display: this.chartOptions.categoryAxis.gridDisplay,
+        },
+        display: this.chartOptions.categoryAxis.display,
+      };
+      if (this.chartOptions.categoryAxis.position) {
+        options.scales.categoryAxis.position = this.chartOptions.categoryAxis.position;
+      }
+      if (this.chartOptions.categoryAxis?.type) {
+        options.scales.categoryAxis.type = this.chartOptions.categoryAxis.type;
+        if (options.scales.categoryAxis.type === 'time' && this.chartOptions.categoryAxis) {
+          options.scales.categoryAxis.time = { unit: this.chartOptions.categoryAxis.timeUnit };
+          if (this.chartOptions.categoryAxis.labelFormat) {
+            options.scales.categoryAxis.time.displayFormats = {
+              [this.chartOptions.categoryAxis.timeUnit as string]: this.chartOptions.categoryAxis.labelFormat,
+            };
+          }
         }
       }
     }
+
+    if (this.chartOptions.valueAxis && options.scales?.valueAxis) {
+      options.scales.valueAxis = {
+        stacked: this.chartOptions.valueAxis.stacked,
+        title: {
+          display: !!this.chartOptions.valueAxis.title,
+          text: this.chartOptions.valueAxis.title,
+        },
+        grid: {
+          display: this.chartOptions.valueAxis.gridDisplay,
+        },
+        display: this.chartOptions.valueAxis.display,
+      };
+
+      if (this.chartOptions.valueAxis.position) {
+        options.scales.valueAxis.position = this.chartOptions.valueAxis.position;
+      }
+    }
+
     return options;
   }
 
@@ -245,23 +271,30 @@ export class XYChart extends LitElement {
     if (Array.isArray(this._data.series)) {
       const colors = this.getBackgroundColor(this.chartOptions) ?? [];
       this._data.series?.forEach((series, index) => {
+        const seriesOptions = this.chartOptions.seriesOptions?.styleMapping[series.name];
         const colorIndex = index % colors.length;
         let dataset: ChartDataset<ChartType, number[]> = { data: [] };
         dataset.data = Object.values(series.data ?? []) as number[];
         dataset.label = series.name;
-        dataset.borderColor = this.chartOptions.multiColor ? colors : colors[colorIndex];
-        dataset.backgroundColor = this.chartOptions.multiColor ? colors : colors[colorIndex];
-
-        if (this.type === ChartTypeEnum.Line) {
+        dataset.borderColor = this.chartOptions.categoryAxis?.enableColor ? colors : colors[colorIndex];
+        dataset.backgroundColor = this.chartOptions.categoryAxis?.enableColor ? colors : colors[colorIndex];
+        dataset.type = seriesOptions?.type ?? this.getChartType();
+        if (this.type === ChartTypeEnum.Line || this.type === ChartTypeEnum.Area || this.type === ChartTypeEnum.Range) {
           dataset = dataset as ChartDataset<ChartTypeEnum.Line, number[]>;
-          if (this.chartOptions.lineStyle === 'dashed') {
+          dataset.yAxisID = this.isHorizontal() === 'x' ? 'valueAxis' : 'categoryAxis';
+          dataset.xAxisID = this.isHorizontal() === 'x' ? 'categoryAxis' : 'valueAxis';
+          if (seriesOptions?.lineStyle === 'dashed') {
             dataset.borderDash = [3, 3];
           }
-          if (this.chartOptions.visualStyle === 'area') {
+          if (this.type === ChartTypeEnum.Area) {
             dataset.fill = { below: transparentizeColor(colors[colorIndex], 0.4), above: transparentizeColor(colors[colorIndex], 0.4), target: 'start' };
-          } else if (this.chartOptions.visualStyle === 'range' && this._data?.series && index === this._data.series.length - 1) {
+          } else if (this.type === ChartTypeEnum.Range && this._data?.series && index === this._data.series.length - 1) {
             dataset.fill = { below: transparentizeColor(colors[colorIndex], 0.4), above: transparentizeColor(colors[colorIndex], 0.4), target: '-1' };
           }
+        } else if (this.type === ChartTypeEnum.Bar || this.type === ChartTypeEnum.Column) {
+          dataset = dataset as ChartDataset<ChartTypeEnum.Bar, number[]>;
+          dataset.yAxisID = this.isHorizontal() === 'x' ? 'valueAxis' : 'categoryAxis';
+          dataset.xAxisID = this.isHorizontal() === 'x' ? 'categoryAxis' : 'valueAxis';
         }
         chartDataset.push(dataset);
       });
@@ -298,7 +331,7 @@ export class XYChart extends LitElement {
 
   private transformGenericData(sourceData: DataTableLike): GenericDataModel {
     const result: GenericDataModel = {
-      categoryKey: this.options?.categoryKey,
+      categoryKey: this.options?.categoryAxis?.dataKey,
       data: [],
     };
 
@@ -354,5 +387,28 @@ export class XYChart extends LitElement {
     console.log('genericToDataView', result);
 
     return result;
+  }
+
+  private getChartType(): ChartType {
+    let chartType: ChartType = 'line';
+    switch (this.type) {
+      case ChartTypeEnum.Bar:
+      case ChartTypeEnum.Column:
+        chartType = 'bar';
+        break;
+      case ChartTypeEnum.Line:
+      case ChartTypeEnum.Area:
+      case ChartTypeEnum.Range:
+        chartType = 'line';
+        break;
+      default:
+        chartType = 'line';
+        break;
+    }
+    return chartType;
+  }
+  private isHorizontal(): 'x' | 'y' {
+    const isHorizontal = this.chartOptions.categoryAxis?.position === 'left' || this.chartOptions.categoryAxis?.position === 'right' || this.chartOptions.valueAxis?.position === 'top' || this.chartOptions.valueAxis?.position === 'bottom';
+    return isHorizontal ? 'y' : 'x';
   }
 }

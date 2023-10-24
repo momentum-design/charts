@@ -14,6 +14,9 @@ export interface DefaultOptions {
   paddingBottom?: number;
   legend?: LegendOptions;
   tooltip?: TooltipOptions;
+  colorMapping: {
+    [key: string]: string;
+  };
 }
 
 export interface LegendOptions {
@@ -39,8 +42,11 @@ export interface TooltipOptions {
 }
 
 export enum ChartTypeEnum {
+  Area = 'area',
   Bar = 'bar',
+  Column = 'column',
   Line = 'line',
   Pie = 'pie',
   Doughnut = 'doughnut',
+  Range = 'range',
 }
