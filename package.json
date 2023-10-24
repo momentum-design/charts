@@ -1,6 +1,6 @@
 {
   "name": "@momentum-design/widgets",
-  "version": "1.0.0-alpha.8",
+  "version": "1.0.0-alpha.9",
   "description": "widgets based on Chart.js for building dashboards",
   "main": "dist/widgets.umd.js",
   "module": "dist/widgets.es5.js",
@@ -18,7 +18,6 @@
     "watch": "rollup --config ./rollup.config.ts --configPlugin typescript --bundleConfigAsCjs -w",
     "start": "concurrently --kill-others \"npm run watch\" \"npm run site-serv\"",
     "site-serv": "npm run docs && npm run test && lite-server",
-
     "dev": "concurrently --kill-others \"npm run watch\" \"npm run website:start\"",
     "website:start": "npm run build && npm start --prefix website",
     "website:prepare": "ts-node tools/gh-pages-prepare-beta",

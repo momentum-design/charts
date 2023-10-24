@@ -1,3 +1,10 @@
+# [1.0.0-alpha.9](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.8...v1.0.0-alpha.9) (2023-10-24)
+
+
+### Bug Fixes
+
+* **core:** theme does not work after adding ([d2ccfbf](https://github.com/momentum-design/momentum-widgets/commit/d2ccfbf0efbddf7cce6fd3919080f49c79611208))
+
 # [1.0.0-alpha.8](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.7...v1.0.0-alpha.8) (2023-09-19)
 
 
