@@ -15,10 +15,10 @@ import { ChartOptions } from '../types';
  * }
  * ```
  *
- * @typeParam TOptions - the type of chart options
  * @typeParam TData - the type of chart data
+ * @typeParam TOptions - the type of chart options
  */
-export abstract class ChartElement<TOptions extends ChartOptions, TData> extends LitElement {
+export abstract class ChartElement<TData, TOptions extends ChartOptions> extends LitElement {
   instance?: ChartJS;
 
   static styles = css`
