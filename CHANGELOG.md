@@ -1,3 +1,10 @@
+# [1.0.0-alpha.10](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.9...v1.0.0-alpha.10) (2023-10-25)
+
+
+### Features
+
+* **xy:** new charts about line, area, column and bar ([#9](https://github.com/momentum-design/momentum-widgets/issues/9)) ([80cddc9](https://github.com/momentum-design/momentum-widgets/commit/80cddc9ed4bbba76716f9b5a50ad1a0583783e91))
+
 # [1.0.0-alpha.9](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.8...v1.0.0-alpha.9) (2023-10-24)
 
 
