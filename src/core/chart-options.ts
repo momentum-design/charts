@@ -1,6 +1,6 @@
-import { DefaultOptions } from '../types';
+import { ChartOptions } from '../types';
 
-const defaultOptions: DefaultOptions = {
+const defaultChartOptions: ChartOptions = {
   responsive: true,
   chartLabel: '',
   fontColor: '#000',
@@ -19,4 +19,4 @@ const defaultOptions: DefaultOptions = {
   },
 };
 
-export { defaultOptions };
+export { defaultChartOptions };

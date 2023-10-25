@@ -2,7 +2,7 @@
  * The default options for xy chart.
  */
 import { TimeUnit } from 'chart.js';
-import { DefaultOptions } from '../../types';
+import { ChartOptions } from '../../types';
 interface AxisOptions {
   title?: string;
   type?: 'category' | 'time';
@@ -23,7 +23,7 @@ interface ValueAxisOptions extends AxisOptions {
   unit?: string;
 }
 
-export interface XYChartOptions extends DefaultOptions {
+export interface XYChartOptions extends ChartOptions {
   seriesOptions?: {
     styleMapping: {
       [key: string]: {

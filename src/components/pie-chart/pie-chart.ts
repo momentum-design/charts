@@ -4,7 +4,7 @@ import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { merge } from 'lodash-es';
 import { COMPONENT_PREFIX, ThemeKey, themes } from '../../core';
-import { defaultOptions } from '../../core/chart-options';
+import { defaultChartOptions } from '../../core/chart-options';
 import { chartA11y, chartLegendA11y, chartSeriesClick, legendClickHandler, legendHandleHover, legendHandleLeave } from '../../core/plugins';
 import { externalTooltipHandler } from '../../core/plugins/chart-tooltip';
 import { LegendClickData } from '../../core/plugins/plugin.types';
@@ -116,7 +116,7 @@ class PieChart extends LitElement {
   private initializeChart(): void {
     const container = this.renderRoot.querySelector('.container');
     const chartLabel = Array.isArray(this.data) ? Object.keys(this.data[0]) : Object.keys(this.data as Record<string, unknown>);
-    this.chartOptions = merge({}, defaultOptions, defaultPieChartOptions, this.options);
+    this.chartOptions = merge({}, defaultChartOptions, defaultPieChartOptions, this.options);
     const chartJsDataset = this.handleChartDataset();
     this.pieChartJsOptions = this.handleChartOptions();
     const canvas = this.renderRoot.querySelector('canvas') as HTMLCanvasElement;

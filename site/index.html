@@ -86,129 +86,6 @@
       <section id="example">
         <h1>Example</h1>
         <fieldset>
-          <legend>XY Chart</legend>
-          <div>
-            <mdw-xy
-              type="line"
-              style="width: 40%"
-              data='[{"dateTime":"2013-11-20T03:18:55.732Z","Arizona":5523,"Louisiana":5239,"Illinois":5539,"Tennessee":816,"Rhode Island":270},{"dateTime":"2013-12-20T03:18:55.732Z","Arizona":315,"Louisiana":3868,"Illinois":182,"Tennessee":1926,"Rhode Island":6734},{"dateTime":"2014-01-20T03:18:55.732Z","Arizona":4244,"Louisiana":2462,"Illinois":9486,"Tennessee":7565,"Rhode Island":4514},{"dateTime":"2014-02-20T03:18:55.732Z","Arizona":2234,"Louisiana":3857,"Illinois":888,"Tennessee":1364,"Rhode Island":1752},{"dateTime":"2014-03-20T03:18:55.732Z","Arizona":6484,"Louisiana":2907,"Illinois":8919,"Tennessee":1369,"Rhode Island":9925}]'
-              options='{
-                "categoryAxis": {
-                  "gridDisplay":true,
-                  "title":"category",
-                  "dataKey":"dateTime",
-                  "type":"time",
-                  "timeUnit":"month",
-                  "labelFormat":"MM DD, YYYY"
-                },
-                "valueAxis":{
-                  "gridDisplay":false,
-                  "position":"left",
-                  "title":"value"
-                },
-                "seriesOptions":{
-                  "styleMapping":{
-                    "Louisiana":{
-                      "lineStyle":"dashed"
-                    }
-                  }
-                },
-                "title":"My First Line Chart",
-                "theme": "diverging-colors-alerts",
-                "legend":{
-                  "isLegendClick": false
-                }
-              }'
-            ></mdw-xy>
-          </div>
-          <div>
-            <mdw-xy
-              type="area"
-              style="width: 40%"
-              data='[["Year", "Things", "Stuff"],
-              ["2004", 1000, 400],
-              ["2005", 1170, 460],
-              ["2006", 660, 1120],
-              ["2007", 1030, 540]]'
-              options='{
-                "title":"My First Line Area Chart",
-                "theme": "material",
-                "legend":{
-                  "isLegendClick": true
-                }
-              }'
-            ></mdw-xy>
-          </div>
-          <div>
-            <mdw-xy
-              type="range"
-              style="width: 40%"
-              data='[["Year", "Things", "Stuff", "Stuff2"],
-              ["2004", 1000, 400, 500],
-              ["2005", 1170, 460, 600],
-              ["2006", 660, 1120, 899],
-              ["2007", 1030, 540, 377]]'
-              options='{
-                "title":"My First Line Range Area Chart",
-                "theme": "color-health"
-              }'
-            ></mdw-xy>
-          </div>
-          <div>
-            <mdw-xy
-              type="bar"
-              style="width: 40%"
-              data='[["Year", "Things"],
-              ["2004", 1000],
-              ["2005", 1170],
-              ["2006", 660],
-              ["2007", 1030]]'
-              options='{
-                "categoryAxis": {
-                  "gridDisplay":true,
-                  "title":"category",
-                  "enableColor":true,
-                  "position":"left"
-                },
-                "valueAxis":{
-                  "title":"value"
-                },
-                "title":"My First Column Chart",
-                "theme": "qualitative-colors-primary",
-                "legend":{
-                  "isLegendClick": false
-                }
-              }'
-            ></mdw-xy>
-          </div>
-          <div>
-            <mdw-xy
-              type="bar"
-              style="width: 40%"
-              data='[["Year", "Things", "Stuff"],
-              ["2004", 1000, 400],
-              ["2005", 1170, 460],
-              ["2006", 660, 1120],
-              ["2007", 1030, 540]]'
-              options='{
-                "categoryAxis": {
-                  "stacked":true,
-                  "enableColor":false
-                },
-                "valueAxis":{
-                  "stacked":true,
-                  "title":"value"
-                },
-                "title":"My First Bar Chart",
-                "theme": "qualitative-colors-primary",
-                "legend":{
-                  "isLegendClick": true
-                }
-              }'
-            ></mdw-xy>
-          </div>
-        </fieldset>
-        <fieldset>
           <legend>Hello World</legend>
           <div>
             <mdw-hello-world name="Bing Zhang"></mdw-hello-world>
@@ -302,6 +179,130 @@
             }'
             >
             </mdw-pie>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>XY Chart</legend>
+          <div>
+            <mdw-xy
+              type="line"
+              style="width: 40%"
+              data='[{"dateTime":"2013-11-20T03:18:55.732Z","Arizona":5523,"Louisiana":5239,"Illinois":5539,"Tennessee":816,"Rhode Island":270},{"dateTime":"2013-12-20T03:18:55.732Z","Arizona":315,"Louisiana":3868,"Illinois":182,"Tennessee":1926,"Rhode Island":6734},{"dateTime":"2014-01-20T03:18:55.732Z","Arizona":4244,"Louisiana":2462,"Illinois":9486,"Tennessee":7565,"Rhode Island":4514},{"dateTime":"2014-02-20T03:18:55.732Z","Arizona":2234,"Louisiana":3857,"Illinois":888,"Tennessee":1364,"Rhode Island":1752},{"dateTime":"2014-03-20T03:18:55.732Z","Arizona":6484,"Louisiana":2907,"Illinois":8919,"Tennessee":1369,"Rhode Island":9925}]'
+              options='{
+                "categoryAxis": {
+                  "gridDisplay":true,
+                  "title":"category",
+                  "dataKey":"dateTime",
+                  "type":"time",
+                  "timeUnit":"month",
+                  "labelFormat":"MM DD, YYYY"
+                },
+                "valueAxis":{
+                  "gridDisplay":false,
+                  "position":"left",
+                  "title":"value"
+                },
+                "seriesOptions":{
+                  "styleMapping":{
+                    "Louisiana":{
+                      "lineStyle":"dashed"
+                    }
+                  }
+                },
+                "title":"My First Line Chart",
+                "theme": "diverging-colors-alerts",
+                "legend":{
+                  "isLegendClick": false
+                }
+              }'
+            ></mdw-xy>
+          </div>
+          <div>
+            <mdw-xy
+              type="area"
+              style="width: 40%"
+              data='[["Year", "Things", "Stuff"],
+              ["2004", 1000, 400],
+              ["2005", 1170, 460],
+              ["2006", 660, 1120],
+              ["2007", 1030, 540]]'
+              options='{
+                "title":"My First Area Chart",
+                "theme": "material",
+                "legend":{
+                  "isLegendClick": true
+                }
+              }'
+            ></mdw-xy>
+          </div>
+          <div>
+            <mdw-xy
+              type="range"
+              style="width: 40%"
+              data='[["Year", "Things", "Stuff"],
+              ["2004", 1000, 400],
+              ["2005", 1170, 460],
+              ["2006", 660, 1120],
+              ["2007", 1030, 540]]'
+              options='{
+                "title":"My First Range Area Chart",
+                "theme": "color-health"
+              }'
+            ></mdw-xy>
+          </div>
+          <div>
+            <mdw-xy
+              type="bar"
+              style="width: 40%"
+              data='[["Year", "Things"],
+              ["2004", 1000],
+              ["2005", 1170],
+              ["2006", 660],
+              ["2007", 1030]]'
+              options='{
+                "categoryAxis": {
+                  "gridDisplay":true,
+                  "title":"category",
+                  "enableColor":true,
+                  "position":"left"
+                },
+                "valueAxis":{
+                  "title":"value"
+                },
+                "title":"My First Bar Chart",
+                "theme": "qualitative-colors-primary",
+                "legend":{
+                  "isLegendClick": false
+                }
+              }'
+            ></mdw-xy>
+          </div>
+          <div>
+            <mdw-xy
+              type="bar"
+              style="width: 40%"
+              data='[["Year", "Things", "Stuff"],
+              ["2004", 1000, 400],
+              ["2005", 1170, 460],
+              ["2006", 660, 1120],
+              ["2007", 1030, 540]]'
+              options='{
+                "categoryAxis": {
+                  "stacked":true,
+                  "enableColor":false
+                },
+                "valueAxis":{
+                  "stacked":true,
+                  "title":"value"
+                },
+                "title":"My First Column Chart",
+                "theme": "qualitative-colors-primary",
+                "legend":{
+                  "isLegendClick": true
+                }
+              }'
+            ></mdw-xy>
           </div>
         </fieldset>
       </section>

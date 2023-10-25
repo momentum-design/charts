@@ -1,17 +1,16 @@
-import { Chart, ChartDataset, ChartOptions, ChartType } from 'chart.js/auto';
+import { ChartConfiguration, ChartConfigurationCustomTypesPerDataset, ChartDataset, ChartOptions, ChartType } from 'chart.js/auto';
 import 'chartjs-adapter-moment';
-import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { merge } from 'lodash-es';
-import { COMPONENT_PREFIX, ThemeKey, themes } from '../../core';
-import { defaultOptions } from '../../core/chart-options';
+import { ChartElement, COMPONENT_PREFIX, ThemeKey, themes } from '../../core';
+import { defaultChartOptions } from '../../core/chart-options';
 import { chartA11y, chartLegendA11y, chartSeriesClick, legendClickHandler, legendHandleHover, legendHandleLeave } from '../../core/plugins';
 import { externalTooltipHandler } from '../../core/plugins/chart-tooltip';
 import { LegendClickData } from '../../core/plugins/plugin.types';
 import { getCurrentTheme, transparentizeColor } from '../../core/utils';
 import { ChartTypeEnum } from '../../types';
-import { defaultXYChartOptions, XYChartOptions } from './xy-chart.options';
-import { DataTableLike, DataView, GenericDataModel } from './xy-chart.types';
+import { defaultXYChartOptions } from './xy-chart.options';
+import { DataTableLike, DataView, GenericDataModel, XYChartOptions } from './xy-chart.types';
 
 interface CurrentChartOptions extends XYChartOptions, ChartOptions<ChartType> {
   isLegendClick?: boolean;
@@ -28,117 +27,47 @@ interface CurrentChartOptions extends XYChartOptions, ChartOptions<ChartType> {
   selectedLegends?: string[];
   onLegendClick?: (legendItem: { label: string | number; value: string | number }[]) => void;
 }
-/**
- * @ignore
- */
-@customElement(`${COMPONENT_PREFIX}-xy`)
-export class XYChart extends LitElement {
-  public static styles = css`
-    :host {
-      display: block;
-      position: relative;
-    }
-  `;
 
+@customElement(`${COMPONENT_PREFIX}-xy`)
+export class XYChart extends ChartElement<DataTableLike, XYChartOptions> {
   @property({ type: String, hasChanged: () => true })
   type: ChartTypeEnum = ChartTypeEnum.Line;
-
-  @property({ type: Object, hasChanged: () => true })
-  data: DataTableLike | string | undefined = undefined;
-
-  @property({ type: Object, hasChanged: () => true })
-  options: XYChartOptions = {};
 
   /**
    * Internal data displayed on the chart.
    */
   @property({ type: Object }) _data: DataView | undefined = undefined;
 
-  private chartInstance: Chart | undefined;
   private chartOptions!: XYChartOptions;
   private currentChartOptions: CurrentChartOptions | undefined;
 
-  constructor() {
-    super();
-    this.handleWindowResize = this.handleWindowResize.bind(this);
-  }
-
-  connectedCallback(): void {
-    super.connectedCallback();
-    window.addEventListener('resize', this.handleWindowResize);
-  }
-
-  disconnectedCallback(): void {
-    super.disconnectedCallback();
-    window.removeEventListener('resize', this.handleWindowResize);
-  }
-
-  handleWindowResize(): void {
-    this.chartInstance?.resize();
-  }
-
-  updated(changedProperties: Map<PropertyKey, unknown>): void {
-    if (changedProperties.has('type')) this.typeChanged();
-    if (changedProperties.has('data')) this.dataChanged();
-    if (changedProperties.has('_data') || changedProperties.has('options')) {
-      this.updateChart();
+  protected getChartJSConfiguration(): ChartConfiguration | ChartConfigurationCustomTypesPerDataset {
+    let chartLabels: unknown[] = [];
+    let chartDatasets: ChartDataset<ChartType, number[]>[] = [];
+    this.initData();
+    if (this._data) {
+      const container = this.renderRoot.querySelector('.container');
+      chartLabels = this._data.category.labels ?? [];
+      this.chartOptions = merge({}, defaultChartOptions, defaultXYChartOptions, this.options);
+      chartDatasets = this.handleChartDataset();
+      this.currentChartOptions = this.handleChartOptions();
+      const canvas = this.renderRoot.querySelector('canvas') as HTMLCanvasElement;
+      if (container) {
+        this.currentChartOptions.maintainAspectRatio = false;
+        this.currentChartOptions.aspectRatio = this.clientWidth / this.clientHeight;
+        canvas.width = this.clientWidth;
+        canvas.height = this.clientHeight;
+      }
     }
-  }
-
-  updateChart(): void {
-    if (this.chartInstance) {
-      this.chartInstance.destroy();
-    }
-    this.initializeChart();
-  }
-
-  firstUpdated(changedProperties: Map<PropertyKey, unknown>): void {
-    super.updated(changedProperties);
-    if (changedProperties.has('_data')) {
-      this.initializeChart();
-    }
-  }
-
-  protected render() {
-    return html`<canvas></canvas>`;
-  }
-  private typeChanged(): void {
-    if (this.chartInstance) {
-      this.chartInstance.destroy();
-      this.initializeChart();
-    }
-  }
-
-  private initializeChart(): void {
-    debugger;
-    if (!this._data) {
-      return;
-    }
-    const container = this.renderRoot.querySelector('.container');
-    const chartLabels = this._data.category.labels;
-    this.chartOptions = merge({}, defaultOptions, defaultXYChartOptions, this.options);
-    const chartDatasets = this.handleChartDataset();
-    this.currentChartOptions = this.handleChartOptions();
-    const canvas = this.renderRoot.querySelector('canvas') as HTMLCanvasElement;
-    if (container) {
-      this.currentChartOptions.maintainAspectRatio = false;
-      this.currentChartOptions.aspectRatio = this.clientWidth / this.clientHeight;
-      canvas.width = this.clientWidth;
-      canvas.height = this.clientHeight;
-    }
-    const ctx = canvas.getContext('2d');
-
-    if (ctx) {
-      this.chartInstance = new Chart(ctx, {
-        type: this.getChartType(),
-        data: {
-          labels: chartLabels,
-          datasets: chartDatasets,
-        },
-        options: this.currentChartOptions,
-        plugins: [chartA11y, chartLegendA11y],
-      });
-    }
+    return {
+      type: this.getChartType(),
+      data: {
+        labels: chartLabels,
+        datasets: chartDatasets,
+      },
+      options: this.currentChartOptions,
+      plugins: [chartA11y, chartLegendA11y],
+    };
   }
 
   private onLegendClick(selectedItem: LegendClickData[]): void {
@@ -303,17 +232,14 @@ export class XYChart extends LitElement {
     return chartDataset;
   }
 
-  /**
-   * Handles changes to the `data` attribute.
-   */
-  private dataChanged() {
+  private initData() {
     let data: DataTableLike = [];
     if (!this.data) {
       return;
     }
     try {
       if (this.data instanceof String) {
-        data = JSON.parse(this.data as string) as DataTableLike;
+        data = JSON.parse(this.data as unknown as string) as DataTableLike;
       } else if (this.data instanceof Array) {
         data = this.data;
       }

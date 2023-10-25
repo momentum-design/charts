@@ -1,6 +1,6 @@
 export type LayoutPosition = 'left' | 'top' | 'right' | 'bottom' | 'center' | 'chartArea' | { [scaleId: string]: number };
 
-export interface DefaultOptions {
+export interface ChartOptions {
   title?: string;
   responsive?: boolean;
   chartLabel?: string | number | string[];
@@ -14,9 +14,10 @@ export interface DefaultOptions {
   paddingBottom?: number;
   legend?: LegendOptions;
   tooltip?: TooltipOptions;
-  colorMapping: {
+  colorMapping?: {
     [key: string]: string;
   };
+  colorSet?: string[];
 }
 
 export interface LegendOptions {
