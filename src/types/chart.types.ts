@@ -1,6 +1,7 @@
 export type LayoutPosition = 'left' | 'top' | 'right' | 'bottom' | 'center' | 'chartArea' | { [scaleId: string]: number };
 
 export interface ChartOptions {
+  title?: string;
   responsive?: boolean;
   chartLabel?: string | number | string[];
   theme?: string | [];
@@ -13,6 +14,10 @@ export interface ChartOptions {
   paddingBottom?: number;
   legend?: LegendOptions;
   tooltip?: TooltipOptions;
+  colorMapping?: {
+    [key: string]: string;
+  };
+  colorSet?: string[];
 }
 
 export interface LegendOptions {
@@ -21,6 +26,7 @@ export interface LegendOptions {
   legendPosition?: LayoutPosition;
   legendLabelsHeight?: number;
   legendLabelsWidth?: number;
+  legendBorderRadius?: number;
 }
 
 export interface TooltipOptions {
@@ -34,4 +40,14 @@ export interface TooltipOptions {
   legendTooltipBody?: string;
   legendTooltipFooter?: string;
   legendTooltipFloor?: number;
+}
+
+export enum ChartTypeEnum {
+  Area = 'area',
+  Bar = 'bar',
+  Column = 'column',
+  Line = 'line',
+  Pie = 'pie',
+  Doughnut = 'doughnut',
+  Range = 'range',
 }

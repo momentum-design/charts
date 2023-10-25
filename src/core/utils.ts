@@ -60,3 +60,18 @@ export function getColorForChart(index: number, colors?: string[], chartTheme?: 
 
   return '';
 }
+
+/**
+ * Decreases the opacity of a color. Its range for the amount is between 0 to 1.
+ *
+ * @param {string} color - Color string in hexadecimal format (e.g., '#FFD700').
+ * @param {number} opacity - Opacity value, ranging from 0 (completely transparent) to 1 (completely opaque).
+ * @returns {string} A new color string including the specified opacity.
+ */
+export function transparentizeColor(color: string, opacity: number): string {
+  const hexColor = color.replace(/^#/, '');
+  const r = parseInt(hexColor.slice(0, 2), 16);
+  const g = parseInt(hexColor.slice(2, 4), 16);
+  const b = parseInt(hexColor.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${Math.min(1, Math.max(0, opacity))})`;
+}

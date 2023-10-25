@@ -45,29 +45,36 @@ const getOrCreateTooltip = (chart: any) => {
 const legendClickHandler = (evt: ChartEvent, item: LegendItem, legend: any): void => {
   // TODO: support Filter Click
   if (legend.chart.config.options?.isLegendClick) {
+    let legendObj: LegendClickData = {};
     if (['pie', 'doughnut'].includes(legend.chart.config.type)) {
       const index = item.index;
-      const legendObj: LegendClickData = {
+      legendObj = {
         label: item.text,
         value: legend.chart.config.data.datasets[0].data[index as number],
       };
-
-      const selectedLegends = legend.chart.config.options?.selectedLegends ?? [];
-      const legendIndex = selectedLegends?.findIndex((data: LegendClickData) => data.label === item.text);
-      if (legendIndex !== -1) {
-        selectedLegends.splice(legendIndex, 1);
-      } else {
-        selectedLegends.push(legendObj);
-      }
-      legend.chart.config.options.onLegendClick(selectedLegends);
+    } else {
+      legendObj = {
+        label: item.text,
+        value: item.text,
+      };
     }
+    const selectedLegends = legend.chart.config.options?.selectedLegends ?? [];
+    const legendIndex = selectedLegends?.findIndex((data: LegendClickData) => data.label === item.text);
+    if (legendIndex !== -1) {
+      selectedLegends.splice(legendIndex, 1);
+    } else {
+      selectedLegends.push(legendObj);
+    }
+    legend.chart.config.options.onLegendClick(selectedLegends);
   } else {
+    const chart = legend.chart;
     if (['pie', 'doughnut'].includes(legend.chart.config.type)) {
       const index = item.index;
-      const chart = legend.chart;
       chart.toggleDataVisibility(index);
-      chart.update();
+    } else {
+      chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex));
     }
+    chart.update();
   }
 };
 
@@ -181,8 +188,14 @@ const legendHandleHover = (evt: ChartEvent, item: LegendItem, legend: any): void
   tooltipFooter && tooltipRoot.appendChild(tooltipFooter);
 
   // tooltip position
-  const left = legend.left;
-  const top = legend.legendHitBoxes[item.index as number].top;
+  let index: number = 0;
+  if (['pie', 'doughnut'].includes(legend.chart.config.type)) {
+    index = item.index ?? 0;
+  } else {
+    index = item.datasetIndex ?? 0;
+  }
+  const top = legend.legendHitBoxes[index].top;
+  const left = legend.legendHitBoxes[index].left;
   tooltipEl.style.opacity = 1;
   tooltipEl.style.left = left + 'px';
   tooltipEl.style.top = top + 8 + 'px';

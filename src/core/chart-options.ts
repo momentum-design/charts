@@ -1,6 +1,6 @@
 import { ChartOptions } from '../types';
 
-const chartOptions: ChartOptions = {
+const defaultChartOptions: ChartOptions = {
   responsive: true,
   chartLabel: '',
   fontColor: '#000',
@@ -9,6 +9,7 @@ const chartOptions: ChartOptions = {
   legend: {
     legendLabelsHeight: 12,
     legendLabelsWidth: 12,
+    legendBorderRadius: 2,
   },
   tooltip: {
     isMultipleLegend: false,
@@ -18,4 +19,4 @@ const chartOptions: ChartOptions = {
   },
 };
 
-export { chartOptions };
+export { defaultChartOptions };
