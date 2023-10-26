@@ -1,0 +1,18 @@
+# Range Chart
+
+```jsx live
+function showComponent() {
+  const data = [
+    ['Year', 'Things', 'Stuff'],
+    ['2004', 1000, 400],
+    ['2005', 1170, 460],
+    ['2006', 660, 1120],
+    ['2007', 1030, 540],
+  ];
+  const options = {
+    title: 'My First Range Area Chart',
+    theme: 'color-health',
+  };
+  return <mdw-xy type="range" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-xy>;
+}
+```

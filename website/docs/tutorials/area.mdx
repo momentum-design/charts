@@ -1,0 +1,28 @@
+# Area Chart
+
+```jsx live
+function showComponent() {
+  const data = [
+    ['Year', 'Things', 'Stuff'],
+    ['2004', 1000, 400],
+    ['2005', 1170, 460],
+    ['2006', 660, 1120],
+    ['2007', 1030, 540],
+  ];
+  const options = {
+    title: 'My First Area Chart',
+    theme: 'material',
+    seriesOptions: {
+      styleMapping: {
+        Stuff: {
+          type: 'line',
+        },
+      },
+    },
+    legend: {
+      isLegendClick: true,
+    },
+  };
+  return <mdw-xy type="area" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-xy>;
+}
+```

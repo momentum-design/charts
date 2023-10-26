@@ -1,0 +1,41 @@
+# Line Chart
+
+```jsx live
+function showComponent() {
+  const data = [
+    { dateTime: '2013-11-20T03:18:55.732Z', Arizona: 5523, Louisiana: 5239, Illinois: 5539, Tennessee: 816, 'Rhode Island': 270 },
+    { dateTime: '2013-12-20T03:18:55.732Z', Arizona: 315, Louisiana: 3868, Illinois: 182, Tennessee: 1926, 'Rhode Island': 6734 },
+    { dateTime: '2014-01-20T03:18:55.732Z', Arizona: 4244, Louisiana: 2462, Illinois: 9486, Tennessee: 7565, 'Rhode Island': 4514 },
+    { dateTime: '2014-02-20T03:18:55.732Z', Arizona: 2234, Louisiana: 3857, Illinois: 888, Tennessee: 1364, 'Rhode Island': 1752 },
+    { dateTime: '2014-03-20T03:18:55.732Z', Arizona: 6484, Louisiana: 2907, Illinois: 8919, Tennessee: 1369, 'Rhode Island': 9925 },
+  ];
+  const options = {
+    categoryAxis: {
+      gridDisplay: true,
+      title: 'category',
+      dataKey: 'dateTime',
+      type: 'time',
+      timeUnit: 'month',
+      labelFormat: 'MM DD, YYYY',
+    },
+    valueAxis: {
+      gridDisplay: false,
+      position: 'left',
+      title: 'value',
+    },
+    seriesOptions: {
+      styleMapping: {
+        Louisiana: {
+          lineStyle: 'dashed',
+        },
+      },
+    },
+    title: 'My First Line Chart',
+    theme: 'diverging-colors-alerts',
+    legend: {
+      isLegendClick: false,
+    },
+  };
+  return <mdw-xy type="line" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-xy>;
+}
+```
