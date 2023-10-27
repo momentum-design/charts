@@ -1,4 +1,4 @@
-export type LayoutPosition = 'left' | 'top' | 'right' | 'bottom' | 'center' | 'chartArea' | { [scaleId: string]: number };
+export type LayoutPosition = 'left' | 'top' | 'right' | 'bottom';
 
 export interface ChartOptions {
   title?: string;

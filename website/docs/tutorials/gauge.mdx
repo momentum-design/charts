@@ -1,5 +1,12 @@
 # Gauge Chart
 
+Gauge chart is a data visualization chart, usually used to show the relative position of a single indicator or value within a fixed range.
+
+It looks similar to a car dashboard and helps people quickly understand where a value falls within a predetermined range.
+
+Gauge charts usually consist of a circular ruler (gauge) and an indicator (needle).
+
+
 ```jsx live
 function showComponent() {
   const data = [
@@ -14,6 +21,15 @@ function showComponent() {
     value: 51,
     theme: 'qualitative-colors-tertiary',
   };
-  return <mdw-gauge style={{width: '50%'}} data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-gauge>;
+  return <mdw-gauge style={{ width: '50%' }} data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-gauge>;
 }
 ```
+
+## [Options Defaults](doughnut#options-defaults)
+
+## Private Configuration
+
+| Name   | Type   | Default | Description                                             |
+| ------ | ------ | ------- | ------------------------------------------------------- |
+| value  | number | 0       | pointer value                                           |
+| cutout | string | 90%     | The portion of the chart that is cut out of the middle. |

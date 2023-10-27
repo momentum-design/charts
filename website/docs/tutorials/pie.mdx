@@ -1,0 +1,32 @@
+# Pie Chart
+
+Pie and doughnut charts are probably the most commonly used charts. They are divided into segments, the arc of each segment shows the proportional value of each piece of data.
+
+They are excellent at showing the relational proportions between data.
+
+```jsx live
+function showComponent() {
+  const data = [
+    {
+      A:'13',
+      B:'17',
+      C:'8',
+      D:'10',
+      E:'40',
+      F:'51',
+      G:'31'
+    }
+  ];
+  const options = {
+    chartLabel:'Label D',
+    theme: 'diverging-colors-alerts',
+    legend:{
+      'isLegendClick': true
+    }
+  }
+
+  return <mdw-pie style={{ width: '80%' }} data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-pie>;
+}
+```
+
+## [Options Defaults](doughnut#options-defaults)
