@@ -1,6 +1,10 @@
+---
+sidebar_position: 104
+---
+
 # Bar Chart
 
-A bar chart provides a way of showing data values represented as vertical bars. It is sometimes used to show trend data, and the comparison of multiple data sets side by side.
+Bar chart provides a way of showing data values represented as horizontal bars. It is sometimes used to show trend data, and the comparison of multiple data sets side by side.
 
 ```jsx live
 function showComponent() {
@@ -57,12 +61,12 @@ These are only the common options supported by all axes. Please see specific axi
 
 | Name        | Type                                               | Default | Description                                                                                                                                        |
 | ----------- | -------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| title       | string                                             |         | Title of value axis.                                                                                                                               |
-| type        | 'category' \| 'time'                               |         | Type of scale being employed. Custom scales can be created and registered with a string key. This allows changing the type of an axis for a chart. |
-| position    | 'left' \| 'right' \| 'top' \| 'bottom' \| 'center' |         | The location of the axis on the chart. Setting the position can determine whether the chart is a horizontal chart or a vertical chart.             |
-| display     | boolean                                            | true    | Controls the axis global visibility (visible when true, hidden when false).                                                                        |
-| gridDisplay | boolean                                            | true    | Controls the grid of axis global visibility (visible when true, hidden when false).                                                                |
-| stacked     | boolean                                            | false   | Should the data be stacked.                                                                                                                        |
+| title       | `string`                                           |         | Title of value axis.                                                                                                                               |
+| type        | `category` \| `time`                               |         | Type of scale being employed. Custom scales can be created and registered with a string key. This allows changing the type of an axis for a chart. |
+| position    | `left` \| `right` \| `top` \| `bottom` \| `center` |         | The location of the axis on the chart. Setting the position can determine whether the chart is a horizontal chart or a vertical chart.             |
+| display     | `boolean`                                          | `true`  | Controls the axis global visibility (visible when true, hidden when false).                                                                        |
+| gridDisplay | `boolean`                                          | `true`  | Controls the grid of axis global visibility (visible when true, hidden when false).                                                                |
+| stacked     | `boolean`                                          | `false` | Should the data be stacked.                                                                                                                        |
 
 ### SeriesOptions
 
@@ -76,21 +80,21 @@ The options for the series.
 
 | Name      | Type                      | Default | Description                                                                       |
 | --------- | ------------------------- | ------- | --------------------------------------------------------------------------------- |
-| key       | string                    |         | Series name.                                                                      |
-| type      | 'bar' \| 'line' \| 'area' |         | The chart type of the series, if not set, it will be the same as the global type. |
-| lineStyle | 'solid' \| 'dashed'       | 'solid' | The line style of the series                                                      |
+| key       | `string`                  |         | Series name.                                                                      |
+| type      | `bar` \| `line` \| `area` |         | The chart type of the series, if not set, it will be the same as the global type. |
+| lineStyle | `solid` \| `dashed`       | `solid` | The line style of the series                                                      |
 
 ### CategoryAxisOptions
 
 CategoryAxisOptions extends [AxisOptions](#axisoptions)
 
-| Name          | Type     | Default | Description                                                                                                                                                  |
-| ------------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| enableColor   | boolean  | false   |                                                                                                                                                              |
-| dataKey       | string   |         | Specifies the category field on the category axis. If not specified, the first field name of the first piece of data in data will be automatically obtained. |
-| timeUnit      | TimeUnit |         | Specifies the time unit on the category axis.                                                                                                                |
-| labelFormat   | string   |         | Specifies the date format of labels on the category axis.                                                                                                    |
-| tooltipFormat | string   |         | Specifies the format of the tooltip displayed for data points on the category axis.                                                                          |
+| Name          | Type       | Default | Description                                                                                                                                                  |
+| ------------- | ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| enableColor   | `boolean`  | `false` |                                                                                                                                                              |
+| dataKey       | `string`   |         | Specifies the category field on the category axis. If not specified, the first field name of the first piece of data in data will be automatically obtained. |
+| timeUnit      | `TimeUnit` |         | Specifies the time unit on the category axis.                                                                                                                |
+| labelFormat   | `string`   |         | Specifies the date format of labels on the category axis. See chartjs-adapter-moment                                                                         |
+| tooltipFormat | `string`   |         | Specifies the format of the tooltip displayed for data points on the category axis.                                                                          |
 
 ### ValueAxisOptions
 

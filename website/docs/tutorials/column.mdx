@@ -1,4 +1,10 @@
+---
+sidebar_position: 105
+---
+
 # Column Chart
+
+Column chart provides a way of showing data values represented as vertical bars. It is sometimes used to show trend data, and the comparison of multiple data sets side by side.
 
 ```jsx live
 function showComponent() {
@@ -9,13 +15,13 @@ function showComponent() {
     ['2006', 660, 1120],
     ['2007', 1030, 540],
   ];
-  const options = {
+  const initialOptions = {
     categoryAxis: {
-      stacked: true,
+      stacked: false,
       enableColor: false,
     },
     valueAxis: {
-      stacked: true,
+      stacked: false,
       title: 'value',
     },
     title: 'My First Column Chart',
@@ -24,6 +30,45 @@ function showComponent() {
       isLegendClick: true,
     },
   };
-  return <mdw-xy type="column" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-xy>;
+
+  const [options, setOptions] = useState(initialOptions);
+  const [key, setKey] = useState(new Date().getTime());
+  const handleButtonClick = (type) => {
+    setKey((preKey) => {
+      return new Date().getTime();
+    });
+    setOptions(() => {
+      const prevOptions = { ...initialOptions };
+      if (type === 'category') {
+        prevOptions.categoryAxis.stacked = !prevOptions.categoryAxis.stacked;
+      } else if (type === 'value') {
+        prevOptions.valueAxis.stacked = !prevOptions.valueAxis.stacked;
+      } else if (type === 'all') {
+        prevOptions.categoryAxis.stacked = !prevOptions.categoryAxis.stacked;
+        prevOptions.valueAxis.stacked = !prevOptions.valueAxis.stacked;
+      }
+      return {
+        ...prevOptions,
+      };
+    });
+  };
+  const actionStyle = { padding: '8px 16px', margin: '0 8px 8px 0', borderRadius: '6px', color: '#3080d0', cursor: 'pointer', background: 'rgba(48,128,208,.15)', borderColor: 'rgba(48,128,208,.2)' };
+  return (
+    <div>
+      <mdw-xy key={key} type="column" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-xy>
+      <button style={actionStyle} onClick={handleButtonClick}>
+        Default
+      </button>
+      <button style={actionStyle} onClick={() => handleButtonClick('category')}>
+        Category Stacked
+      </button>
+      <button style={actionStyle} onClick={() => handleButtonClick('value')}>
+        Value Stacked
+      </button>
+      <button style={actionStyle} onClick={() => handleButtonClick('all')}>
+        All Stacked
+      </button>
+    </div>
+  );
 }
 ```
