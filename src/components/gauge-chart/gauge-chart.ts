@@ -12,6 +12,8 @@ import { GaugeChartOptions } from './gauge-chart.types';
 
 interface ChartJsOptions extends ChartOptions<'doughnut'> {
   value?: number;
+  circumference?: number;
+  rotation?: number;
 }
 
 @customElement(`${COMPONENT_PREFIX}-gauge`)

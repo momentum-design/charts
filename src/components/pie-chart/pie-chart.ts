@@ -147,7 +147,8 @@ class PieChart extends LitElement {
       bubbles: true,
       composed: true,
     };
-    this.dispatchEvent(new CustomEvent('legendClick', options));
+
+    this.dispatchEvent(new CustomEvent('onLegendClick', options));
   }
 
   private handleChartOptions(): PieChartJsOptions {

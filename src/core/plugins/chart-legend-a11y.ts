@@ -112,8 +112,11 @@ class ChartLegendManager {
       const box = this.canvas.getBoundingClientRect();
       const { left, top, width, height, text } = this.hitBoxes[index];
 
-      const newLeft = `${left - this.focusBoxMargin - window.pageXOffset}px`;
-      const newTop = `${top - this.focusBoxMargin + window.pageYOffset}px`;
+      // TODO
+      // const newLeft = `${left - this.focusBoxMargin - window.pageXOffset}px`;
+      // const newTop = `${top - this.focusBoxMargin + window.pageYOffset}px`;
+      const newLeft = `${left - this.focusBoxMargin}px`;
+      const newTop = `${top - this.focusBoxMargin}px`;
       const newWidth = `${width + 2 * this.focusBoxMargin}px`;
       const newHeight = `${height + 2 * this.focusBoxMargin}px`;
       focusBox.setAttribute('style', `position:absolute; left: ${newLeft}; top:${newTop}; width:${newWidth}; height:${newHeight}`);
