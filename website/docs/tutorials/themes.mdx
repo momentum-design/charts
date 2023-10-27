@@ -4,6 +4,8 @@ sidebar_position: 2
 
 # Themes
 
+## Set Global Theme
+
 We provide some built-in themes. You can set global theme via below code.
 
 ```js
@@ -12,7 +14,7 @@ mdw.settings.set({
 });
 ```
 
-The following is the built-in themes:
+## Built-in Themes
 
 <mdw-themes></mdw-themes>
 
@@ -24,3 +26,8 @@ That will be set as the default theme.
 ```js
 mdw.settings.addTheme('my-theme', ['#00ff00', '#ff0000', '#0000ff']);
 ```
+
+## More Color Customization
+
+Except above simply theme setting, we also provide color customization for each chart and each series.
+Please see the [ChartOptions.colors](https://momentum-design.github.io/momentum-widgets/docs/api/interfaces/ChartOptions#colors) definition or specific chart.

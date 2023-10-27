@@ -1,8 +1,15 @@
 # @momentum-design/widgets
 
-A pure ui library based on web components and chart.js that is for building dashboards.
+A PURE UI library based on web components and chart.js that is for building dashboards
+which can be used in any front-end framework.
 
-## How to Start
+- [API](https://momentum-design.github.io/momentum-widgets/docs/api/)
+- [Tutorials](https://momentum-design.github.io/momentum-widgets/docs/tutorials/getting-started)
+- [Changelog](https://momentum-design.github.io/momentum-widgets/blog)
+
+All examples in website are using the JXS and online code editor to render widgets in real time.
+
+## Installation
 
 ### umd
 
