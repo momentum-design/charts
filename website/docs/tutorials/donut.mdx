@@ -1,6 +1,10 @@
+---
+sidebar_position: 111
+---
+
 import { useEffect, useRef } from 'react';
 
-# Doughnut Chart
+# Donut Chart
 
 Donut chart is a commonly used data visualization tool, often used to show the relative proportions between different categories or parts.
 
@@ -36,7 +40,7 @@ function showComponent() {
 | Name          | Type                                | Default | Description                                 |
 | ------------- | ----------------------------------- | ------- | ------------------------------------------- |
 | responsive    | `boolean`                           | `true`  | Resizes the chart canvas when its container |
-| chartLabel    | `string` or `number` or `string[]`; | -       | Data label                                  |
+| chartLabel    | `string` \| `number` \| `string[]`; | -       | Data label                                  |
 | theme         |                                     | -       | Chart theme                                 |
 | fontColor     | `string`                            | -       | Plugin text font color                      |
 | fontFamily    | `string`                            | -       | Plugin text font family                     |
@@ -59,13 +63,13 @@ function showComponent() {
 
 ** Legend related configuration **
 
-| Name               | Type                                | Default | Description                    |
-| ------------------ | ----------------------------------- | ------- | ------------------------------ |
-| legendDisplay      | `boolean`                           | true    | Legend show                    |
-| isLegendClick      | `boolean    `                       | 90%     | Change legend default behavior |
-| legendPosition     | `left` , `top` , `right` , `bottom` | `top`   | Legend position                |
-| legendLabelsWidth  | `number`                            | 12      | Legend color block width       |
-| legendLabelsHeight | `number`                            | 12      | Legend color block height      |
+| Name               | Type                                   | Default | Description                    |
+| ------------------ | -------------------------------------- | ------- | ------------------------------ |
+| legendDisplay      | `boolean`                              | true    | Legend show                    |
+| isLegendClick      | `boolean`                              | 90%     | Change legend default behavior |
+| legendPosition     | `left` \| `top` \| `right` \| `bottom` | `top`   | Legend position                |
+| legendLabelsWidth  | `number`                               | 12      | Legend color block width       |
+| legendLabelsHeight | `number`                               | 12      | Legend color block height      |
 
 > If isLegendClick is set to true, the default click behavior of chart legend will be disabled.
 
@@ -111,13 +115,13 @@ function showComponent() {
 
 ** Tooltip related configuration **
 
-| Name                | Type              | Default | Description                 |
-| ------------------- | ----------------- | ------- | --------------------------- |
-| seriesTooltipHead   | `HTML`or `string` | -       | Series tooltip Header       |
-| seriesTooltipBody   | `HTML`or `string` | -       | Series tooltip Body         |
-| seriesTooltipFooter | `HTML`or `string` | -       | Series tooltip Footer       |
-| seriesTooltipFloor  | `number`          | 0       | Series tooltip number floor |
-| legendTooltipHead   | `HTML`or `string` | -       | Legend tooltip Header       |
-| legendTooltipBody   | `HTML`or `string` | -       | Legend tooltip Body         |
-| legendTooltipFooter | `HTML`or `string` | -       | Legend tooltip Footer       |
-| legendTooltipFloor  | `number`          | 0       | Legend tooltip number floor |
+| Name                | Type               | Default | Description                 |
+| ------------------- | ------------------ | ------- | --------------------------- |
+| seriesTooltipHead   | `HTML` \| `string` | -       | Series tooltip Header       |
+| seriesTooltipBody   | `HTML` \| `string` | -       | Series tooltip Body         |
+| seriesTooltipFooter | `HTML` \| `string` | -       | Series tooltip Footer       |
+| seriesTooltipFloor  | `number`           | 0       | Series tooltip number floor |
+| legendTooltipHead   | `HTML` \| `string` | -       | Legend tooltip Header       |
+| legendTooltipBody   | `HTML` \| `string` | -       | Legend tooltip Body         |
+| legendTooltipFooter | `HTML` \| `string` | -       | Legend tooltip Footer       |
+| legendTooltipFloor  | `number`           | 0       | Legend tooltip number floor |

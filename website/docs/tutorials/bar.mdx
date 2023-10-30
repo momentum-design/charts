@@ -1,0 +1,101 @@
+---
+sidebar_position: 104
+---
+
+# Bar Chart
+
+Bar chart provides a way of showing data values represented as horizontal bars. It is sometimes used to show trend data, and the comparison of multiple data sets side by side.
+
+```jsx live
+function showComponent() {
+  const data = [
+    ['Year', 'Things'],
+    ['2004', 1000],
+    ['2005', 1170],
+    ['2006', 660],
+    ['2007', 1030],
+  ];
+  const options = {
+    categoryAxis: {
+      gridDisplay: true,
+      title: 'category',
+      enableColor: true,
+    },
+    valueAxis: {
+      title: 'value',
+    },
+    title: 'My First Bar Chart',
+    theme: 'qualitative-colors-primary',
+    legend: {
+      isLegendClick: false,
+    },
+  };
+  return <mdw-xy type="bar" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-xy>;
+}
+```
+
+## Type
+
+type = 'bar'
+
+## Data
+
+The data supports the following multiple data formats:
+
+| Mode                  | Type                               | Example                                                                                                                  |
+| --------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Two-dimensional array | unknown[][]                        | [['Year','Things'],['2004',1000],['2005',1170],['2006',660],['2007',1030]]                                               |
+| Array                 | Record<string, string \| number>[] | [{"Year":"2004","Things":1000},{"Year":"2005","Things":1170},{"Year":"2006","Things":660},{"Year":"2007","Things":1030}] |
+
+## Options
+
+| Name          | Type                                        | Description                                           |
+| ------------- | ------------------------------------------- | ----------------------------------------------------- |
+| seriesOptions | [SeriesOptions](#seriesoptions)             | Series related configuration, including styleMapping. |
+| categoryAxis  | [CategoryAxisOptions](#categoryaxisoptions) | Used to create a category-based axis for the chart.   |
+| valueAxis     | [ValueAxisOptions](#valueaxisoptions)       | Used to create a value axis for the chart.            |
+
+### AxisOptions
+
+These are only the common options supported by all axes. Please see specific axis documentation for all the available options for that axis.
+
+| Name        | Type                                               | Default | Description                                                                                                                                        |
+| ----------- | -------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| title       | `string`                                           |         | Title of value axis.                                                                                                                               |
+| type        | `category` \| `time`                               |         | Type of scale being employed. Custom scales can be created and registered with a string key. This allows changing the type of an axis for a chart. |
+| position    | `left` \| `right` \| `top` \| `bottom` \| `center` |         | The location of the axis on the chart. Setting the position can determine whether the chart is a horizontal chart or a vertical chart.             |
+| display     | `boolean`                                          | `true`  | Controls the axis global visibility (visible when true, hidden when false).                                                                        |
+| gridDisplay | `boolean`                                          | `true`  | Controls the grid of axis global visibility (visible when true, hidden when false).                                                                |
+| stacked     | `boolean`                                          | `false` | Should the data be stacked.                                                                                                                        |
+
+### SeriesOptions
+
+The options for the series.
+
+| Name         | Type                          | Default | Description                                                       |
+| ------------ | ----------------------------- | ------- | ----------------------------------------------------------------- |
+| styleMapping | [styleMapping](#stylemapping) |         | The style mapping is an object where keys are string identifiers. |
+
+#### styleMapping
+
+| Name      | Type                      | Default | Description                                                                       |
+| --------- | ------------------------- | ------- | --------------------------------------------------------------------------------- |
+| key       | `string`                  |         | Series name.                                                                      |
+| type      | `bar` \| `line` \| `area` |         | The chart type of the series, if not set, it will be the same as the global type. |
+| lineStyle | `solid` \| `dashed`       | `solid` | The line style of the series                                                      |
+
+### CategoryAxisOptions
+
+CategoryAxisOptions extends [AxisOptions](#axisoptions)
+
+| Name          | Type                                                                                                 | Default | Description                                                                                                                                                  |
+| ------------- | ---------------------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| enableColor   | `boolean`                                                                                            | `false` |                                                                                                                                                              |
+| dataKey       | `string`                                                                                             |         | Specifies the category field on the category axis. If not specified, the first field name of the first piece of data in data will be automatically obtained. |
+| timeUnit      | `millisecond` \| `second` \| `minute` \| `hour` \| `day` \| `week` \| `month` \| `quarter` \| `year` |         | Specifies the time unit on the category axis.                                                                                                                |
+| labelFormat   | `string`                                                                                             |         | Specifies the date format of labels on the category axis. See chartjs-adapter-moment                                                                         |
+| tooltipFormat | `string`                                                                                             |         | Specifies the format of the tooltip displayed for data points on the category axis.                                                                          |
+
+### ValueAxisOptions
+
+ValueAxisOptions extends [AxisOptions](#axisoptions)
