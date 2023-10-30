@@ -133,7 +133,8 @@
             "E":"40",
             "F":"51",
             "G":"31"
-          }' options='{
+          }'
+              options='{
               "theme": "diverging-colors-alerts",
               "legend":{
                 "isLegendClick": true
@@ -262,14 +263,12 @@
                 "categoryAxis": {
                   "gridDisplay":true,
                   "title":"category",
-                  "enableColor":true,
-                  "position":"left"
+                  "enableColor":true
                 },
                 "valueAxis":{
                   "title":"value"
                 },
                 "title":"My First Bar Chart",
-                "theme": "qualitative-colors-primary",
                 "legend":{
                   "isLegendClick": false
                 }
@@ -278,7 +277,7 @@
           </div>
           <div>
             <mdw-xy
-              type="bar"
+              type="column"
               style="width: 40%"
               data='[["Year", "Things", "Stuff"],
               ["2004", 1000, 400],
