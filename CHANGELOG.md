@@ -1,3 +1,10 @@
+# [1.0.0-alpha.11](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.10...v1.0.0-alpha.11) (2023-10-30)
+
+
+### Bug Fixes
+
+* **xy:** the style is invalid when area and line charts are combined ([#12](https://github.com/momentum-design/momentum-widgets/issues/12)) ([ad37daf](https://github.com/momentum-design/momentum-widgets/commit/ad37dafe56f3806984dc376ab649e67075e3ebcf))
+
 # [1.0.0-alpha.10](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.9...v1.0.0-alpha.10) (2023-10-25)
 
 
