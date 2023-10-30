@@ -28,8 +28,49 @@ interface CurrentChartOptions extends XYChartOptions, ChartOptions<ChartType> {
   onLegendClick?: (legendItem: { label: string | number; value: string | number }[]) => void;
 }
 
+/**
+ * Basically this is a chart type, that is used to display any chart.
+ *
+ * The horizontal and vertical scale is determined by the type of Axis.
+ *
+ *
+ * @example
+ * You can implement a specific chart by following code.
+ * ```ts
+  <mdw-xy
+    type="bar"
+    style="width: 40%"
+    data='[["Year", "Things", "Stuff"],
+    ["2004", 1000, 400],
+    ["2005", 1170, 460],
+    ["2006", 660, 1120],
+    ["2007", 1030, 540]]'
+    options='{
+      "categoryAxis": {
+        "stacked":true,
+        "enableColor":false
+      },
+      "valueAxis":{
+        "stacked":true,
+        "title":"value"
+      },
+      "title":"My First Bar Chart",
+      "theme": "qualitative-colors-primary",
+      "legend":{
+        "isLegendClick": true
+      }
+    }'
+  ></mdw-xy>
+ * ```
+ *
+ * @typeParam data - the data of chart
+ * @typeParam options - the options of chart
+ */
 @customElement(`${COMPONENT_PREFIX}-xy`)
 export class XYChart extends ChartElement<DataTableLike, XYChartOptions> {
+  /**
+   * Set the chart type, currently supports 'area', 'bar', 'column', 'line', and 'range'
+   */
   @property({ type: String, hasChanged: () => true })
   type: ChartTypeEnum = ChartTypeEnum.Line;
 
@@ -46,18 +87,10 @@ export class XYChart extends ChartElement<DataTableLike, XYChartOptions> {
     let chartDatasets: ChartDataset<ChartType, number[]>[] = [];
     this.initData();
     if (this._data) {
-      const container = this.renderRoot.querySelector('.container');
       chartLabels = this._data.category.labels ?? [];
       this.chartOptions = merge({}, defaultChartOptions, defaultXYChartOptions, this.options);
       chartDatasets = this.handleChartDataset();
       this.currentChartOptions = this.handleChartOptions();
-      const canvas = this.renderRoot.querySelector('canvas') as HTMLCanvasElement;
-      if (container) {
-        this.currentChartOptions.maintainAspectRatio = false;
-        this.currentChartOptions.aspectRatio = this.clientWidth / this.clientHeight;
-        canvas.width = this.clientWidth;
-        canvas.height = this.clientHeight;
-      }
     }
     return {
       type: this.getChartType(),
@@ -207,7 +240,7 @@ export class XYChart extends ChartElement<DataTableLike, XYChartOptions> {
         dataset.label = series.name;
         dataset.borderColor = this.chartOptions.categoryAxis?.enableColor ? colors : colors[colorIndex];
         dataset.backgroundColor = this.chartOptions.categoryAxis?.enableColor ? colors : colors[colorIndex];
-        dataset.type = seriesOptions?.type ?? this.getChartType();
+        dataset.type = this.getChartType(seriesOptions?.type);
         if (this.type === ChartTypeEnum.Line || this.type === ChartTypeEnum.Area || this.type === ChartTypeEnum.Range) {
           dataset = dataset as ChartDataset<ChartTypeEnum.Line, number[]>;
           dataset.yAxisID = this.isHorizontal() === 'x' ? 'valueAxis' : 'categoryAxis';
@@ -215,7 +248,7 @@ export class XYChart extends ChartElement<DataTableLike, XYChartOptions> {
           if (seriesOptions?.lineStyle === 'dashed') {
             dataset.borderDash = [3, 3];
           }
-          if (this.type === ChartTypeEnum.Area) {
+          if ((this.type === ChartTypeEnum.Area && !seriesOptions?.type) || seriesOptions?.type === ChartTypeEnum.Area) {
             dataset.fill = { below: transparentizeColor(colors[colorIndex], 0.4), above: transparentizeColor(colors[colorIndex], 0.4), target: 'start' };
           } else if (this.type === ChartTypeEnum.Range && this._data?.series && index === this._data.series.length - 1) {
             dataset.fill = { below: transparentizeColor(colors[colorIndex], 0.4), above: transparentizeColor(colors[colorIndex], 0.4), target: '-1' };
@@ -257,19 +290,19 @@ export class XYChart extends ChartElement<DataTableLike, XYChartOptions> {
 
   private transformGenericData(sourceData: DataTableLike): GenericDataModel {
     const result: GenericDataModel = {
-      categoryKey: this.options?.categoryAxis?.dataKey,
+      dataKey: this.options?.categoryAxis?.dataKey,
       data: [],
     };
 
     if (typeof sourceData[0] === 'object' && !Array.isArray(sourceData[0])) {
       const data = sourceData as Record<string, string | number>[];
-      result.categoryKey = result.categoryKey ?? Object.keys(data[0])[0];
+      result.dataKey = result.dataKey ?? Object.keys(data[0])[0];
       result.data = data;
     } else if (Array.isArray(sourceData[0])) {
       const data = sourceData as unknown[][];
       const columns = data[0] as string[];
       const rows = data.slice(1);
-      result.categoryKey = result.categoryKey ?? columns[0];
+      result.dataKey = result.dataKey ?? columns[0];
       rows.forEach((row: unknown[]) => {
         const item: {
           [key: string]: string | number;
@@ -284,23 +317,24 @@ export class XYChart extends ChartElement<DataTableLike, XYChartOptions> {
         }
       });
     }
+
     return result;
   }
 
   private genericToDataView(data: GenericDataModel): DataView {
     const result: DataView = {
       category: {
-        name: data.categoryKey ?? '',
+        name: data.dataKey ?? '',
         labels: [],
       },
       series: [],
     };
 
-    if (!data?.categoryKey) {
+    if (!data?.dataKey) {
       return result;
     }
-    result.category.labels = data.data.map((item) => item[data.categoryKey as string]);
-    const seriesNames = Object.keys(data.data[0]).filter((key) => key !== data.categoryKey);
+    result.category.labels = data.data.map((item) => item[data.dataKey as string]);
+    const seriesNames = Object.keys(data.data[0]).filter((key) => key !== data.dataKey);
 
     const seriesData = seriesNames.map((name) => {
       return {
@@ -310,14 +344,12 @@ export class XYChart extends ChartElement<DataTableLike, XYChartOptions> {
     });
 
     result.series = seriesData;
-    console.log('genericToDataView', result);
-
     return result;
   }
 
-  private getChartType(): ChartType {
+  private getChartType(customType?: string): ChartType {
     let chartType: ChartType = 'line';
-    switch (this.type) {
+    switch (customType || this.type) {
       case ChartTypeEnum.Bar:
       case ChartTypeEnum.Column:
         chartType = 'bar';
@@ -334,6 +366,12 @@ export class XYChart extends ChartElement<DataTableLike, XYChartOptions> {
     return chartType;
   }
   private isHorizontal(): 'x' | 'y' {
+    if (!this.chartOptions.categoryAxis?.position && !this.chartOptions.valueAxis?.position) {
+      if (!this.chartOptions.categoryAxis) {
+        this.chartOptions.categoryAxis = {};
+      }
+      this.chartOptions.categoryAxis.position = this.type === ChartTypeEnum.Bar ? 'left' : 'bottom';
+    }
     const isHorizontal = this.chartOptions.categoryAxis?.position === 'left' || this.chartOptions.categoryAxis?.position === 'right' || this.chartOptions.valueAxis?.position === 'top' || this.chartOptions.valueAxis?.position === 'bottom';
     return isHorizontal ? 'y' : 'x';
   }

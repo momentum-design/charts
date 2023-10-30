@@ -5,7 +5,6 @@ const defaultXYChartOptions: XYChartOptions = {
     gridDisplay: true,
     display: true,
     stacked: false,
-    dataKey: '',
   },
   valueAxis: {
     gridDisplay: true,
