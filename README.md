@@ -7,7 +7,7 @@ which can be used in any front-end framework.
 - [Tutorials](https://momentum-design.github.io/momentum-widgets/docs/tutorials/getting-started)
 - [Changelog](https://momentum-design.github.io/momentum-widgets/blog)
 
-All examples in website are using the JXS and online code editor to render widgets in real time.
+All examples in website are using the JSX and online code editor to render widgets in real time.
 
 ## Installation
 
