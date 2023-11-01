@@ -1,0 +1,8 @@
+{
+  "label": "Demo - Charts",
+  "position": 10,
+  "link": {
+    "type": "generated-index",
+    "description": "All examples in website are using the JSX and online code editor to render components in real time."
+  }
+}
