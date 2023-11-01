@@ -1,10 +1,11 @@
+// TODO: rename to Position
 export type LayoutPosition = 'left' | 'top' | 'right' | 'bottom';
 
 export interface ChartOptions {
   title?: string;
-  responsive?: boolean;
-  chartLabel?: string | number | string[];
-  theme?: string | [];
+  responsive?: boolean; // TODO: remove it as it has a default value.
+  chartLabel?: string | number | string[]; // TODO: if it is only for donut chart, it should be moved into PieChartOptions
+  theme?: string | []; // TODO: remove empty array
   fontColor?: string;
   fontFamily?: string;
   aspectRatio?: number;
@@ -42,6 +43,7 @@ export interface TooltipOptions {
   legendTooltipFloor?: number;
 }
 
+// TODO: rename to ChartType
 export enum ChartTypeEnum {
   Area = 'area',
   Bar = 'bar',
