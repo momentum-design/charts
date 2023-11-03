@@ -7,7 +7,7 @@ import { defaultChartOptions } from '../../core/chart-options';
 import { chartA11y, chartLegendA11y, chartSeriesClick, legendClickHandler, legendHandleHover, legendHandleLeave } from '../../core/plugins';
 import { externalTooltipHandler } from '../../core/plugins/chart-tooltip';
 import { LegendClickData } from '../../core/plugins/plugin.types';
-import { getCurrentTheme, transparentizeColor } from '../../core/utils';
+import { getCurrentTheme, tableDataToJSON, transparentizeColor } from '../../core/utils';
 import { ChartTypeEnum } from '../../types';
 import { defaultXYChartOptions } from './xy-chart.options';
 import { DataTableLike, DataView, GenericDataModel, XYChartOptions } from './xy-chart.types';
@@ -293,31 +293,15 @@ export class XYChart extends ChartElement<DataTableLike, XYChartOptions> {
       dataKey: this.options?.categoryAxis?.dataKey,
       data: [],
     };
-
     if (typeof sourceData[0] === 'object' && !Array.isArray(sourceData[0])) {
       const data = sourceData as Record<string, string | number>[];
       result.dataKey = result.dataKey ?? Object.keys(data[0])[0];
       result.data = data;
     } else if (Array.isArray(sourceData[0])) {
       const data = sourceData as unknown[][];
-      const columns = data[0] as string[];
-      const rows = data.slice(1);
-      result.dataKey = result.dataKey ?? columns[0];
-      rows.forEach((row: unknown[]) => {
-        const item: {
-          [key: string]: string | number;
-        } = {};
-        columns.forEach((column: string, index) => {
-          item[column] = row[index] as string | number;
-        });
-        if (result.data) {
-          result.data.push(item);
-        } else {
-          result.data = [item];
-        }
-      });
+      result.dataKey = result.dataKey ?? (data[0][0] as string);
+      result.data = tableDataToJSON(data);
     }
-
     return result;
   }
 
