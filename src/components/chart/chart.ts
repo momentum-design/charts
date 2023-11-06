@@ -2,7 +2,7 @@
 import { ChartConfiguration, ChartConfigurationCustomTypesPerDataset } from 'chart.js/auto';
 import { customElement } from 'lit/decorators.js';
 import { ChartElement, COMPONENT_PREFIX } from '../../core';
-import { getWordCloudConfiguration } from '../../lib/word-cloud';
+import { getWordCloudConfiguration } from '../../lib/word-cloud/word-cloud';
 import { ChartOptions, ChartTypeEnum } from '../../types';
 
 @customElement(`${COMPONENT_PREFIX}-chart`)
