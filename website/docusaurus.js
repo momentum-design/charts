@@ -105,6 +105,13 @@ const getConfig = (app) => (
           // CSS selector to apply the plugin to, defaults to '.markdown img'
           selector: '.markdown img',
         },
+        liveCodeBlock: {
+          /**
+           * The position of the live playground, above or under the editor
+           * Possible values: "top" | "bottom"
+           */
+          playgroundPosition: 'top',
+        },
       }),
 
     themes: ['@docusaurus/theme-live-codeblock', '@docusaurus/theme-mermaid'],
