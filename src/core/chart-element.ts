@@ -48,6 +48,9 @@ export abstract class ChartElement<TData, TOptions extends ChartOptions> extends
   }
 
   firstUpdated(changedProperties: Map<PropertyKey, unknown>): void {
+    if (!this.options || !this.data) {
+      throw new Error('The options and data properties are required.');
+    }
     this.initChart();
   }
 
@@ -86,7 +89,10 @@ export abstract class ChartElement<TData, TOptions extends ChartOptions> extends
    * Initializes and renders the chart.
    */
   protected initChart(): void {
-    this.instance = new ChartJS(this.renderRoot.querySelector('canvas') as HTMLCanvasElement, this.getChartJSConfiguration());
+    const config = this.getChartJSConfiguration();
+    if (config) {
+      this.instance = new ChartJS(this.renderRoot.querySelector('canvas') as HTMLCanvasElement, config);
+    }
   }
 
   /**
@@ -102,5 +108,5 @@ export abstract class ChartElement<TData, TOptions extends ChartOptions> extends
   /**
    * You can convert the data and options to ChartJS configuration here so that can be used for ChartJS.
    */
-  protected abstract getChartJSConfiguration(): ChartConfiguration | ChartConfigurationCustomTypesPerDataset;
+  protected abstract getChartJSConfiguration(): ChartConfiguration | ChartConfigurationCustomTypesPerDataset | null;
 }

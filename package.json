@@ -125,6 +125,7 @@
     "@babel/runtime": "^7.22.3",
     "chart.js": "^4.3.0",
     "chartjs-adapter-moment": "^1.0.1",
+    "chartjs-chart-wordcloud": "^4.3.2",
     "html2canvas": "^1.4.1",
     "lit": "^2.7.5",
     "lodash-es": "^4.17.21",

@@ -2,6 +2,7 @@
 export type LayoutPosition = 'left' | 'top' | 'right' | 'bottom';
 
 export interface ChartOptions {
+  type?: ChartTypeEnum; // TODO: remove optional
   title?: string;
   responsive?: boolean; // TODO: remove it as it has a default value.
   chartLabel?: string | number | string[]; // TODO: if it is only for donut chart, it should be moved into PieChartOptions
@@ -52,4 +53,5 @@ export enum ChartTypeEnum {
   Pie = 'pie',
   Doughnut = 'doughnut',
   Range = 'range',
+  WordCloud = 'wordCloud',
 }
