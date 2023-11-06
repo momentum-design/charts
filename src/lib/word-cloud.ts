@@ -31,7 +31,6 @@ export function getWordCloudConfiguration(data: WordCloudData, options: WordClou
       }
       return item;
     });
-    console.log(finalData);
   } else {
     finalData = Object.keys(data).map((key) => ({ key, value: data[key] }));
   }

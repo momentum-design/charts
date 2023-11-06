@@ -6,12 +6,12 @@ import { getWordCloudConfiguration } from '../../lib/word-cloud';
 import { ChartOptions, ChartTypeEnum } from '../../types';
 
 @customElement(`${COMPONENT_PREFIX}-chart`)
-export class HelloChart extends ChartElement<any, ChartOptions> {
+export class Chart extends ChartElement<any, ChartOptions> {
   protected getChartJSConfiguration(): ChartConfiguration | ChartConfigurationCustomTypesPerDataset | null {
     switch (this.options?.type) {
       case ChartTypeEnum.WordCloud:
         return getWordCloudConfiguration(this.data || {}, this.options);
     }
-    throw new Error('Method not implemented.');
+    throw new Error(`Unknown chart type: ${this.options?.type}`);
   }
 }
