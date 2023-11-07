@@ -4,6 +4,7 @@ import { property } from 'lit/decorators.js';
 import { ChartOptions } from '../types';
 
 /**
+ * @deprecated
  * A base class for all chart elements that extends {@link LitElement}.
  *
  * @example

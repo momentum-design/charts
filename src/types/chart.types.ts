@@ -1,6 +1,11 @@
 // TODO: rename to Position
 export type LayoutPosition = 'left' | 'top' | 'right' | 'bottom';
 
+export type ChartContainer = string | CanvasRenderingContext2D | HTMLCanvasElement | { canvas: HTMLCanvasElement } | ArrayLike<CanvasRenderingContext2D | HTMLCanvasElement>;
+
+export type TableData = Array<Array<string | number | boolean>>;
+export type ChartData = any | TableData;
+
 export interface ChartOptions {
   type?: ChartTypeEnum; // TODO: remove optional
   title?: string;
