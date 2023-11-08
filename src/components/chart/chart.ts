@@ -36,6 +36,23 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
   `;
 
   /**
+   * Type of the chart.
+   *
+   * Should be one of:
+   * - `pie`
+   * - `gauge`
+   * - `doughnut`
+   * - `bar`
+   * - `column`
+   * - `line`
+   * - `area`
+   * - `range`
+   * - `wordCloud`
+   */
+  @property({ type: String, reflect: true })
+  type?: string;
+
+  /**
    * The data for current chart.
    */
   @property({ type: Object, hasChanged: () => true })
@@ -96,8 +113,8 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
    * Initializes and renders the chart.
    */
   protected initChart(): void {
-    if (this.data && this.options) {
-      this.chart = createChart(this.options?.type as ChartTypeEnum, this.data, this.options);
+    if (this.data && this.type) {
+      this.chart = createChart(this.type as ChartTypeEnum, this.data, this.options);
       this.chart.render(this.renderRoot.querySelector('canvas') as HTMLCanvasElement);
     }
   }

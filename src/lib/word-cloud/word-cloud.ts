@@ -12,9 +12,10 @@ WordElement.defaults.hoverColor = undefined;
 ChartJS.register(WordCloudController, WordElement);
 
 export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
-  constructor(data: WordCloudData, options?: WordCloudOptions) {
-    super(data, options);
-  }
+  /**
+   * The default options for Word Cloud chart.
+   */
+  static readonly defaultOptions: WordCloudOptions = {};
 
   getTableData(): TableData {
     // TODO(bndynet): coming soon
@@ -85,6 +86,6 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
   }
 
   protected getDefaultOptions(): WordCloudOptions {
-    return {};
+    return WordCloudChart.defaultOptions;
   }
 }

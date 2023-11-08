@@ -209,7 +209,7 @@ function showComponent() {
     item.value = 10 + item.value * 10;
     return item;
   });
-  const options = { type: 'wordCloud' };
-  return <mdw-chart style={{ height: '500px' }} data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-chart>;
+  const options = {};
+  return <mdw-chart style={{ height: '500px' }} type="wordCloud" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-chart>;
 }
 ```
