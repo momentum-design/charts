@@ -5,10 +5,14 @@ import { Chart } from '../.internal';
 import { tooltip } from './word-cloud.tooltip';
 import { WordCloudData, WordCloudOptions } from './word-cloud.types';
 
+// remove the default value, otherwise the tooltip point appears with the hover color sometimes.
+// see https://github.com/sgratzl/chartjs-chart-wordcloud/blob/main/src/elements/WordElement.ts#L99
+WordElement.defaults.hoverColor = undefined;
+
 ChartJS.register(WordCloudController, WordElement);
 
 export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
-  constructor(data: WordCloudData, options: WordCloudOptions) {
+  constructor(data: WordCloudData, options?: WordCloudOptions) {
     super(data, options);
   }
 
@@ -67,8 +71,7 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
       options: {
         elements: {
           word: {
-            color: 'red', // TODO
-            hoverColor: this.options.hoverColor,
+            hoverColor: this.options?.hoverColor,
           },
         },
         plugins: {
@@ -79,5 +82,9 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
         },
       },
     };
+  }
+
+  protected getDefaultOptions(): WordCloudOptions {
+    return {};
   }
 }

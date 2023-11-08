@@ -201,7 +201,6 @@ function showComponent() {
     { key: 'fairly', value: 1 },
     { key: 'though', value: 1 },
     { key: 'compared', value: 1 },
-    { key: 'analagous', value: 1 },
     { key: 'mask', value: 1 },
     { key: 'essentially', value: 1 },
     { key: 'ORing', value: 1 },
@@ -210,7 +209,7 @@ function showComponent() {
     item.value = 10 + item.value * 10;
     return item;
   });
-  const options = { type: 'wordCloud', hoverColor: '#000' };
+  const options = { type: 'wordCloud' };
   return <mdw-chart style={{ height: '500px' }} data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-chart>;
 }
 ```
