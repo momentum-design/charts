@@ -5,8 +5,14 @@ import { ChartContainer, ChartData, ChartOptions, TableData } from '../../types'
 export abstract class Chart<TData extends ChartData, TOptions extends ChartOptions> {
   api?: ChartJS;
 
-  constructor(protected data: TData, protected options?: TOptions) {
-    options = merge(this.getDefaultOptions(), options);
+  private _options: TOptions;
+
+  get options(): TOptions {
+    return this._options;
+  }
+
+  constructor(protected data: TData, options?: TOptions) {
+    this._options = merge(this.getDefaultOptions(), options);
   }
 
   render(container: ChartContainer): void {

@@ -64,11 +64,11 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
   @property({ type: Object, hasChanged: () => true })
   options?: TOptions;
 
-  #boundResizeHandler: () => void;
+  private boundResizeHandler: () => void;
 
   constructor() {
     super();
-    this.#boundResizeHandler = this.handleResize.bind(this);
+    this.boundResizeHandler = this.handleResize.bind(this);
   }
 
   firstUpdated(changedProperties: Map<PropertyKey, unknown>): void {
@@ -80,12 +80,12 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
 
   connectedCallback(): void {
     super.connectedCallback();
-    window.addEventListener('resize', this.#boundResizeHandler);
+    window.addEventListener('resize', this.boundResizeHandler);
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
-    window.removeEventListener('resize', this.#boundResizeHandler);
+    window.removeEventListener('resize', this.boundResizeHandler);
   }
 
   render(): TemplateResult {
