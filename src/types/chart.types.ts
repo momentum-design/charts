@@ -25,6 +25,7 @@ export interface ChartOptions {
     [key: string]: string;
   };
   colorSet?: string[];
+  colorMode?: ColorMode;
 }
 
 export interface LegendOptions {
@@ -59,4 +60,11 @@ export enum ChartType {
   Doughnut = 'doughnut',
   Range = 'range',
   WordCloud = 'wordCloud',
+}
+
+export enum ColorMode {
+  Repeat = 'repeat',
+  Random = 'random',
+  Lighten = 'lighten',
+  Darken = 'darken',
 }

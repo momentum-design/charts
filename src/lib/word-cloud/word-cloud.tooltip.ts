@@ -1,5 +1,6 @@
 import { TooltipLabelStyle, TooltipOptions } from 'chart.js/auto';
 import { _DeepPartialObject } from 'chart.js/dist/types/utils';
+import { alphaColor } from '../../helpers';
 import { WordCloudTooltipContext } from './word-cloud.types';
 
 export function getTooltip(
@@ -21,9 +22,9 @@ export function getTooltip(
       },
       labelColor: (context: WordCloudTooltipContext): TooltipLabelStyle => {
         return {
-          borderColor: context.element.options.color,
+          borderColor: alphaColor(context.element.options.color as string, 0.6),
           backgroundColor: context.element.options.color,
-          borderWidth: 0,
+          borderWidth: 1,
           borderRadius: 2,
         };
       },
