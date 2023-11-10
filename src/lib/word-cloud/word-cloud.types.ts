@@ -3,7 +3,8 @@ import { ChartOptions } from '../../types';
 
 export interface WordCloudOptions extends ChartOptions {
   hoverColor?: string;
-  hoverStrokeColor?: string;
+  minFontSize?: number;
+  maxFontSize?: number;
 }
 
 export type WordCloudData = string[] | { key: string; value: number }[] | { [key: string]: number };

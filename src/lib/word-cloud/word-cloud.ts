@@ -2,7 +2,7 @@ import { Chart as ChartJS, ChartConfiguration } from 'chart.js/auto';
 import { WordCloudController, WordElement } from 'chartjs-chart-wordcloud';
 import { TableData } from '../../types';
 import { Chart } from '../.internal';
-import { tooltip } from './word-cloud.tooltip';
+import { getTooltip } from './word-cloud.tooltip';
 import { WordCloudData, WordCloudOptions } from './word-cloud.types';
 
 // remove the default value, otherwise the tooltip point appears with the hover color sometimes.
@@ -12,10 +12,16 @@ WordElement.defaults.hoverColor = undefined;
 ChartJS.register(WordCloudController, WordElement);
 
 export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
+  private minValue = 0;
+  private maxValue = 1;
+
   /**
    * The default options for Word Cloud chart.
    */
-  static readonly defaultOptions: WordCloudOptions = {};
+  static readonly defaultOptions: WordCloudOptions = {
+    minFontSize: 12,
+    maxFontSize: 80,
+  };
 
   getTableData(): TableData {
     // TODO(bndynet): coming soon
@@ -56,6 +62,10 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
       return null;
     }
 
+    const values = finalData.map((item) => item.value);
+    this.minValue = Math.min(...values);
+    this.maxValue = Math.max(...values);
+
     return {
       type: WordCloudController.id,
       data: {
@@ -63,7 +73,7 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
         datasets: [
           {
             label: '',
-            data: finalData.map((item) => item.value),
+            data: finalData.map((item) => this.getFontSize(item.value)),
             color: ['#dd0000', '#ff0000', '#00ff00'], // TODO
             fit: true,
           },
@@ -79,10 +89,21 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
           legend: {
             display: false,
           },
-          tooltip,
+          tooltip: getTooltip(finalData),
         },
       },
     };
+  }
+
+  private getFontSize(value: number): number {
+    if (this.options.maxFontSize && this.options.minFontSize) {
+      return (
+        ((value - this.minValue) / this.maxValue) * (this.options.maxFontSize - this.options.minFontSize) +
+        this.options.minFontSize
+      );
+    }
+
+    throw new Error(`The minFontSize and maxFontSize are required.`);
   }
 
   protected getDefaultOptions(): WordCloudOptions {
