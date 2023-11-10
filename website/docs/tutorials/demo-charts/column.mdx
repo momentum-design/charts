@@ -52,10 +52,18 @@ function showComponent() {
       };
     });
   };
-  const actionStyle = { padding: '8px 16px', margin: '0 8px 8px 0', borderRadius: '6px', color: '#3080d0', cursor: 'pointer', background: 'rgba(48,128,208,.15)', borderColor: 'rgba(48,128,208,.2)' };
+  const actionStyle = {
+    padding: '8px 16px',
+    margin: '0 8px 8px 0',
+    borderRadius: '6px',
+    color: '#3080d0',
+    cursor: 'pointer',
+    background: 'rgba(48,128,208,.15)',
+    borderColor: 'rgba(48,128,208,.2)',
+  };
   return (
     <div>
-      <mdw-xy key={key} type="column" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-xy>
+      <mdw-chart key={key} type="column" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-chart>
       <button style={actionStyle} onClick={handleButtonClick}>
         Default
       </button>

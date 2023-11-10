@@ -29,7 +29,11 @@ function showComponent() {
       isLegendClick: true,
     },
   };
-  return <mdw-xy type="area" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-xy>;
+  return (
+    <div>
+      <mdw-chart type="area" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-chart>
+    </div>
+  );
 }
 ```
 

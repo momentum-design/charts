@@ -19,7 +19,11 @@ function showComponent() {
     title: 'My First Range Area Chart',
     theme: 'color-health',
   };
-  return <mdw-xy type="range" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-xy>;
+  return (
+    <div>
+      <mdw-chart type="range" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-chart>
+    </div>
+  );
 }
 ```
 
