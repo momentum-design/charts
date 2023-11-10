@@ -29,6 +29,14 @@ const d = {
       return result;
     },
   },
+  wordCloud: {
+    default: () => {
+      return {
+        key: faker.word.words(1),
+        value: faker.number.int({ min: 0, max: 10 }),
+      }
+    }
+  }
 };
 
 let currentDt = new Date();

@@ -98,6 +98,6 @@ module.exports = {
     return [`${this.baseUrl}dist-lib/widgets.css`];
   },
   get externalScripts() {
-    return [`${this.baseUrl}dist-lib/widgets.umd.js`];
+    return [`${this.baseUrl}dist-lib/widgets.umd.js`, `${this.baseUrl}data.js`];
   }
 };
