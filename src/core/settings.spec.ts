@@ -7,8 +7,8 @@ describe('settings', () => {
   });
 
   it('should change the default settings by calling `set()` method', () => {
-    settings.set({ theme: ThemeKey.ColorHealth });
-    expect(settings.theme).toBe(ThemeKey.ColorHealth);
+    settings.set({ theme: ThemeKey.Material });
+    expect(settings.theme).toBe(ThemeKey.Material);
   });
 
   it('should add new theme', () => {
