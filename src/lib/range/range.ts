@@ -1,12 +1,12 @@
 import { ChartDataset } from 'chart.js/auto';
 import 'chartjs-adapter-moment';
 import { transparentizeColor } from '../../core/utils';
-import { ChartTypeEnum, TableData } from '../../types';
+import { ChartType, TableData } from '../../types';
 import { XYChart } from '../xy';
 
 export class RangeChart extends XYChart {
-  getType(): ChartTypeEnum {
-    return ChartTypeEnum.Range;
+  getType(): ChartType {
+    return ChartType.Range;
   }
   getTableData(): TableData {
     throw new Error('Method not implemented.');

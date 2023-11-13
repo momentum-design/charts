@@ -1,7 +1,6 @@
 import { ChartOptions } from '../types';
 
 const defaultChartOptions: ChartOptions = {
-  responsive: true,
   chartLabel: '',
   fontColor: '#000',
   fontFamily: 'Helvetica',

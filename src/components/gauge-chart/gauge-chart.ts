@@ -72,7 +72,9 @@ class GaugeChart extends LitElement {
     const canvas = this.renderRoot.querySelector('canvas') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
 
-    const chartLabel = Array.isArray(this.data) ? Object.keys(this.data[0]) : Object.keys(this.data as Record<string, unknown>);
+    const chartLabel = Array.isArray(this.data)
+      ? Object.keys(this.data[0])
+      : Object.keys(this.data as Record<string, unknown>);
     this.chartOptions = merge({}, defaultChartOptions, defaultGaugeChartOptions, this.options);
     const chartJsDataset = this.handleChartDataset();
     const chartJsOptions = this.handleChartOptions();
@@ -92,7 +94,7 @@ class GaugeChart extends LitElement {
 
   private handleChartOptions(): ChartJsOptions {
     const chartOptions: ChartJsOptions = {
-      responsive: this.chartOptions.responsive,
+      responsive: true,
       value: this.chartOptions.value,
       cutout: this.chartOptions.cutout,
       aspectRatio: this.chartOptions.aspectRatio,
@@ -121,7 +123,10 @@ class GaugeChart extends LitElement {
     const chartJsData = Array.isArray(this.data) ? Object.values(this.data[0]) : Object.values(this.data);
     chartDataset[0] = {
       data: chartJsData as number[],
-      backgroundColor: typeof this.chartOptions?.theme === 'string' ? themes.get(this.chartOptions?.theme as keyof typeof ThemeKey) : getCurrentTheme().colors,
+      backgroundColor:
+        typeof this.chartOptions?.theme === 'string'
+          ? themes.get(this.chartOptions?.theme as keyof typeof ThemeKey)
+          : getCurrentTheme().colors,
     };
     return chartDataset;
   }

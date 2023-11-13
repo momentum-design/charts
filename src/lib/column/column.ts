@@ -1,11 +1,11 @@
 import { ChartDataset, ChartTypeRegistry } from 'chart.js/auto';
 import 'chartjs-adapter-moment';
-import { ChartTypeEnum, TableData } from '../../types';
+import { ChartType, TableData } from '../../types';
 import { XYChart } from '../xy';
 
 export class ColumnChart extends XYChart {
-  getType(): ChartTypeEnum {
-    return ChartTypeEnum.Column;
+  getType(): ChartType {
+    return ChartType.Column;
   }
   getTableData(): TableData {
     throw new Error('Method not implemented.');

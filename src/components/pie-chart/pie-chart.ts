@@ -5,7 +5,14 @@ import { customElement, property } from 'lit/decorators.js';
 import { merge } from 'lodash-es';
 import { COMPONENT_PREFIX, ThemeKey, themes } from '../../core';
 import { defaultChartOptions } from '../../core/chart-options';
-import { chartA11y, chartLegendA11y, chartSeriesClick, legendClickHandler, legendHandleHover, legendHandleLeave } from '../../core/plugins';
+import {
+  chartA11y,
+  chartLegendA11y,
+  chartSeriesClick,
+  legendClickHandler,
+  legendHandleHover,
+  legendHandleLeave,
+} from '../../core/plugins';
 import { externalTooltipHandler } from '../../core/plugins/chart-tooltip';
 import { LegendClickData } from '../../core/plugins/plugin.types';
 import { getCurrentTheme } from '../../core/utils';
@@ -115,7 +122,9 @@ class PieChart extends LitElement {
 
   private initializeChart(): void {
     const container = this.renderRoot.querySelector('.container');
-    const chartLabel = Array.isArray(this.data) ? Object.keys(this.data[0]) : Object.keys(this.data as Record<string, unknown>);
+    const chartLabel = Array.isArray(this.data)
+      ? Object.keys(this.data[0])
+      : Object.keys(this.data as Record<string, unknown>);
     this.chartOptions = merge({}, defaultChartOptions, defaultPieChartOptions, this.options);
     const chartJsDataset = this.handleChartDataset();
     this.pieChartJsOptions = this.handleChartOptions();
@@ -153,7 +162,7 @@ class PieChart extends LitElement {
 
   private handleChartOptions(): PieChartJsOptions {
     const chartOptions: PieChartJsOptions = {
-      responsive: this.chartOptions.responsive,
+      responsive: true,
       centerLabel: this.chartOptions.centerLabel,
       cutout: this.chartOptions.cutout,
       chartLabel: this.chartOptions.chartLabel,
@@ -206,7 +215,10 @@ class PieChart extends LitElement {
       this.data?.forEach((data, index) => {
         chartDataset.push({
           data: Object.values(data) as number[],
-          label: typeof this.chartOptions.chartLabel === 'string' ? this.chartOptions.chartLabel : (this.chartOptions.chartLabel as string[])[index],
+          label:
+            typeof this.chartOptions.chartLabel === 'string'
+              ? this.chartOptions.chartLabel
+              : (this.chartOptions.chartLabel as string[])[index],
           backgroundColor: this.getBackgroundColor(this.chartOptions),
         });
       });
@@ -222,7 +234,9 @@ class PieChart extends LitElement {
   }
 
   private getBackgroundColor(chartOptions: PieChartOptions): string[] | undefined {
-    return typeof chartOptions?.theme === 'string' ? themes.get(chartOptions?.theme as keyof typeof ThemeKey) : getCurrentTheme().colors;
+    return typeof chartOptions?.theme === 'string'
+      ? themes.get(chartOptions?.theme as keyof typeof ThemeKey)
+      : getCurrentTheme().colors;
   }
 
   updateChart(): void {

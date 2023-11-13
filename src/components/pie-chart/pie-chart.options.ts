@@ -1,7 +1,6 @@
 import { PieChartOptions } from './pie-chart.types';
 
 const defaultPieChartOptions: PieChartOptions = {
-  responsive: true,
   centerLabel: '',
   chartLabel: '',
   cutout: '0',
