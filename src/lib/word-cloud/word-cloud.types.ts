@@ -7,6 +7,6 @@ export interface WordCloudOptions extends ChartOptions {
   maxFontSize?: number;
 }
 
-export type WordCloudData = string[] | { key: string; value: number }[] | { [key: string]: number };
+export type WordCloudData = { key: string; value: number }[] | { [key: string]: number };
 
 export type WordCloudTooltipContext = TooltipItem<'wordCloud'> & { parsed: { y: number | null } };

@@ -11,6 +11,15 @@ WordElement.defaults.hoverColor = undefined;
 
 ChartJS.register(WordCloudController, WordElement);
 
+/**
+ * A chart about word cloud.
+ *
+ * @example The data can be following formats:
+ * ```json
+ * {'hello': 100, 'world': 30} // or
+ * [{key: 'hello', value: 100}, {key: 'world', value: 30}}]
+ * ```
+ */
 export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
   private minValue = 0;
   private maxValue = 1;
@@ -28,19 +37,6 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
     throw new Error('Method not implemented.');
   }
 
-  /**
-   * Gets the configuration for Word Cloud chart.
-   *
-   * @example The data parameter can be following formats:
-   * ```json
-   * ['hello', 'world']
-   * {'hello': 100, 'world': 30}
-   * [{key: 'hello', value: 100}, {key: 'world', value: 30}}]
-   * ```
-   *
-   * @param data - The data for Word Cloud chart.
-   * @returns A configuration of Word Cloud chart.
-   */
   getConfiguration(): ChartConfiguration<'wordCloud'> | null {
     let finalData;
     if (Array.isArray(this.data)) {
