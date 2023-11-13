@@ -53,6 +53,8 @@ export const themes = new Map<ThemeKey | string, string[]>([
       '#795548',
       '#9E9E9E',
       '#607D8B',
+      '#148579',
+      '#0A414D',
     ],
   ],
 ]);

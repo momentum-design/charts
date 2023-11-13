@@ -21,11 +21,12 @@ export class Themes extends LitElement {
       font-weight: bold;
     }
     .item .item-name {
-      width: 250px;
+      width: 160px;
       display: table-cell;
       vertical-align: middle;
       padding: 1rem;
       border: solid 1px #efefef;
+      text-align: center;
     }
     .item .item-values {
       display: table-cell;
@@ -52,7 +53,26 @@ export class Themes extends LitElement {
   `;
 
   @property()
-  data = ['#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3', '#03A9F4', '#00BCD4', '#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800', '#FF5722', '#795548', '#9E9E9E', '#607D8B'];
+  data = [
+    '#F44336',
+    '#E91E63',
+    '#9C27B0',
+    '#673AB7',
+    '#3F51B5',
+    '#2196F3',
+    '#03A9F4',
+    '#00BCD4',
+    '#4CAF50',
+    '#8BC34A',
+    '#CDDC39',
+    '#FFEB3B',
+    '#FFC107',
+    '#FF9800',
+    '#FF5722',
+    '#795548',
+    '#9E9E9E',
+    '#607D8B',
+  ];
 
   render() {
     return html`${Array.from(settings.themes.keys()).map(
@@ -72,6 +92,11 @@ export class Themes extends LitElement {
   }
 
   getThemeDetails(colors: string[]) {
-    return html`${colors.map((color) => html`<div class="color-item"><span class="text">${color}</span><span class="flag" style="background-color: ${color}"></span></div>`)}`;
+    return html`${colors.map(
+      (color) =>
+        html`<div class="color-item">
+          <span class="text">${color}</span><span class="flag" style="background-color: ${color}"></span>
+        </div>`,
+    )}`;
   }
 }
