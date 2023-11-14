@@ -1,5 +1,4 @@
-// TODO: rename to Position
-export type LayoutPosition = 'left' | 'top' | 'right' | 'bottom';
+export type Position = 'left' | 'top' | 'right' | 'bottom';
 
 export type ChartContainer =
   | string
@@ -13,8 +12,7 @@ export type ChartData = any | TableData;
 
 export interface ChartOptions {
   title?: string;
-  responsive?: boolean; // TODO: remove it as it has a default value.
-  chartLabel?: string | number | string[]; // TODO: if it is only for donut chart, it should be moved into PieChartOptions
+  chartLabel?: string | number | string[]; // TODO: remove it, please use series name.
   theme?: string | []; // TODO: remove empty array
   fontColor?: string;
   fontFamily?: string;
@@ -34,7 +32,7 @@ export interface ChartOptions {
 export interface LegendOptions {
   isLegendClick?: boolean;
   legendDisplay?: boolean;
-  legendPosition?: LayoutPosition;
+  legendPosition?: Position;
   legendLabelsHeight?: number;
   legendLabelsWidth?: number;
   legendBorderRadius?: number;
@@ -53,8 +51,7 @@ export interface TooltipOptions {
   legendTooltipFloor?: number;
 }
 
-// TODO: rename to ChartType
-export enum ChartTypeEnum {
+export enum ChartType {
   Area = 'area',
   Bar = 'bar',
   Column = 'column',

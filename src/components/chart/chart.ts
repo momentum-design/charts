@@ -4,7 +4,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { COMPONENT_PREFIX } from '../../core';
 import { createChart } from '../../lib';
 import { Chart } from '../../lib/.internal';
-import { ChartData, ChartOptions, ChartTypeEnum } from '../../types';
+import { ChartData, ChartOptions, ChartType } from '../../types';
 
 /**
  * The chart component for rendering all charts that extends {@link LitElement}.
@@ -114,7 +114,7 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
    */
   protected initChart(): void {
     if (this.data && this.type) {
-      this.chart = createChart(this.type as ChartTypeEnum, this.data, this.options);
+      this.chart = createChart(this.type as ChartType, this.data, this.options);
       this.chart.render(this.renderRoot.querySelector('canvas') as HTMLCanvasElement);
     }
   }

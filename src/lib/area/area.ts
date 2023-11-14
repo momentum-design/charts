@@ -1,12 +1,12 @@
 import { ChartDataset } from 'chart.js/auto';
 import 'chartjs-adapter-moment';
 import { transparentizeColor } from '../../core/utils';
-import { ChartTypeEnum, TableData } from '../../types';
+import { ChartType, TableData } from '../../types';
 import { XYChart } from '../xy';
 
 export class AreaChart extends XYChart {
-  getType(): ChartTypeEnum {
-    return ChartTypeEnum.Area;
+  getType(): ChartType {
+    return ChartType.Area;
   }
   getTableData(): TableData {
     throw new Error('Method not implemented.');
@@ -16,7 +16,7 @@ export class AreaChart extends XYChart {
     seriesOptions: { styleMapping: { type: string } },
     index: number,
   ): ChartDataset<'line', number[]> {
-    if (!seriesOptions?.styleMapping?.type || seriesOptions?.styleMapping?.type === ChartTypeEnum.Area) {
+    if (!seriesOptions?.styleMapping?.type || seriesOptions?.styleMapping?.type === ChartType.Area) {
       const colors = this.options ? this.getBackgroundColor(this.options) ?? [] : [];
       const colorIndex = index % colors.length;
       let borderColor = '';

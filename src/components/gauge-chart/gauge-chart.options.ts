@@ -1,7 +1,6 @@
 import { GaugeChartOptions } from './gauge-chart.types';
 
 const defaultGaugeChartOptions: GaugeChartOptions = {
-  responsive: true,
   value: 0,
   aspectRatio: 1.6,
   cutout: '90%',

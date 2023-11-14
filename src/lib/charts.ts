@@ -1,4 +1,4 @@
-import { ChartData, ChartOptions, ChartTypeEnum } from '../types';
+import { ChartData, ChartOptions, ChartType } from '../types';
 import { Chart } from './.internal';
 import { AreaChart } from './area';
 import { BarChart } from './bar';
@@ -7,17 +7,17 @@ import { LineChart } from './line';
 import { RangeChart } from './range';
 import { WordCloudChart } from './word-cloud';
 
-export const SUPPORTED_CHARTS = new Map<ChartTypeEnum, typeof Chart<ChartData, ChartOptions>>([
-  [ChartTypeEnum.WordCloud, WordCloudChart],
-  [ChartTypeEnum.Bar, BarChart],
-  [ChartTypeEnum.Column, ColumnChart],
-  [ChartTypeEnum.Line, LineChart],
-  [ChartTypeEnum.Area, AreaChart],
-  [ChartTypeEnum.Range, RangeChart],
+export const SUPPORTED_CHARTS = new Map<ChartType, typeof Chart<ChartData, ChartOptions>>([
+  [ChartType.WordCloud, WordCloudChart],
+  [ChartType.Bar, BarChart],
+  [ChartType.Column, ColumnChart],
+  [ChartType.Line, LineChart],
+  [ChartType.Area, AreaChart],
+  [ChartType.Range, RangeChart],
 ]);
 
 export function createChart(
-  chartType: ChartTypeEnum,
+  chartType: ChartType,
   chartData: ChartData,
   chartOptions?: ChartOptions,
 ): Chart<ChartData, ChartOptions> {
