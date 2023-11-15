@@ -12,8 +12,8 @@ const defaultXYChartOptions: XYChartOptions = {
     stacked: false,
   },
   legend: {
-    legendPosition: 'bottom',
-    legendDisplay: true,
+    position: 'bottom',
+    display: true,
     isLegendClick: false,
   },
 };

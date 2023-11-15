@@ -6,8 +6,8 @@ const defaultPieChartOptions: PieChartOptions = {
   cutout: '0',
   aspectRatio: 2,
   legend: {
-    legendPosition: 'right',
-    legendDisplay: true,
+    position: 'right',
+    display: true,
     isLegendClick: false,
   },
 };

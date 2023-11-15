@@ -2,8 +2,6 @@ import { ChartOptions } from '../types';
 
 const defaultChartOptions: ChartOptions = {
   chartLabel: '',
-  fontColor: '#000',
-  fontFamily: 'Helvetica',
   aspectRatio: 1.6,
   legend: {
     legendLabelsHeight: 12,

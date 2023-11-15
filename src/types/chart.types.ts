@@ -1,3 +1,5 @@
+import { Padding } from './common.types';
+
 export type Position = 'left' | 'top' | 'right' | 'bottom';
 
 export type ChartContainer =
@@ -8,19 +10,15 @@ export type ChartContainer =
   | ArrayLike<CanvasRenderingContext2D | HTMLCanvasElement>;
 
 export type TableData = Array<Array<string | number | boolean>>;
-export type ChartData = any | TableData;
+export type JsonData = Record<string, string | number>[];
+export type ChartData = any | TableData | JsonData;
 
 export interface ChartOptions {
   title?: string;
   chartLabel?: string | number | string[]; // TODO: remove it, please use series name.
-  theme?: string | []; // TODO: remove empty array
-  fontColor?: string;
-  fontFamily?: string;
-  aspectRatio?: number;
-  paddingLeft?: number;
-  paddingRight?: number;
-  paddingTop?: number;
-  paddingBottom?: number;
+  theme?: string;
+  aspectRatio?: number; //TODO: calculate this property for all charts, remove it here
+  padding?: Padding | number;
   legend?: LegendOptions;
   tooltip?: TooltipOptions;
   colorMapping?: {
@@ -30,22 +28,23 @@ export interface ChartOptions {
 }
 
 export interface LegendOptions {
-  isLegendClick?: boolean;
-  legendDisplay?: boolean;
-  legendPosition?: Position;
-  legendLabelsHeight?: number;
-  legendLabelsWidth?: number;
-  legendBorderRadius?: number;
+  isLegendClick?: boolean; //TODO onClick function
+  display?: boolean;
+  position?: Position;
+  legendLabelsHeight?: number; //TODO remove it
+  legendLabelsWidth?: number; //TODO remove it
+  legendBorderRadius?: number; //TODO remove it
+  tooltip?: TooltipOptions;
 }
 
 export interface TooltipOptions {
-  isMultipleSeries?: boolean;
-  seriesTooltipHead?: string;
+  isMultipleSeries?: boolean; //TODO remove it
+  seriesTooltipHead?: string; // TODO refine to series
   seriesTooltipBody?: string;
   seriesTooltipFooter?: string;
   seriesTooltipFloor?: number;
   isMultipleLegend?: boolean;
-  legendTooltipHead?: string;
+  legendTooltipHead?: string; //TODO refine to legend
   legendTooltipBody?: string;
   legendTooltipFooter?: string;
   legendTooltipFloor?: number;

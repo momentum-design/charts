@@ -50,8 +50,8 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
       stacked: false,
     },
     legend: {
-      legendPosition: 'bottom',
-      legendDisplay: true,
+      position: 'bottom',
+      display: true,
       isLegendClick: false,
     },
   };
@@ -80,7 +80,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
       this.currentChartOptions = this.getChartOptions();
     }
     return {
-      type: this.toChartType(this.getType()) as ChartJSType,
+      type: this.toChartJsType(this.getType()) as ChartJSType,
       data: {
         labels: chartLabels,
         datasets: chartDatasets,
@@ -116,7 +116,6 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
       responsive: true,
       aspectRatio: this.options.aspectRatio,
       isLegendClick: this.options.legend?.isLegendClick,
-      isMultipleSeries: this.options.tooltip?.isMultipleSeries,
       seriesTooltipFloor: this.options.tooltip?.seriesTooltipFloor,
       seriesTooltipFooter: this.options.tooltip?.seriesTooltipFooter,
       seriesTooltipHead: this.options.tooltip?.seriesTooltipHead,
@@ -138,8 +137,8 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
           text: this.options.title,
         },
         legend: {
-          display: this.options.legend?.legendDisplay,
-          position: this.options.legend?.legendPosition,
+          display: this.options.legend?.display,
+          position: this.options.legend?.position,
           labels: {
             boxWidth: this.options.legend?.legendLabelsWidth,
             boxHeight: this.options.legend?.legendLabelsHeight,
@@ -161,7 +160,11 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
         valueAxis: {},
       },
     };
-
+    if (this.options.padding) {
+      options.layout = {
+        padding: this.options.padding,
+      };
+    }
     if (this.options.categoryAxis && this.options.valueAxis) {
       if (!this.options.categoryAxis.position) {
         this.options.categoryAxis.position = this.isHorizontal() === 'x' ? 'bottom' : 'left';
@@ -258,7 +261,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     dataset.label = series.name;
     dataset.borderColor = this.options.categoryAxis?.enableColor ? colors : colors[colorIndex];
     dataset.backgroundColor = this.options.categoryAxis?.enableColor ? colors : colors[colorIndex];
-    dataset.type = this.toChartType(styleMapping?.type);
+    dataset.type = this.toChartJsType(styleMapping?.type);
     dataset = this.setAxisIDs(dataset);
     if (dataset.type === 'line') {
       dataset = dataset as ChartDataset<ChartType.Line, number[]>;
@@ -324,7 +327,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     return result;
   }
 
-  private toChartType(type?: string): ChartJSType {
+  private toChartJsType(type?: string): ChartJSType {
     let chartType: ChartJSType;
     switch (type || this.getType()) {
       case ChartType.Bar:
