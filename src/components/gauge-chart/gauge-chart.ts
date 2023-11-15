@@ -100,18 +100,17 @@ class GaugeChart extends LitElement {
       aspectRatio: this.chartOptions.aspectRatio,
       circumference: this.chartOptions.circumference,
       rotation: this.chartOptions.rotation,
-      layout: {
-        padding: {
-          left: this.chartOptions.paddingLeft,
-          right: this.chartOptions.paddingRight,
-        },
-      },
       plugins: {
         legend: {
-          display: this.chartOptions.legend?.legendDisplay,
+          display: this.chartOptions.legend?.display,
         },
       },
     };
+    if (this.chartOptions.padding) {
+      chartOptions.layout = {
+        padding: this.chartOptions.padding,
+      };
+    }
     return chartOptions;
   }
 

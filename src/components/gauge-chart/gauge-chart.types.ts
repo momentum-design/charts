@@ -5,4 +5,7 @@ export interface GaugeChartOptions extends ChartOptions {
   value?: number;
   circumference?: number;
   rotation?: number;
+  fontColor?: string; //TODO: refine it
+  fontSize?: number; //TODO: refine it
+  fontFamily?: string; //TODO: refine it
 }

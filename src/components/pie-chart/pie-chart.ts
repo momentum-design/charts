@@ -185,8 +185,8 @@ class PieChart extends LitElement {
       onClick: chartSeriesClick,
       plugins: {
         legend: {
-          display: this.chartOptions.legend?.legendDisplay,
-          position: this.chartOptions.legend?.legendPosition,
+          display: this.chartOptions.legend?.display,
+          position: this.chartOptions.legend?.position,
           labels: {
             boxWidth: this.chartOptions.legend?.legendLabelsWidth,
             boxHeight: this.chartOptions.legend?.legendLabelsHeight,

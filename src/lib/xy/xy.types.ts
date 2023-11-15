@@ -2,7 +2,7 @@
  * The default options for xy chart.
  */
 import { TimeUnit } from 'chart.js';
-import { ChartOptions } from '../../types';
+import { ChartOptions, JsonData, TableData } from '../../types';
 
 /**
  * Interface `AxisOptions` provides a set of configurations for the axis in a chart.
@@ -86,13 +86,14 @@ export interface XYChartOptions extends ChartOptions {
   /**
    * Options for configuring the value axis.
    */
-  valueAxis?: ValueAxisOptions;
+  valueAxis?: ValueAxisOptions; //TODO remove it
+  valueAxes?: ValueAxisOptions[]; //TODO support multi valueAxes
 }
 
 /**
  * The "DataTableLike" type can be a two-dimensional array (unknown[][]) or an array of objects (Record<string, string | number>[]).
  */
-export type DataTableLike = unknown[][] | Record<string, string | number>[];
+export type DataTableLike = TableData | JsonData;
 
 /**
  * Data model required for chart rendering.
