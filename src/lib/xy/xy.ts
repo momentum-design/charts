@@ -18,33 +18,13 @@ import { ChartType, TableData } from '../../types';
 import { Chart } from '../.internal';
 import { DataTableLike, DataView, GenericDataModel, XYChartOptions } from './xy.types';
 
-interface CurrentChartOptions extends XYChartOptions, ChartOptions<ChartJSType> {
-  isLegendClick?: boolean;
-  isMultipleSeries?: boolean;
-  seriesTooltipHead?: string;
-  seriesTooltipBody?: string;
-  seriesTooltipFooter?: string;
-  seriesTooltipFloor?: number;
-  isMultipleLegend?: boolean;
-  legendTooltipHead?: string;
-  legendTooltipBody?: string;
-  legendTooltipFooter?: string;
-  legendTooltipFloor?: number;
-  selectedLegends?: string[];
-  onLegendClick?: (legendItem: { label: string | number; value: string | number }[]) => void;
-}
-
 export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
   getTableData(): TableData {
     throw new Error('Method not implemented.');
   }
+
   static readonly defaultOptions: XYChartOptions = {
     categoryAxis: {
-      gridDisplay: true,
-      display: true,
-      stacked: false,
-    },
-    valueAxis: {
       gridDisplay: true,
       display: true,
       stacked: false,
@@ -54,6 +34,11 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
       display: true,
       isLegendClick: false,
     },
+  };
+  static readonly defaultValueAxisOptions = {
+    gridDisplay: true,
+    display: true,
+    stacked: false,
   };
 
   protected getDefaultOptions(): XYChartOptions {
@@ -68,8 +53,6 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     series: [],
   };
 
-  private currentChartOptions: CurrentChartOptions | undefined;
-
   protected getConfiguration(): ChartConfiguration {
     let chartLabels: unknown[] = [];
     let chartDatasets: ChartDataset<ChartJSType, number[]>[] = [];
@@ -77,7 +60,6 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     if (this.chartData) {
       chartLabels = this.chartData.category.labels ?? [];
       chartDatasets = this.getDatasets();
-      this.currentChartOptions = this.getChartOptions();
     }
     return {
       type: this.toChartJsType(this.getType()) as ChartJSType,
@@ -85,7 +67,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
         labels: chartLabels,
         datasets: chartDatasets,
       },
-      options: this.currentChartOptions,
+      options: this.getChartOptions(),
       plugins: [chartA11y, chartLegendA11y],
     };
   }
@@ -111,24 +93,8 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     }
   }
 
-  private getChartOptions(): CurrentChartOptions {
-    const options: CurrentChartOptions = {
-      responsive: true,
-      aspectRatio: this.options.aspectRatio,
-      isLegendClick: this.options.legend?.isLegendClick,
-      seriesTooltipFloor: this.options.tooltip?.seriesTooltipFloor,
-      seriesTooltipFooter: this.options.tooltip?.seriesTooltipFooter,
-      seriesTooltipHead: this.options.tooltip?.seriesTooltipHead,
-      seriesTooltipBody: this.options.tooltip?.seriesTooltipBody,
-      isMultipleLegend: this.options.tooltip?.isMultipleLegend,
-      legendTooltipHead: this.options.tooltip?.legendTooltipHead,
-      legendTooltipBody: this.options.tooltip?.legendTooltipBody,
-      legendTooltipFooter: this.options.tooltip?.legendTooltipFooter,
-      legendTooltipFloor: this.options.tooltip?.legendTooltipFloor,
-      selectedLegends: [],
-      onLegendClick: (selectedItem: LegendClickData[]): void => {
-        this.onLegendClick(selectedItem);
-      },
+  private getChartOptions(): ChartOptions {
+    const options: ChartOptions = {
       onClick: chartSeriesClick,
       indexAxis: this.isHorizontal(),
       plugins: {
@@ -165,70 +131,72 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
         padding: this.options.padding,
       };
     }
-    if (this.options.categoryAxis && this.options.valueAxis) {
-      if (!this.options.categoryAxis.position) {
-        this.options.categoryAxis.position = this.isHorizontal() === 'x' ? 'bottom' : 'left';
-      }
-      if (!this.options.valueAxis.position) {
-        this.options.valueAxis.position = this.isHorizontal() === 'x' ? 'left' : 'bottom';
-      }
-    }
-
-    if (
-      this.options.valueAxis &&
-      options.scales?.valueAxis &&
-      (options.scales.valueAxis.type === 'category' || options.scales.valueAxis.type === 'time')
-    ) {
-      options.scales.valueAxis.position = this.options.valueAxis.position;
-    }
-
-    if (this.options.categoryAxis && options.scales?.categoryAxis) {
-      options.scales.categoryAxis = {
-        stacked: this.options.categoryAxis.stacked,
-        title: {
-          display: !!this.options.categoryAxis.title,
-          text: this.options.categoryAxis.title,
-        },
-        grid: {
-          display: this.options.categoryAxis.gridDisplay,
-        },
-        display: this.options.categoryAxis.display,
-      };
-      if (this.options.categoryAxis.position) {
-        options.scales.categoryAxis.position = this.options.categoryAxis.position;
-      }
-      if (this.options.categoryAxis?.type) {
-        options.scales.categoryAxis.type = this.options.categoryAxis.type;
-        if (options.scales.categoryAxis.type === 'time' && this.options.categoryAxis) {
-          options.scales.categoryAxis.time = { unit: this.options.categoryAxis.timeUnit };
-          if (this.options.categoryAxis.labelFormat) {
-            options.scales.categoryAxis.time.displayFormats = {
-              [this.options.categoryAxis.timeUnit as string]: this.options.categoryAxis.labelFormat,
-            };
+    if (this.options.categoryAxis) {
+      if (options.scales?.categoryAxis) {
+        options.scales.categoryAxis = {
+          stacked: this.options.categoryAxis.stacked,
+          title: {
+            display: !!this.options.categoryAxis.title,
+            text: this.options.categoryAxis.title,
+          },
+          grid: {
+            display: this.options.categoryAxis.gridDisplay,
+          },
+          display: this.options.categoryAxis.display,
+        };
+        if (this.options.categoryAxis.position) {
+          options.scales.categoryAxis.position = this.options.categoryAxis.position;
+        } else {
+          options.scales.categoryAxis.position = this.isHorizontal() === 'x' ? 'bottom' : 'left';
+        }
+        if (this.options.categoryAxis?.type) {
+          options.scales.categoryAxis.type = this.options.categoryAxis.type;
+          if (options.scales.categoryAxis.type === 'time' && this.options.categoryAxis) {
+            options.scales.categoryAxis.time = { unit: this.options.categoryAxis.timeUnit };
+            if (this.options.categoryAxis.labelFormat) {
+              options.scales.categoryAxis.time.displayFormats = {
+                [this.options.categoryAxis.timeUnit as string]: this.options.categoryAxis.labelFormat,
+              };
+            }
           }
         }
       }
     }
+    if (this.options.valueAxes) {
+      this.options.valueAxes.forEach((valueAxis, index) => {
+        valueAxis = {
+          ...XYChart.defaultValueAxisOptions,
+          ...valueAxis,
+        };
+        if (!valueAxis.position) {
+          valueAxis.position = this.isHorizontal() === 'x' ? 'left' : 'bottom';
+        }
+        const valueAxisKey = 'valueAxis' + (index > 0 ? '_' + index : '');
+        options.scales = {
+          ...options.scales,
+        };
 
-    if (this.options.valueAxis && options.scales?.valueAxis) {
-      options.scales.valueAxis = {
-        stacked: this.options.valueAxis.stacked,
-        title: {
-          display: !!this.options.valueAxis.title,
-          text: this.options.valueAxis.title,
-        },
-        grid: {
-          display: this.options.valueAxis.gridDisplay,
-        },
-        display: this.options.valueAxis.display,
-      };
+        options.scales[valueAxisKey] = {
+          ...options.scales[valueAxisKey],
+        };
+        options.scales[valueAxisKey] = {
+          stacked: valueAxis.stacked,
+          title: {
+            display: !!valueAxis.title,
+            text: valueAxis.title,
+          },
+          grid: {
+            display: valueAxis.gridDisplay,
+          },
+          display: valueAxis.display,
+        };
 
-      if (this.options.valueAxis.position) {
-        options.scales.valueAxis.position = this.options.valueAxis.position;
-      }
+        options.scales[valueAxisKey] = {
+          ...options.scales[valueAxisKey],
+          ...{ position: valueAxis.position },
+        };
+      });
     }
-    console.log('options', options);
-
     return options;
   }
 
@@ -262,7 +230,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     dataset.borderColor = this.options.categoryAxis?.enableColor ? colors : colors[colorIndex];
     dataset.backgroundColor = this.options.categoryAxis?.enableColor ? colors : colors[colorIndex];
     dataset.type = this.toChartJsType(styleMapping?.type);
-    dataset = this.setAxisIDs(dataset);
+    dataset = this.setAxisIDs(dataset, styleMapping.valueAxisIndex);
     if (dataset.type === 'line') {
       dataset = dataset as ChartDataset<ChartType.Line, number[]>;
       if (styleMapping?.lineStyle === 'dashed') {
@@ -271,10 +239,14 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     }
     return this.afterDatasetCreated(dataset, { styleMapping: styleMapping }, index);
   }
-  private setAxisIDs(dataset: ChartDataset<ChartJSType, number[]>): ChartDataset<ChartJSType, number[]> {
+  private setAxisIDs(
+    dataset: ChartDataset<ChartJSType, number[]>,
+    valueAxisIndex?: number,
+  ): ChartDataset<ChartJSType, number[]> {
     dataset = dataset as ChartDataset<ChartType.Bar, number[]> | ChartDataset<ChartType.Line, number[]>;
-    dataset.yAxisID = this.isHorizontal() === 'x' ? 'valueAxis' : 'categoryAxis';
-    dataset.xAxisID = this.isHorizontal() === 'x' ? 'categoryAxis' : 'valueAxis';
+    const valueAxisKey = 'valueAxis' + (valueAxisIndex && valueAxisIndex > 0 ? '_' + valueAxisIndex : '');
+    dataset.yAxisID = this.isHorizontal() === 'x' ? valueAxisKey : 'categoryAxis';
+    dataset.xAxisID = this.isHorizontal() === 'x' ? 'categoryAxis' : valueAxisKey;
     return dataset;
   }
 
@@ -347,7 +319,8 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
   }
 
   private isHorizontal(): 'x' | 'y' {
-    if (!this.options.categoryAxis?.position && !this.options.valueAxis?.position) {
+    const firstValueAxis = this.options.valueAxes?.[0];
+    if (!this.options.categoryAxis?.position && !firstValueAxis?.position) {
       if (!this.options.categoryAxis) {
         this.options.categoryAxis = {};
       }
@@ -356,8 +329,8 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     const isHorizontal =
       this.options.categoryAxis?.position === 'left' ||
       this.options.categoryAxis?.position === 'right' ||
-      this.options.valueAxis?.position === 'top' ||
-      this.options.valueAxis?.position === 'bottom';
+      firstValueAxis?.position === 'top' ||
+      firstValueAxis?.position === 'bottom';
     return isHorizontal ? 'y' : 'x';
   }
 
@@ -367,7 +340,6 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
       bubbles: true,
       composed: true,
     };
-    // this.dispatchEvent(new CustomEvent('legendClick', options));
   }
 
   protected abstract getType(): ChartType;

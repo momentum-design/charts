@@ -16,8 +16,25 @@ function showComponent() {
     ['2007', 1030, 540],
   ];
   const options = {
+    valueAxes: [
+      {
+        gridDisplay: false,
+        position: 'left',
+        title: 'Left Title',
+      },
+      {
+        position: 'right',
+        title: 'Right Title',
+      },
+    ],
+    seriesOptions: {
+      styleMapping: {
+        Stuff: {
+          valueAxisIndex: 1,
+        },
+      },
+    },
     title: 'My First Range Area Chart',
-    theme: 'color-health',
   };
   return (
     <div>
