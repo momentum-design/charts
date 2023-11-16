@@ -1,19 +1,16 @@
 module.exports = {
   verbose: true,
   rootDir: './',
-  roots: ['<rootDir>/src/'],
-  preset: 'ts-jest',
+  roots: ['<rootDir>/test/'],
+  preset: 'ts-jest/presets/default-esm',
   moduleNameMapper: {
     '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
-    'lodash-es': 'lodash',
   },
-  globals: {
-    'ts-jest': {
-      diagnostics: false,
-    },
+  transform: {
+    '^.+\\.jsx?$': 'babel-jest',
   },
-  testEnvironment: 'node',
-  testRegex: '(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$',
+  testEnvironment: 'jsdom',
+  testRegex: '(/__tests__/.*|\\.(tests|spec))\\.(ts|tsx|js)$',
   setupFilesAfterEnv: ['./jest.setup.ts'],
   moduleFileExtensions: ['ts', 'tsx', 'js'],
   coveragePathIgnorePatterns: ['/node_modules/', '/src/styles/', 'src/index.ts'],

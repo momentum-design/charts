@@ -2,12 +2,19 @@
 
 A word cloud, also known as a tag cloud or word or weighted list, is a visual representation of text data where words are displayed in different sizes and colors.
 
-```jsx live
-function showComponent() {
-  const data = mdwd.wordCloud;
-  const options = {};
-  return <mdw-chart style={{ height: '500px' }} type="wordCloud" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-chart>;
-}
+```jsx live noInline
+const data = mdwd.wordCloud;
+const options = {
+  colorMode: 'random', // one of random, repeat, lighten, darken
+};
+render(
+  <mdw-chart
+    style={{ height: '500px' }}
+    type="wordCloud"
+    data={JSON.stringify(data)}
+    options={JSON.stringify(options)}
+  ></mdw-chart>,
+);
 ```
 
 ## Data
