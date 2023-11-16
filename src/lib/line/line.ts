@@ -15,20 +15,12 @@ export class LineChart extends XYChart {
   protected afterDatasetCreated(
     dataset: ChartDataset<'line', number[]>,
     seriesOptions: { styleMapping: { type: string } },
-    index: number,
+    color: string,
   ): ChartDataset<'line', number[]> {
     if (seriesOptions?.styleMapping?.type && seriesOptions?.styleMapping?.type === ChartType.Area) {
-      const colors = this.options ? this.getBackgroundColor(this.options) ?? [] : [];
-      const colorIndex = index % colors.length;
-      let borderColor = '';
-      if (Array.isArray(dataset.borderColor)) {
-        borderColor = borderColor[colorIndex];
-      } else {
-        borderColor = dataset.borderColor as string;
-      }
       dataset.fill = {
-        below: transparentizeColor(borderColor, 0.4),
-        above: transparentizeColor(borderColor, 0.4),
+        below: transparentizeColor(color, 0.4),
+        above: transparentizeColor(color, 0.4),
         target: 'start',
       };
     }

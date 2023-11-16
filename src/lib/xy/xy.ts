@@ -54,17 +54,15 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
   };
 
   protected getConfiguration(): ChartConfiguration {
-    let chartLabels: unknown[] = [];
     let chartDatasets: ChartDataset<ChartJSType, number[]>[] = [];
     this.getChartData();
     if (this.chartData) {
-      chartLabels = this.chartData.category.labels ?? [];
       chartDatasets = this.getDatasets();
     }
     return {
       type: this.toChartJsType(this.getType()) as ChartJSType,
       data: {
-        labels: chartLabels,
+        labels: this.chartData.category.labels ?? [],
         datasets: chartDatasets,
       },
       options: this.getChartOptions(),
@@ -149,7 +147,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
         } else {
           options.scales.categoryAxis.position = this.isHorizontal() === 'x' ? 'bottom' : 'left';
         }
-        if (this.options.categoryAxis?.type) {
+        if (this.options.categoryAxis.type) {
           options.scales.categoryAxis.type = this.options.categoryAxis.type;
           if (options.scales.categoryAxis.type === 'time' && this.options.categoryAxis) {
             options.scales.categoryAxis.time = { unit: this.options.categoryAxis.timeUnit };
@@ -202,10 +200,20 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
 
   private getDatasets(): ChartDataset<ChartJSType, number[]>[] {
     const chartDataset: ChartDataset<ChartJSType, number[]>[] = [];
+    if (!this.chartData.category.labels) {
+      throw new Error('Categories cannot be undefined.');
+    }
     if (Array.isArray(this.chartData?.series)) {
+      let colors: string[] = [];
+      if (this.options.categoryAxis?.enableColor) {
+        colors = this.getColorsForKeys(this.chartData.category.labels);
+      } else {
+        colors = this.getColorsForKeys(this.chartData?.series.map((series) => series.name));
+      }
+
       this.chartData?.series?.forEach((series, index) => {
         let dataset: ChartDataset<ChartJSType, number[]> = { data: [] };
-        dataset = this.createChartDataset(series, index);
+        dataset = this.createChartDataset(series, colors, index);
         if (dataset) {
           chartDataset.push(dataset);
         }
@@ -219,16 +227,15 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
       name: string;
       data?: number[];
     },
+    colors: string[],
     index: number,
   ): ChartDataset<ChartJSType, number[]> {
     let dataset: ChartDataset<ChartJSType, number[]> = { data: [] };
-    const colors = this.options ? this.getBackgroundColor(this.options) ?? [] : [];
     const styleMapping = this.options.seriesOptions?.styleMapping[series.name] ?? {};
-    const colorIndex = index % colors.length;
     dataset.data = Object.values(series.data ?? []) as number[];
     dataset.label = series.name;
-    dataset.borderColor = this.options.categoryAxis?.enableColor ? colors : colors[colorIndex];
-    dataset.backgroundColor = this.options.categoryAxis?.enableColor ? colors : colors[colorIndex];
+    dataset.borderColor = this.options.categoryAxis?.enableColor ? colors : colors[index];
+    dataset.backgroundColor = this.options.categoryAxis?.enableColor ? colors : colors[index];
     dataset.type = this.toChartJsType(styleMapping?.type);
     dataset = this.setAxisIDs(dataset, styleMapping.valueAxisIndex);
     if (dataset.type === 'line') {
@@ -237,7 +244,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
         dataset.borderDash = [3, 3];
       }
     }
-    return this.afterDatasetCreated(dataset, { styleMapping: styleMapping }, index);
+    return this.afterDatasetCreated(dataset, { styleMapping: styleMapping }, colors[index], index);
   }
   private setAxisIDs(
     dataset: ChartDataset<ChartJSType, number[]>,
@@ -285,7 +292,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     if (!data?.dataKey) {
       return result;
     }
-    result.category.labels = data.data.map((item) => item[data.dataKey as string]);
+    result.category.labels = data.data.map((item) => item[data.dataKey as string] as string);
     const seriesNames = Object.keys(data.data[0]).filter((key) => key !== data.dataKey);
 
     const seriesData = seriesNames.map((name) => {
@@ -351,6 +358,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
         lineStyle?: string;
       };
     },
+    color?: string,
     index?: number,
   ): ChartDataset<ChartJSType, number[]>;
 }
