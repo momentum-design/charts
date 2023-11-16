@@ -1,5 +1,5 @@
-import { settings } from './settings';
-import { defaultTheme, ThemeKey } from './theme';
+import { settings } from '../src/core/settings';
+import { defaultTheme, ThemeKey } from '../src/core/theme';
 
 describe('settings', () => {
   it('should have the default theme', () => {

@@ -58,6 +58,7 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
       return null;
     }
 
+    const words = finalData.map((item) => item.key);
     const values = finalData.map((item) => item.value);
     this.minValue = Math.min(...values);
     this.maxValue = Math.max(...values);
@@ -65,12 +66,12 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
     return {
       type: WordCloudController.id,
       data: {
-        labels: finalData.map((item) => item.key),
+        labels: words,
         datasets: [
           {
             label: '',
             data: finalData.map((item) => this.getFontSize(item.value)),
-            color: ['#dd0000', '#ff0000', '#00ff00'], // TODO
+            color: this.getColorsForKeys(words),
             fit: true,
           },
         ],
