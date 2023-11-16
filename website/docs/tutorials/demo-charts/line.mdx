@@ -59,11 +59,13 @@ function showComponent() {
       timeUnit: 'month',
       labelFormat: 'MM DD, YYYY',
     },
-    valueAxis: {
-      gridDisplay: false,
-      position: 'left',
-      title: 'value',
-    },
+    valueAxes: [
+      {
+        gridDisplay: false,
+        position: 'left',
+        title: 'value',
+      },
+    ],
     seriesOptions: {
       styleMapping: {
         Louisiana: {
@@ -72,7 +74,6 @@ function showComponent() {
       },
     },
     title: 'My First Line Chart',
-    theme: 'diverging-colors-alerts',
     legend: {
       isLegendClick: false,
     },

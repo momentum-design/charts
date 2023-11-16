@@ -60,7 +60,7 @@ interface CategoryAxisOptions extends AxisOptions {
    */
   tooltipFormat?: string;
 }
-interface ValueAxisOptions extends AxisOptions {
+export interface ValueAxisOptions extends AxisOptions {
   unit?: string;
 }
 
@@ -76,6 +76,7 @@ export interface XYChartOptions extends ChartOptions {
       [key: string]: {
         type?: 'bar' | 'line' | 'area';
         lineStyle?: 'solid' | 'dashed';
+        valueAxisIndex?: number;
       };
     };
   };
@@ -86,8 +87,9 @@ export interface XYChartOptions extends ChartOptions {
   /**
    * Options for configuring the value axis.
    */
-  valueAxis?: ValueAxisOptions; //TODO remove it
-  valueAxes?: ValueAxisOptions[]; //TODO support multi valueAxes
+  valueAxes?: ValueAxisOptions[];
+
+  onLegendClick?: (legendItem: { label: string | number; value: string | number }[]) => void;
 }
 
 /**

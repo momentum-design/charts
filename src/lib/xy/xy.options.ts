@@ -6,11 +6,13 @@ const defaultXYChartOptions: XYChartOptions = {
     display: true,
     stacked: false,
   },
-  valueAxis: {
-    gridDisplay: true,
-    display: true,
-    stacked: false,
-  },
+  valueAxes: [
+    {
+      gridDisplay: true,
+      display: true,
+      stacked: false,
+    },
+  ],
   legend: {
     position: 'bottom',
     display: true,

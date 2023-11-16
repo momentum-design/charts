@@ -20,12 +20,13 @@ function showComponent() {
       stacked: false,
       enableColor: false,
     },
-    valueAxis: {
-      stacked: false,
-      title: 'value',
-    },
+    valueAxes: [
+      {
+        stacked: false,
+        title: 'value',
+      },
+    ],
     title: 'My First Column Chart',
-    theme: 'qualitative-colors-primary',
     legend: {
       isLegendClick: true,
     },
@@ -42,10 +43,10 @@ function showComponent() {
       if (type === 'category') {
         prevOptions.categoryAxis.stacked = !prevOptions.categoryAxis.stacked;
       } else if (type === 'value') {
-        prevOptions.valueAxis.stacked = !prevOptions.valueAxis.stacked;
+        prevOptions.valueAxes[0].stacked = !prevOptions.valueAxes[0].stacked;
       } else if (type === 'all') {
         prevOptions.categoryAxis.stacked = !prevOptions.categoryAxis.stacked;
-        prevOptions.valueAxis.stacked = !prevOptions.valueAxis.stacked;
+        prevOptions.valueAxes[0].stacked = !prevOptions.valueAxes[0].stacked;
       }
       return {
         ...prevOptions,
