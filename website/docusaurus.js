@@ -140,6 +140,12 @@ const getConfig = (app) => (
                 watchFiles: {
                   paths: ['static/dist-lib/**'],
                 },
+                client: {
+                  progress: true,
+                  overlay: {
+                    errors: true,
+                  }
+                }
               },
             }
           }

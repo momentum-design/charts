@@ -98,3 +98,8 @@ table {
   display: table !important;
   width: 100%;
 }
+
+iframe#webpack-dev-server-client-overlay {
+  height: 250px !important;
+  top: auto !important;
+}
