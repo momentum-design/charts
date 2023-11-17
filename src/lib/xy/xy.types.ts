@@ -101,7 +101,7 @@ export type DataTableLike = TableData | JsonData;
  * Data model required for chart rendering.
  */
 export type DataView = {
-  category: { name?: string; labels?: unknown[] };
+  category: { name?: string; labels?: string[] };
   series: {
     name: string;
     data?: number[];
