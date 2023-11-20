@@ -113,12 +113,10 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
             label += ': ';
           }
 
-          label += new Intl.NumberFormat().format(
+          label += this.getValueWithUnit(
             this.finalData?.find((item) => item.key === context.label)?.value || 0,
+            this.options.valueUnit,
           );
-          if (this.options.valueUnit) {
-            label += this.options.valueUnit;
-          }
           return label;
         },
         labelColor: (context: WordCloudTooltipContext): TooltipLabelStyle => {

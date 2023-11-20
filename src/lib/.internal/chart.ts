@@ -57,6 +57,14 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
     return merge({}, ...fonts);
   }
 
+  protected getValueWithUnit(value: number, unit?: string): string {
+    let formatted = new Intl.NumberFormat().format(value || 0);
+    if (unit) {
+      formatted += ' ' + this.options.valueUnit;
+    }
+    return formatted;
+  }
+
   private getColorForKey(key: string, total: number): string {
     let color = '';
     if (this.options?.colorMapping) {
