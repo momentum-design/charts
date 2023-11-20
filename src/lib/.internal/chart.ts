@@ -108,8 +108,8 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
       return;
     }
 
-    if (this.options?.colorSet) {
-      this.colors = this.options.colorSet;
+    if (this.options?.colors) {
+      this.colors = this.options.colors;
       return;
     }
 

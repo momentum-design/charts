@@ -26,7 +26,7 @@ export interface ChartOptions {
   colorMapping?: {
     [key: string]: string;
   };
-  colorSet?: string[];
+  colors?: string[];
   colorMode?: ColorMode;
 }
 

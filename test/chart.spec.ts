@@ -26,7 +26,7 @@ describe('chart', () => {
     let chartData = {};
     let keys = ['key1', 'key2', 'key3', 'key4'];
     let chartColors = ['#ff0000', '#00ff00', '#0000ff'];
-    let chartOptions: TestChartOptions = { id: 'testChartInstance', colorSet: chartColors };
+    let chartOptions: TestChartOptions = { id: 'testChartInstance', colors: chartColors };
 
     it('should create an instance', () => {
       chart = new TestChart(chartData, chartOptions);
