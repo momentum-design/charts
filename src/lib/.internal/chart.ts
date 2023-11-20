@@ -1,15 +1,25 @@
-import { Chart as ChartJS } from 'chart.js/auto';
+import { Chart as ChartJS, FontSpec } from 'chart.js/auto';
 import { merge } from 'lodash-es';
 import { settings, ThemeKey } from '../../core';
 import { darkenColor, getRandomColor, lightenColor } from '../../helpers';
-import { ChartContainer, ChartData, ChartOptions, ColorMode, TableData } from '../../types';
+import { ChartContainer, ChartData, ChartOptions, ColorMode, Font, TableData } from '../../types';
 
 export abstract class Chart<TData extends ChartData, TOptions extends ChartOptions> {
+  static defaults: ChartOptions = {
+    font: {
+      size: 12,
+      family: 'CiscoSansTT Regular,Helvetica Neue,Helvetica,Arial,sans-serif',
+      style: 'normal',
+      weight: undefined,
+      lineHeight: 1.2,
+    },
+  };
+
   api?: ChartJS;
 
-  private _colors?: string[];
-  private _lastColor?: string;
-  private _countColored = 0;
+  private colors?: string[];
+  private lastColor?: string;
+  private countColored = 0;
   private _options: TOptions;
 
   get options(): TOptions {
@@ -17,7 +27,7 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   }
 
   constructor(protected data: TData, options?: TOptions) {
-    this._options = merge(this.getDefaultOptions(), options);
+    this._options = merge({}, Chart.defaults, this.getDefaultOptions(), options);
 
     this.init();
   }
@@ -43,30 +53,34 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
     return keys.map((key) => this.getColorForKey(key, keys.length));
   }
 
+  protected getChartJSFont(...fonts: Font[]): Partial<FontSpec> {
+    return merge({}, ...fonts);
+  }
+
   private getColorForKey(key: string, total: number): string {
     let color = '';
     if (this.options?.colorMapping) {
       color = this.options.colorMapping[key];
     }
 
-    if (!color && this._colors && this._colors.length > this._countColored) {
-      color = this._colors[this._countColored];
-      this._countColored += 1;
+    if (!color && this.colors && this.colors.length > this.countColored) {
+      color = this.colors[this.countColored];
+      this.countColored += 1;
     }
 
-    if (!color && this._colors) {
+    if (!color && this.colors) {
       switch (this.options?.colorMode) {
         case ColorMode.Repeat:
-          color = this._colors[this._countColored % this._colors?.length];
-          this._countColored += 1;
+          color = this.colors[this.countColored % this.colors?.length];
+          this.countColored += 1;
           break;
 
         case ColorMode.Darken:
-          color = darkenColor(this._lastColor!, 4 / total);
+          color = darkenColor(this.lastColor!, 4 / total);
           break;
 
         case ColorMode.Lighten:
-          color = lightenColor(this._lastColor!, 4 / total);
+          color = lightenColor(this.lastColor!, 4 / total);
           break;
 
         case ColorMode.Random:
@@ -76,18 +90,18 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
       }
     }
 
-    this._lastColor = color;
+    this.lastColor = color;
 
     return color;
   }
 
   private initColors(): void {
-    if (this._colors) {
+    if (this.colors) {
       return;
     }
 
     if (this.options?.colorSet) {
-      this._colors = this.options.colorSet;
+      this.colors = this.options.colorSet;
       return;
     }
 
@@ -108,8 +122,8 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
       }
     }
 
-    this._colors = themeModel.colors || [];
-    this._lastColor = this._colors[this._colors.length - 1];
+    this.colors = themeModel.colors || [];
+    this.lastColor = this.colors[this.colors.length - 1];
   }
 
   abstract getTableData(): TableData;

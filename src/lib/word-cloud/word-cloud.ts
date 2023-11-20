@@ -1,9 +1,10 @@
-import { Chart as ChartJS, ChartConfiguration } from 'chart.js/auto';
+import { Chart as ChartJS, ChartConfiguration, TooltipLabelStyle, TooltipOptions } from 'chart.js/auto';
+import { _DeepPartialObject } from 'chart.js/dist/types/utils';
 import { WordCloudController, WordElement } from 'chartjs-chart-wordcloud';
+import { alphaColor } from '../../helpers';
 import { TableData } from '../../types';
 import { Chart } from '../.internal';
-import { getTooltip } from './word-cloud.tooltip';
-import { WordCloudData, WordCloudOptions } from './word-cloud.types';
+import { WordCloudData, WordCloudOptions, WordCloudTooltipContext } from './word-cloud.types';
 
 // remove the default value, otherwise the tooltip point appears with the hover color sometimes.
 // see https://github.com/sgratzl/chartjs-chart-wordcloud/blob/main/src/elements/WordElement.ts#L99
@@ -23,6 +24,7 @@ ChartJS.register(WordCloudController, WordElement);
 export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
   private minValue = 0;
   private maxValue = 1;
+  private finalData?: { key: string; value: number }[];
 
   /**
    * The default options for Word Cloud chart.
@@ -38,9 +40,8 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
   }
 
   getConfiguration(): ChartConfiguration<'wordCloud'> | null {
-    let finalData;
     if (Array.isArray(this.data)) {
-      finalData = this.data.map((item) => {
+      this.finalData = this.data.map((item) => {
         if (typeof item === 'string') {
           return { key: item, value: Math.floor(Math.random() * 10) };
         }
@@ -51,15 +52,15 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
         return item;
       });
     } else {
-      finalData = Object.keys(this.data).map((key) => ({ key, value: (<any>this.data)[key] }));
+      this.finalData = Object.keys(this.data).map((key) => ({ key, value: (<any>this.data)[key] }));
     }
 
-    if (!finalData) {
+    if (!this.finalData) {
       return null;
     }
 
-    const words = finalData.map((item) => item.key);
-    const values = finalData.map((item) => item.value);
+    const words = this.finalData.map((item) => item.key);
+    const values = this.finalData.map((item) => item.value);
     this.minValue = Math.min(...values);
     this.maxValue = Math.max(...values);
 
@@ -70,7 +71,7 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
         datasets: [
           {
             label: '',
-            data: finalData.map((item) => this.getFontSize(item.value)),
+            data: this.finalData.map((item) => this.getFontSize(item.value)),
             color: this.getColorsForKeys(words),
             fit: true,
           },
@@ -86,7 +87,53 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
           legend: {
             display: false,
           },
-          tooltip: getTooltip(finalData),
+          tooltip: this.getTooltipConfiguration(),
+        },
+      },
+    };
+  }
+
+  protected getDefaultOptions(): WordCloudOptions {
+    return WordCloudChart.defaultOptions;
+  }
+
+  private getTooltipConfiguration(): _DeepPartialObject<TooltipOptions<'wordCloud'>> {
+    return {
+      usePointStyle: true,
+      titleFont: this.getChartJSFont(),
+      bodyFont: this.getChartJSFont(),
+      footerFont: this.getChartJSFont(),
+      callbacks: {
+        title: (context: WordCloudTooltipContext[]): string | void | string[] =>
+          (context.length > 0 && context[0].dataset.label) || '',
+        label: (context: WordCloudTooltipContext): string => {
+          let label = context.label;
+
+          if (label) {
+            label += ': ';
+          }
+
+          label += new Intl.NumberFormat().format(
+            this.finalData?.find((item) => item.key === context.label)?.value || 0,
+          );
+          if (this.options.valueUnit) {
+            label += this.options.valueUnit;
+          }
+          return label;
+        },
+        labelColor: (context: WordCloudTooltipContext): TooltipLabelStyle => {
+          return {
+            borderColor: alphaColor(context.element.options.color as string, 0.6),
+            backgroundColor: context.element.options.color,
+            borderWidth: 1,
+            borderRadius: 2,
+          };
+        },
+        labelPointStyle: (context) => {
+          return {
+            pointStyle: 'rectRounded',
+            rotation: 0,
+          };
         },
       },
     };
@@ -101,9 +148,5 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
     }
 
     throw new Error(`The minFontSize and maxFontSize are required.`);
-  }
-
-  protected getDefaultOptions(): WordCloudOptions {
-    return WordCloudChart.defaultOptions;
   }
 }

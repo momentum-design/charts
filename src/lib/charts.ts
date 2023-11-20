@@ -21,10 +21,7 @@ export function createChart(
   chartData: ChartData,
   chartOptions?: ChartOptions,
 ): Chart<ChartData, ChartOptions> {
-  const ctor = SUPPORTED_CHARTS.get(chartType) as new (data: ChartData, options?: ChartOptions) => Chart<
-    ChartData,
-    ChartOptions
-  >;
+  const ctor = SUPPORTED_CHARTS.get(chartType) as any;
 
   if (ctor) {
     return new ctor(chartData, chartOptions);

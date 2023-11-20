@@ -1,4 +1,4 @@
-import { Padding } from './common.types';
+import { Font, Padding } from '.';
 
 export type Position = 'left' | 'top' | 'right' | 'bottom';
 
@@ -17,6 +17,8 @@ export interface ChartOptions {
   title?: string;
   chartLabel?: string | number | string[]; // TODO: remove it, please use series name.
   theme?: string;
+  font?: Font;
+  valueUnit?: string;
   aspectRatio?: number; //TODO: calculate this property for all charts, remove it here
   padding?: Padding | number;
   legend?: LegendOptions;
