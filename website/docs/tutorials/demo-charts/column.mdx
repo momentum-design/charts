@@ -8,17 +8,15 @@ Column chart provides a way of showing data values represented as vertical bars.
 
 ```jsx live
 function showComponent() {
-  const data = [
-    ['Year', 'Things', 'Stuff'],
-    ['2004', 1000, 400],
-    ['2005', 1170, 460],
-    ['2006', 660, 1120],
-    ['2007', 1030, 540],
-  ];
+  const data = mdwd.xy;
   const initialOptions = {
     categoryAxis: {
       stacked: false,
       enableColor: false,
+      dataKey: 'dateTime',
+      type: 'time',
+      timeUnit: 'month',
+      labelFormat: 'MM DD, YYYY',
     },
     valueAxes: [
       {
@@ -27,9 +25,7 @@ function showComponent() {
       },
     ],
     title: 'My First Column Chart',
-    legend: {
-      isLegendClick: true,
-    },
+    legend: {},
   };
 
   const [options, setOptions] = useState(initialOptions);

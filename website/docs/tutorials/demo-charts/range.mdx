@@ -9,11 +9,15 @@ Range chart support a fill area on the dataset object which can be used to creat
 ```jsx live
 function showComponent() {
   const data = [
-    ['Year', 'Things', 'Stuff'],
+    ['Year', 'Unfilled', 'Filled'],
     ['2004', 1000, 400],
     ['2005', 1170, 460],
     ['2006', 660, 1120],
-    ['2007', 1030, 540],
+    ['2008', 630, 540],
+    ['2009', 1030, 740],
+    ['2010', 930, 640],
+    ['2011', 530, 340],
+    ['2012', 1030, 240],
   ];
   const options = {
     valueAxes: [
@@ -29,7 +33,7 @@ function showComponent() {
     ],
     seriesOptions: {
       styleMapping: {
-        Stuff: {
+        Filled: {
           valueAxisIndex: 1,
         },
       },

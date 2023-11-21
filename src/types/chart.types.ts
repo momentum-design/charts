@@ -31,13 +31,18 @@ export interface ChartOptions {
 }
 
 export interface LegendOptions {
-  isLegendClick?: boolean; //TODO onClick function
+  itemSelectable?: boolean;
+  onItemClick?(legendItem: LegendItemOptions[]): void;
   display?: boolean;
   position?: Position;
-  legendLabelsHeight?: number; //TODO remove it
-  legendLabelsWidth?: number; //TODO remove it
-  legendBorderRadius?: number; //TODO remove it
   tooltip?: TooltipOptions;
+}
+
+export interface LegendItemOptions {
+  label?: string | number;
+  value?: string | number;
+  isSelected?: boolean;
+  color?: string;
 }
 
 export interface TooltipOptions {

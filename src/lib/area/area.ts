@@ -1,8 +1,9 @@
 import { ChartDataset } from 'chart.js/auto';
 import 'chartjs-adapter-moment';
-import { transparentizeColor } from '../../core/utils';
+import { alphaColor } from '../../helpers';
 import { ChartType, TableData } from '../../types';
 import { XYChart } from '../xy';
+import { SeriesStyleOptions } from '../xy/xy.types';
 
 export class AreaChart extends XYChart {
   getType(): ChartType {
@@ -13,13 +14,15 @@ export class AreaChart extends XYChart {
   }
   protected afterDatasetCreated(
     dataset: ChartDataset<'line', number[]>,
-    seriesOptions: { styleMapping: { type: string } },
+    seriesOptions: {
+      styleOptions?: SeriesStyleOptions;
+    },
     color: string,
   ): ChartDataset<'line', number[]> {
-    if (!seriesOptions?.styleMapping?.type || seriesOptions?.styleMapping?.type === ChartType.Area) {
+    if (!seriesOptions?.styleOptions?.type || seriesOptions?.styleOptions?.type === ChartType.Area) {
       dataset.fill = {
-        below: transparentizeColor(color, 0.4),
-        above: transparentizeColor(color, 0.4),
+        below: alphaColor(color, 0.4),
+        above: alphaColor(color, 0.4),
         target: 'start',
       };
     }

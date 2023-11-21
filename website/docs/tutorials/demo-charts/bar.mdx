@@ -9,23 +9,62 @@ Bar chart provides a way of showing data values represented as horizontal bars. 
 ```jsx live
 function showComponent() {
   const data = [
-    ['Year', 'Things'],
-    ['2004', 1000],
-    ['2005', 1170],
-    ['2006', 660],
-    ['2007', 1030],
+    {
+      dateTime: '2013-12-20T06:37:35.217Z',
+      Arkansas: 2174,
+    },
+    {
+      dateTime: '2014-01-20T06:37:35.217Z',
+      Arkansas: 894,
+    },
+    {
+      dateTime: '2014-02-20T06:37:35.217Z',
+      Arkansas: 7669,
+    },
+    {
+      dateTime: '2014-03-20T06:37:35.217Z',
+      Arkansas: 9651,
+    },
+    {
+      dateTime: '2014-04-20T06:37:35.217Z',
+      Arkansas: 7468,
+    },
+    {
+      dateTime: '2014-05-20T06:37:35.217Z',
+      Arkansas: 3762,
+    },
+    {
+      dateTime: '2014-06-20T06:37:35.217Z',
+      Arkansas: 6416,
+    },
+    {
+      dateTime: '2014-07-20T06:37:35.217Z',
+      Arkansas: 8387,
+    },
+    {
+      dateTime: '2014-08-20T06:37:35.217Z',
+      Arkansas: 7394,
+    },
+    {
+      dateTime: '2014-09-20T06:37:35.217Z',
+      Arkansas: 1121,
+    },
   ];
   const options = {
     categoryAxis: {
       gridDisplay: true,
       title: 'category',
       enableColor: false,
+      dataKey: 'dateTime',
+      type: 'time',
+      timeUnit: 'month',
     },
     valueAxes: [
       {
         title: 'value',
       },
     ],
+    legend: {},
     title: 'My First Bar Chart',
   };
   return (

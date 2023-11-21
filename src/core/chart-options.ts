@@ -3,11 +3,7 @@ import { ChartOptions } from '../types';
 const defaultChartOptions: ChartOptions = {
   chartLabel: '',
   aspectRatio: 1.6,
-  legend: {
-    legendLabelsHeight: 12,
-    legendLabelsWidth: 12,
-    legendBorderRadius: 2,
-  },
+  legend: {},
   tooltip: {
     isMultipleLegend: false,
     isMultipleSeries: false,
