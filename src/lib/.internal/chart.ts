@@ -54,6 +54,10 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   }
 
   protected getChartJSFont(...fonts: Font[]): Partial<FontSpec> {
+    if (Chart.defaults.font) {
+      fonts.push(Chart.defaults.font);
+    }
+    fonts.reverse();
     return merge({}, ...fonts);
   }
 
