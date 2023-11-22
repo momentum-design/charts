@@ -1,9 +1,10 @@
 import { ChartConfiguration, ChartDataset, ChartOptions, ChartType as ChartJSType } from 'chart.js/auto';
 import { chartA11y, chartLegendA11y } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
+import { toChartJSType } from '../../helpers/utils';
 import { ChartType, TableData } from '../../types';
 import { Chart } from '../.internal';
-import { legendClickHandler } from '../donut/donut.plugin';
+import { initLegendOptions } from '../legend/legend';
 import { DataView, GenericDataModel, PieData, PieOptions } from './pie.types';
 
 export class PieChart<TData extends PieData, TOptions extends PieOptions> extends Chart<TData, TOptions> {
@@ -73,7 +74,7 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
     const chartDataset: ChartDataset<ChartJSType, number[]>[] = [];
     if (Array.isArray(this.chartData?.series)) {
       const chartBG = this.getColorsForKeys(this.chartData?.category?.labels as string[]);
-      let colors: string[] = [];
+      const colors: string[] = [];
       this.chartData?.series?.forEach((series) => {
         let dataset: ChartDataset<ChartJSType, number[]> = { data: [] };
         dataset = this.getChartDataset(series, chartBG);
@@ -88,11 +89,7 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
   private getChartOptions(): ChartOptions {
     let options: ChartOptions = {
       plugins: {
-        legend: {
-          display: this.options.legend?.display,
-          position: this.options.legend?.position,
-          onClick: legendClickHandler,
-        },
+        legend: initLegendOptions(toChartJSType(this.getType()), this.options),
       },
     };
     if (this.getType() !== ChartType.Pie) {
@@ -152,7 +149,7 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
     },
     chartBG: string[],
   ): ChartDataset<ChartJSType, number[]> {
-    let dataset: ChartDataset<ChartJSType, number[]> = { data: [] };
+    const dataset: ChartDataset<ChartJSType, number[]> = { data: [] };
     dataset.data = Object.values(series.data ?? []) as number[];
     dataset.label = series.name;
     dataset.type = ChartType.Pie;

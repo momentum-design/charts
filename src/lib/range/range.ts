@@ -15,14 +15,16 @@ export class RangeChart extends XYChart {
 
   protected afterDatasetCreated(
     dataset: ChartDataset<'line', number[]>,
-    seriesOptions: { styleOptions?: SeriesStyleOptions },
-    color: string,
-    index: number,
+    options: {
+      styleOptions?: SeriesStyleOptions;
+      color: string;
+      index: number;
+    },
   ): ChartDataset<'line', number[]> {
-    if (this.chartData?.series && index === this.chartData.series.length - 1) {
+    if (this.chartData?.series && options.index === this.chartData.series.length - 1) {
       dataset.fill = {
-        below: alphaColor(color, 0.4),
-        above: alphaColor(color, 0.4),
+        below: alphaColor(options.color, 0.4),
+        above: alphaColor(options.color, 0.4),
         target: '-1',
       };
     }

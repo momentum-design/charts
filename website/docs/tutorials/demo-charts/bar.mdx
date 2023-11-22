@@ -10,62 +10,57 @@ Bar chart provides a way of showing data values represented as horizontal bars. 
 function showComponent() {
   const data = [
     {
-      dateTime: '2013-12-20T06:37:35.217Z',
-      Arkansas: 2174,
+      country: 'USA',
+      value: 2025,
     },
     {
-      dateTime: '2014-01-20T06:37:35.217Z',
-      Arkansas: 894,
+      country: 'China',
+      value: 1882,
     },
     {
-      dateTime: '2014-02-20T06:37:35.217Z',
-      Arkansas: 7669,
+      country: 'Japan',
+      value: 1809,
     },
     {
-      dateTime: '2014-03-20T06:37:35.217Z',
-      Arkansas: 9651,
+      country: 'Germany',
+      value: 1322,
     },
     {
-      dateTime: '2014-04-20T06:37:35.217Z',
-      Arkansas: 7468,
+      country: 'UK',
+      value: 1122,
     },
     {
-      dateTime: '2014-05-20T06:37:35.217Z',
-      Arkansas: 3762,
+      country: 'France',
+      value: 1114,
     },
     {
-      dateTime: '2014-06-20T06:37:35.217Z',
-      Arkansas: 6416,
+      country: 'India',
+      value: 984,
     },
     {
-      dateTime: '2014-07-20T06:37:35.217Z',
-      Arkansas: 8387,
+      country: 'Spain',
+      value: 711,
     },
     {
-      dateTime: '2014-08-20T06:37:35.217Z',
-      Arkansas: 7394,
+      country: 'Netherlands',
+      value: 665,
     },
     {
-      dateTime: '2014-09-20T06:37:35.217Z',
-      Arkansas: 1121,
+      country: 'South Korea',
+      value: 443,
+    },
+    {
+      country: 'Canada',
+      value: 441,
     },
   ];
   const options = {
     categoryAxis: {
       gridDisplay: true,
-      title: 'category',
-      enableColor: false,
-      dataKey: 'dateTime',
-      type: 'time',
-      timeUnit: 'month',
+      enableColor: true,
+      dataKey: 'country',
     },
-    valueAxes: [
-      {
-        title: 'value',
-      },
-    ],
     legend: {},
-    title: 'My First Bar Chart',
   };
   return (
     <div>

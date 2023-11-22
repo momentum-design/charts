@@ -8,24 +8,115 @@ Column chart provides a way of showing data values represented as vertical bars.
 
 ```jsx live
 function showComponent() {
-  const data = mdwd.xy;
+  const data = [
+    {
+      date: 'January',
+      'New Mexico': 8757,
+      Florida: 5588,
+      Nevada: 7370,
+      Wyoming: 8478,
+      Arkansas: 2174,
+    },
+    {
+      date: 'February',
+      'New Mexico': 2602,
+      Florida: 8134,
+      Nevada: 198,
+      Wyoming: 1204,
+      Arkansas: 894,
+    },
+    {
+      date: 'March',
+      'New Mexico': 4191,
+      Florida: 3375,
+      Nevada: 3473,
+      Wyoming: 6359,
+      Arkansas: 7669,
+    },
+    {
+      date: 'April',
+      'New Mexico': 7684,
+      Florida: 8590,
+      Nevada: 3483,
+      Wyoming: 792,
+      Arkansas: 9651,
+    },
+    {
+      date: 'May',
+      'New Mexico': 5332,
+      Florida: 5670,
+      Nevada: 3803,
+      Wyoming: 8538,
+      Arkansas: 7468,
+    },
+    {
+      date: 'June',
+      'New Mexico': 8579,
+      Florida: 627,
+      Nevada: 1531,
+      Wyoming: 6598,
+      Arkansas: 3762,
+    },
+    {
+      date: 'July',
+      'New Mexico': 3409,
+      Florida: 2120,
+      Nevada: 7987,
+      Wyoming: 6407,
+      Arkansas: 6416,
+    },
+    {
+      date: 'August',
+      'New Mexico': 5513,
+      Florida: 6070,
+      Nevada: 3558,
+      Wyoming: 351,
+      Arkansas: 8387,
+    },
+    {
+      date: 'September',
+      'New Mexico': 1015,
+      Florida: 4560,
+      Nevada: 6241,
+      Wyoming: 6344,
+      Arkansas: 7394,
+    },
+    {
+      date: 'October',
+      'New Mexico': 3060,
+      Florida: 5139,
+      Nevada: 7757,
+      Wyoming: 3808,
+      Arkansas: 5121,
+    },
+    {
+      date: 'November',
+      'New Mexico': 4060,
+      Florida: 7139,
+      Nevada: 8757,
+      Wyoming: 5808,
+      Arkansas: 3121,
+    },
+    {
+      date: 'December',
+      'New Mexico': 5060,
+      Florida: 7139,
+      Nevada: 10757,
+      Wyoming: 6808,
+      Arkansas: 2121,
+    },
+  ];
   const initialOptions = {
     categoryAxis: {
       stacked: false,
       enableColor: false,
-      dataKey: 'dateTime',
-      type: 'time',
-      timeUnit: 'month',
-      labelFormat: 'MM DD, YYYY',
+      dataKey: 'date',
     },
     valueAxes: [
       {
         stacked: false,
-        title: 'value',
       },
     ],
-    title: 'My First Column Chart',
-    legend: {},
   };
 
   const [options, setOptions] = useState(initialOptions);
