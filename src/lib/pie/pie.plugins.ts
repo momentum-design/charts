@@ -27,15 +27,15 @@ const getCenterValue = (chart: Chart | any, total: number, label?: string | numb
   ctx.save();
 };
 
-const centerValue = (label?: DoughnutLabel) => {
+const centerValue = (donut?: DoughnutLabel) => {
   return {
     id: 'centerValue',
     afterDatasetDraw: (chart: Chart | any) => {
-      if (!label?.enable) {
+      if (!donut?.enable) {
         return;
       }
       const total = chart.getDatasetMeta(0).total;
-      getCenterValue(chart, total, label.label);
+      getCenterValue(chart, total, donut.label);
     },
   };
 };

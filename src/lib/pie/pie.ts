@@ -1,4 +1,5 @@
 import { ChartConfiguration, ChartDataset, ChartOptions, ChartType as ChartJSType } from 'chart.js/auto';
+import { merge } from 'lodash-es';
 import { chartA11y, chartLegendA11y } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
 import { ChartType, TableData } from '../../types';
@@ -12,7 +13,14 @@ export abstract class PieChart extends Chart<PieData, PieOptions> {
     throw new Error('Method not implemented.');
   }
 
-  static readonly defaultOptions: PieOptions = defaultPieChartOptions;
+  static readonly defaultOptions: PieOptions = {
+    legend: {
+      position: 'right',
+    },
+    doughnutLabel: {
+      enable: false,
+    },
+  };
 
   protected chartData: DataView = {
     category: {
@@ -162,7 +170,7 @@ export abstract class PieChart extends Chart<PieData, PieOptions> {
   }
 
   protected getDefaultOptions(): PieOptions {
-    return PieChart.defaultOptions;
+    return merge(PieChart.defaultOptions, defaultPieChartOptions);
   }
 
   protected abstract afterOptionsCreated(options: ChartOptions): ChartOptions;
