@@ -67,6 +67,7 @@ export enum ChartType {
   Doughnut = 'doughnut',
   Range = 'range',
   WordCloud = 'wordCloud',
+  Gauge = 'gauge',
 }
 
 export enum ColorMode {

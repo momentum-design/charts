@@ -84,11 +84,19 @@ var mdwd = {
   pie: [
     {
       'Brunei Darussalam': 739,
-      Jordan: 763,
+      'Jordan': 763,
       'Burkina Faso': 604,
       'Cook Islands': 509,
-      Monaco: 205,
-      Switzerland: 108,
+      'Monaco': 205,
+      'Switzerland': 108,
+    },
+    {
+      'Brunei Darussalam': 79,
+      'Jordan': 743,
+      'Burkina Faso': 504,
+      'Cook Islands': 809,
+      'Monaco': 605,
+      'Switzerland': 708,
     },
   ],
   wordCloud: [
