@@ -1,22 +1,24 @@
-import { ChartConfiguration, ChartDataset, ChartOptions, ChartType as ChartJSType } from 'chart.js/auto';
+import ChartJS, {
+  ChartConfiguration,
+  ChartDataset,
+  ChartOptions,
+  ChartType as ChartJSType,
+  ChartTypeRegistry,
+  LegendElement,
+  LegendItem,
+} from 'chart.js/auto';
 import 'chartjs-adapter-moment';
 import { merge } from 'lodash-es';
 import { ThemeKey, themes } from '../../core';
 import { defaultChartOptions } from '../../core/chart-options';
-import {
-  chartA11y,
-  chartLegendA11y,
-  chartSeriesClick,
-  legendClickHandler,
-  legendHandleHover,
-  legendHandleLeave,
-} from '../../core/plugins';
+import { chartA11y, chartLegendA11y, chartSeriesClick, legendHandleHover, legendHandleLeave } from '../../core/plugins';
 import { externalTooltipHandler } from '../../core/plugins/chart-tooltip';
-import { LegendClickData } from '../../core/plugins/plugin.types';
-import { getCurrentTheme, tableDataToJSON } from '../../core/utils';
-import { ChartType, TableData } from '../../types';
+import { getCurrentTheme } from '../../core/utils';
+import { tableDataToJSON } from '../../helpers/data';
+import { ChartType, LegendItemOptions, TableData } from '../../types';
 import { Chart } from '../.internal';
-import { DataTableLike, DataView, GenericDataModel, XYChartOptions } from './xy.types';
+import legendClickHandler from '../legend/legend';
+import { DataTableLike, DataView, GenericDataModel, SeriesStyleOptions, XYChartOptions } from './xy.types';
 
 export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
   getTableData(): TableData {
@@ -32,7 +34,6 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     legend: {
       position: 'bottom',
       display: true,
-      isLegendClick: false,
     },
   };
   static readonly defaultValueAxisOptions = {
@@ -53,6 +54,8 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     series: [],
   };
 
+  private selectedLegends: LegendItemOptions[] = [];
+  private itemSelectable = false;
   protected getConfiguration(): ChartConfiguration {
     let chartDatasets: ChartDataset<ChartJSType, number[]>[] = [];
     this.getChartData();
@@ -92,6 +95,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
   }
 
   private getChartOptions(): ChartOptions {
+    this.itemSelectable = this.options.legend?.itemSelectable ?? false;
     const options: ChartOptions = {
       onClick: chartSeriesClick,
       indexAxis: this.isHorizontal(),
@@ -104,12 +108,26 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
           display: this.options.legend?.display,
           position: this.options.legend?.position,
           labels: {
-            boxWidth: this.options.legend?.legendLabelsWidth,
-            boxHeight: this.options.legend?.legendLabelsHeight,
-            useBorderRadius: !!this.options.legend?.legendBorderRadius,
-            borderRadius: this.options.legend?.legendBorderRadius,
+            pointStyle: 'rectRounded',
+            usePointStyle: true,
+            pointStyleWidth: 20,
+            generateLabels(chart) {
+              return ChartJS.defaults.plugins.legend.labels.generateLabels(chart).map(function (data, i) {
+                let dataset = chart.data.datasets.find((dataset) => dataset.label === data.text);
+                if (dataset?.type === 'line') {
+                  data.pointStyle = 'line';
+                  dataset = dataset as ChartDataset<ChartType.Line, number[]>;
+                  if (dataset.borderDash) {
+                    data.lineDash = [3, 3];
+                  }
+                }
+                return data;
+              });
+            },
           },
-          onClick: legendClickHandler,
+          onClick: (e, legendItem, legend) => {
+            this.onLegendClick(legendItem, legend);
+          },
           onHover: legendHandleHover,
           onLeave: legendHandleLeave,
         },
@@ -238,13 +256,20 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     dataset.backgroundColor = this.options.categoryAxis?.enableColor ? colors : colors[index];
     dataset.type = this.toChartJsType(styleMapping?.type);
     dataset = this.setAxisIDs(dataset, styleMapping.valueAxisIndex);
+    if (styleMapping.order) {
+      dataset.order = styleMapping.order;
+    }
     if (dataset.type === 'line') {
+      dataset.borderWidth = 2;
       dataset = dataset as ChartDataset<ChartType.Line, number[]>;
       if (styleMapping?.lineStyle === 'dashed') {
         dataset.borderDash = [3, 3];
       }
+      if (styleMapping.tension) {
+        dataset.tension = styleMapping.tension;
+      }
     }
-    return this.afterDatasetCreated(dataset, { styleMapping: styleMapping }, colors[index], index);
+    return this.afterDatasetCreated(dataset, { styleOptions: styleMapping }, colors[index], index);
   }
   private setAxisIDs(
     dataset: ChartDataset<ChartJSType, number[]>,
@@ -341,22 +366,23 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     return isHorizontal ? 'y' : 'x';
   }
 
-  private onLegendClick(selectedItem: LegendClickData[]): void {
-    const options = {
-      detail: { selectedItem: selectedItem },
-      bubbles: true,
-      composed: true,
-    };
+  private onLegendClick(item: LegendItem, legend: LegendElement<keyof ChartTypeRegistry>): void {
+    if (this.options.legend?.onItemClick) {
+      // TODO(yiwei): Implementation of callback
+      legendClickHandler(item, legend, this.selectedLegends, this.options.legend?.onItemClick);
+    } else {
+      if (typeof item.datasetIndex !== 'undefined') {
+        legend.chart?.setDatasetVisibility(item.datasetIndex, !legend.chart.isDatasetVisible(item.datasetIndex));
+        legend.chart?.update();
+      }
+    }
   }
 
   protected abstract getType(): ChartType;
   protected abstract afterDatasetCreated(
     dataset: ChartDataset<ChartJSType, number[]>,
     seriesOptions?: {
-      styleMapping?: {
-        type?: string;
-        lineStyle?: string;
-      };
+      styleOptions?: SeriesStyleOptions;
     },
     color?: string,
     index?: number,

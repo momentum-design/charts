@@ -1,8 +1,9 @@
 import { ChartDataset } from 'chart.js/auto';
 import 'chartjs-adapter-moment';
-import { transparentizeColor } from '../../core/utils';
+import { alphaColor } from '../../helpers';
 import { ChartType, TableData } from '../../types';
 import { XYChart } from '../xy';
+import { SeriesStyleOptions } from '../xy/xy.types';
 
 export class RangeChart extends XYChart {
   getType(): ChartType {
@@ -14,14 +15,14 @@ export class RangeChart extends XYChart {
 
   protected afterDatasetCreated(
     dataset: ChartDataset<'line', number[]>,
-    seriesOptions: { styleMapping: { type: string } },
+    seriesOptions: { styleOptions?: SeriesStyleOptions },
     color: string,
     index: number,
   ): ChartDataset<'line', number[]> {
     if (this.chartData?.series && index === this.chartData.series.length - 1) {
       dataset.fill = {
-        below: transparentizeColor(color, 0.4),
-        above: transparentizeColor(color, 0.4),
+        below: alphaColor(color, 0.4),
+        above: alphaColor(color, 0.4),
         target: '-1',
       };
     }

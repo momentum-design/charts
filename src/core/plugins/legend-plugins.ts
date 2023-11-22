@@ -108,7 +108,13 @@ const customizeTooltipBody = (legend: any, item: LegendItem, legendTooltip: any)
       const curLabel = element.label;
       const percentage = ((curValue / totalData) * 100).toFixed(legendTooltip.floorNumber) + '%';
 
-      const curTemplate = `${legendTooltip.body}`.replace('${colorBlock}', boxSpan.outerHTML).replace('${seriesName}', item.text).replace('${label}', curLabel).replace('${percentage}', percentage).replace('${value}', curValue).replace('${total}', totalData);
+      const curTemplate = `${legendTooltip.body}`
+        .replace('${colorBlock}', boxSpan.outerHTML)
+        .replace('${seriesName}', item.text)
+        .replace('${label}', curLabel)
+        .replace('${percentage}', percentage)
+        .replace('${value}', curValue)
+        .replace('${total}', totalData);
 
       replacedTemplate = replacedTemplate + curTemplate;
     });
@@ -118,7 +124,13 @@ const customizeTooltipBody = (legend: any, item: LegendItem, legendTooltip: any)
     const currentLegendData = legendData.data[item.index as number];
     const percentage = ((Math.floor(currentLegendData) / totalData) * 100).toFixed(legendTooltip.floorNumber) + '%';
 
-    replacedTemplate = `${legendTooltip.body}`.replace('${colorBlock}', boxSpan.outerHTML).replace('${seriesName}', item.text).replace('${label}', legendData.label).replace('${percentage}', percentage).replace('${value}', currentLegendData).replace('${total}', totalData);
+    replacedTemplate = `${legendTooltip.body}`
+      .replace('${colorBlock}', boxSpan.outerHTML)
+      .replace('${seriesName}', item.text)
+      .replace('${label}', legendData.label)
+      .replace('${percentage}', percentage)
+      .replace('${value}', currentLegendData)
+      .replace('${total}', totalData);
   }
 
   tooltipBody.innerHTML = replacedTemplate;
@@ -151,7 +163,9 @@ const legendHandleHover = (evt: ChartEvent, item: LegendItem, legend: any): void
     tooltipHeader.style.padding = '5px 0 0 0';
 
     const boxSpan = colorBlock({ backgroundColor: item.fillStyle as string });
-    const replacedTemplate = `${header}`.replace('${colorBlock}', boxSpan.outerHTML).replace('${seriesName}', item.text);
+    const replacedTemplate = `${header}`
+      .replace('${colorBlock}', boxSpan.outerHTML)
+      .replace('${seriesName}', item.text);
 
     tooltipHeader.innerHTML = replacedTemplate;
   }
@@ -160,7 +174,8 @@ const legendHandleHover = (evt: ChartEvent, item: LegendItem, legend: any): void
   if (body) {
     tooltipBody = customizeTooltipBody(legend, item, legendTooltip);
   } else {
-    legendTooltip.body = '<div>${colorBlock}${seriesName}</div><div class=flex-x-between><p style=min-width:100px>Percentage</p><span>${percentage}</span></p></div><div class=flex-x-between><p style=min-width:100px>Total</p><span>${value}</span></p></div> ';
+    legendTooltip.body =
+      '<div>${colorBlock}${seriesName}</div><div class=flex-x-between><p style=min-width:100px>Percentage</p><span>${percentage}</span></p></div><div class=flex-x-between><p style=min-width:100px>Total</p><span>${value}</span></p></div> ';
 
     tooltipBody = customizeTooltipBody(legend, item, legendTooltip);
   }

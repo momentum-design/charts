@@ -64,6 +64,14 @@ export interface ValueAxisOptions extends AxisOptions {
   unit?: string;
 }
 
+export interface SeriesStyleOptions {
+  type?: 'bar' | 'line' | 'area';
+  lineStyle?: 'solid' | 'dashed';
+  valueAxisIndex?: number;
+  tension?: number;
+  order?: number;
+}
+
 export interface XYChartOptions extends ChartOptions {
   /**
    * The options for the series.
@@ -73,11 +81,7 @@ export interface XYChartOptions extends ChartOptions {
      * The style mapping is an object where keys are string identifiers.
      */
     styleMapping: {
-      [key: string]: {
-        type?: 'bar' | 'line' | 'area';
-        lineStyle?: 'solid' | 'dashed';
-        valueAxisIndex?: number;
-      };
+      [key: string]: SeriesStyleOptions;
     };
   };
   /**
@@ -88,8 +92,6 @@ export interface XYChartOptions extends ChartOptions {
    * Options for configuring the value axis.
    */
   valueAxes?: ValueAxisOptions[];
-
-  onLegendClick?: (legendItem: { label: string | number; value: string | number }[]) => void;
 }
 
 /**

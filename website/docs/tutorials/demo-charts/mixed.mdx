@@ -1,0 +1,100 @@
+---
+sidebar_position: 110
+---
+
+# Mixed Bar/Line Chart
+
+Mixed Bar/Line Chart is a data visualization that combines the characteristics of both bar chart and line chart.
+
+```jsx live
+function showComponent() {
+  const data = [
+    {
+      dateTime: '2013-12-20T06:37:35.217Z',
+      Florida: 5588,
+      Nevada: 7370,
+    },
+    {
+      dateTime: '2014-01-20T06:37:35.217Z',
+      Florida: 8134,
+      Nevada: 198,
+    },
+    {
+      dateTime: '2014-02-20T06:37:35.217Z',
+      Florida: 3375,
+      Nevada: 3473,
+    },
+    {
+      dateTime: '2014-03-20T06:37:35.217Z',
+      Florida: 8590,
+      Nevada: 3483,
+    },
+    {
+      dateTime: '2014-04-20T06:37:35.217Z',
+      Florida: 5670,
+      Nevada: 3803,
+    },
+    {
+      dateTime: '2014-05-20T06:37:35.217Z',
+      Florida: 627,
+      Nevada: 1531,
+    },
+    {
+      dateTime: '2014-06-20T06:37:35.217Z',
+      Florida: 2120,
+      Nevada: 7987,
+    },
+    {
+      dateTime: '2014-07-20T06:37:35.217Z',
+      Florida: 6070,
+      Nevada: 3558,
+    },
+    {
+      dateTime: '2014-08-20T06:37:35.217Z',
+      Florida: 4560,
+      Nevada: 6241,
+    },
+    {
+      dateTime: '2014-09-20T06:37:35.217Z',
+      Florida: 6139,
+      Nevada: 9757,
+    },
+  ];
+  const options = {
+    categoryAxis: {
+      gridDisplay: true,
+      title: 'category',
+      dataKey: 'dateTime',
+      type: 'time',
+      timeUnit: 'month',
+      labelFormat: 'MM DD, YYYY',
+    },
+    valueAxes: [
+      {
+        gridDisplay: false,
+        position: 'left',
+        title: 'value',
+      },
+    ],
+    seriesOptions: {
+      styleMapping: {
+        Florida: {
+          type: 'bar',
+          order: 1,
+        },
+        Nevada: {
+          type: 'line',
+          tension: 0.5,
+          order: 0,
+        },
+      },
+    },
+    title: 'My First Combo Bar/Line Chart',
+  };
+  return (
+    <div>
+      <mdw-chart type="line" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-chart>
+    </div>
+  );
+}
+```
