@@ -12,14 +12,39 @@ They are excellent at showing the relational proportions between data.
 function showComponent() {
   const data = mdwd.pie;
   const options = {
-    chartLabel: 'Label D',
-    theme: 'diverging-colors-alerts',
-    legend: {
-      isLegendClick: true,
-    },
+    dataKey: 'time',
   };
 
-  return <mdw-pie style={{ width: '80%' }} data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-pie>;
+  return (
+    <mdw-chart
+      type="pie"
+      style={{ width: '80%' }}
+      data={JSON.stringify(data)}
+      options={JSON.stringify(options)}
+    ></mdw-chart>
+  );
+}
+```
+
+```jsx live
+function showComponent() {
+  const data = [
+    ['time', 'good', 'poor'],
+    ['2022', '2565', '12'],
+    ['2023', '3432', '15'],
+  ];
+  const options = {
+    dataKey: 'time',
+  };
+
+  return (
+    <mdw-chart
+      type="pie"
+      style={{ width: '80%' }}
+      data={JSON.stringify(data)}
+      options={JSON.stringify(options)}
+    ></mdw-chart>
+  );
 }
 ```
 

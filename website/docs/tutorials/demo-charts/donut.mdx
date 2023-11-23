@@ -13,23 +13,25 @@ It is a circular chart, similar to a pie chart, but unlike a pie chart, a donut 
 ```jsx live
 function showComponent() {
   const data = [
-    {
-      A: '13',
-      B: '17',
-      C: '8',
-      D: '10',
-      E: '40',
-      F: '51',
-      G: '31',
-    },
+    ['time', 'good', 'poor'],
+    ['2022', '2565', '90'],
   ];
   const options = {
-    chartLabel: 'Label D',
+    dataKey: 'time',
     cutout: '80%',
-    centerLabel: '<p>123123123</p><h4>total</h4>',
+    donutLabel: {
+      enable: true,
+    },
   };
 
-  return <mdw-pie data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-pie>;
+  return (
+    <mdw-chart
+      type="donut"
+      style={{ width: '80%' }}
+      data={JSON.stringify(data)}
+      options={JSON.stringify(options)}
+    ></mdw-chart>
+  );
 }
 ```
 
@@ -37,19 +39,19 @@ function showComponent() {
 
 ** Basic configuration (all chart types) **
 
-| Name          | Type                                | Default | Description                                 |
-| ------------- | ----------------------------------- | ------- | ------------------------------------------- |
-| chartLabel    | `string` \| `number` \| `string[]`; | -       | Data label                                  |
-| theme         |                                     | -       | Chart theme                                 |
-| fontColor     | `string`                            | -       | Plugin text font color                      |
-| fontFamily    | `string`                            | -       | Plugin text font family                     |
-| aspectRatio   | `number`                            | 2       | The aspect ratio to maintain                |
-| paddingTop    | `number`                            | -       | Chart to parent container top padding       |
-| paddingBottom | `number`                            | -       | Chart to parent container bottom padding    |
-| paddingLeft   | `number`                            | -       | Chart to parent container left padding      |
-| paddingRight  | `number`                            | -       | Chart to parent container right padding     |
-| legend        | [LegendOptions](#legendoptions)     | -       | Legend related configuration                |
-| tooltip       | [TooltipOptions](#tooltipoptions)   | -       | Tooltip related configuration               |
+| Name          | Type                                | Default | Description                              |
+| ------------- | ----------------------------------- | ------- | ---------------------------------------- |
+| chartLabel    | `string` \| `number` \| `string[]`; | -       | Data label                               |
+| theme         |                                     | -       | Chart theme                              |
+| fontColor     | `string`                            | -       | Plugin text font color                   |
+| fontFamily    | `string`                            | -       | Plugin text font family                  |
+| aspectRatio   | `number`                            | 2       | The aspect ratio to maintain             |
+| paddingTop    | `number`                            | -       | Chart to parent container top padding    |
+| paddingBottom | `number`                            | -       | Chart to parent container bottom padding |
+| paddingLeft   | `number`                            | -       | Chart to parent container left padding   |
+| paddingRight  | `number`                            | -       | Chart to parent container right padding  |
+| legend        | [LegendOptions](#legendoptions)     | -       | Legend related configuration             |
+| tooltip       | [TooltipOptions](#tooltipoptions)   | -       | Tooltip related configuration            |
 
 ## Private Configuration
 
@@ -106,7 +108,14 @@ function showComponent() {
     };
   }, []);
 
-  return <mdw-pie ref={pieRef} style={{ width: '80%' }} data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-pie>;
+  return (
+    <mdw-pie
+      ref={pieRef}
+      style={{ width: '80%' }}
+      data={JSON.stringify(data)}
+      options={JSON.stringify(options)}
+    ></mdw-pie>
+  );
 }
 ```
 
