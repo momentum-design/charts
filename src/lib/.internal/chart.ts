@@ -7,7 +7,7 @@ import { ChartContainer, ChartData, ChartOptions, ColorMode, Font, TableData } f
 export abstract class Chart<TData extends ChartData, TOptions extends ChartOptions> {
   static defaults: ChartOptions = {
     font: {
-      size: 12,
+      size: 13,
       family: 'CiscoSansTT Regular,Helvetica Neue,Helvetica,Arial,sans-serif',
       style: 'normal',
       weight: undefined,
@@ -35,6 +35,8 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   }
 
   init(): void {
+    ChartJS.defaults.font = this.getChartJSFont();
+
     this.initColors();
   }
 
