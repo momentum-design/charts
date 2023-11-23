@@ -1,5 +1,4 @@
 import { ChartConfiguration, ChartDataset, ChartOptions, ChartType as ChartJSType } from 'chart.js/auto';
-import { merge } from 'lodash-es';
 import { chartA11y, chartLegendA11y } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
 import { toChartJSType } from '../../helpers/utils';
