@@ -7,6 +7,11 @@ const data = mdwd.wordCloud;
 const options = {
   colorMode: 'random', // one of random, repeat, lighten, darken
 };
+
+listenOn('mdw-chart', 'wordClick', (d) => {
+  console.log(d.data);
+});
+
 render(
   <mdw-chart
     style={{ height: '500px' }}

@@ -1,10 +1,18 @@
-import { Chart as ChartJS, ChartConfiguration, TooltipLabelStyle, TooltipOptions } from 'chart.js/auto';
+import {
+  ActiveElement,
+  Chart as ChartJS,
+  ChartConfiguration,
+  ChartEvent,
+  TooltipLabelStyle,
+  TooltipOptions,
+} from 'chart.js/auto';
 import { _DeepPartialObject } from 'chart.js/dist/types/utils';
 import { WordCloudController, WordElement } from 'chartjs-chart-wordcloud';
+import { EventType } from '../../events';
 import { alphaColor } from '../../helpers';
 import { TableData } from '../../types';
 import { Chart } from '../.internal';
-import { WordCloudData, WordCloudOptions, WordCloudTooltipContext } from './word-cloud.types';
+import { WordClickContext, WordCloudData, WordCloudOptions, WordCloudTooltipContext } from './word-cloud.types';
 
 // remove the default value, otherwise the tooltip point appears with the hover color sometimes.
 // see https://github.com/sgratzl/chartjs-chart-wordcloud/blob/main/src/elements/WordElement.ts#L99
@@ -78,6 +86,31 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
         ],
       },
       options: {
+        onClick: (event: ChartEvent, clickedElements: ActiveElement[]) => {
+          if (clickedElements?.length === 0) {
+            return;
+          }
+          const selectedWord = (clickedElements[0].element as WordElement).getProps(['text']).text;
+          const selectedItem = this.finalData?.find((item) => item.key === selectedWord);
+          if (selectedItem) {
+            const clickContext: WordClickContext = {
+              data: {
+                text: selectedItem.key,
+                value: selectedItem.value,
+              },
+              chart: this,
+            };
+            if (this.options.onWordClick) {
+              this.options.onWordClick(clickContext);
+            }
+            this.rootElement?.dispatchEvent(
+              new CustomEvent<WordClickContext>(EventType.WorkClick, {
+                bubbles: true,
+                detail: clickContext,
+              }),
+            );
+          }
+        },
         elements: {
           word: {
             hoverColor: this.options?.hoverColor,

@@ -1,5 +1,16 @@
 import React from 'react';
 
+const listenOn = (selector, eventName, callback) => {
+  setTimeout(() => {
+    const elem = document.querySelector(selector);
+    if (elem) {
+      elem.addEventListener(eventName, (e) => {
+        callback(e.detail);
+      });
+    }
+  }, 500);
+}
+
 const ButtonExample = (props) => (
   <button
     {...props}
@@ -20,5 +31,7 @@ const ReactLiveScope = {
   React,
   ...React,
   ButtonExample,
+
+  listenOn,
 };
 export default ReactLiveScope;

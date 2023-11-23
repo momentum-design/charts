@@ -16,6 +16,8 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   };
 
   api?: ChartJS;
+  canvasElement?: HTMLCanvasElement;
+  rootElement?: HTMLElement;
 
   private colors?: string[];
   private lastColor?: string;
@@ -39,6 +41,8 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   render(container: ChartContainer): void {
     const config = this.getConfiguration();
     this.api = new ChartJS(container, config);
+    this.canvasElement = this.api.canvas;
+    this.rootElement = this.canvasElement.parentElement || this.api.canvas;
   }
 
   resize(): void {

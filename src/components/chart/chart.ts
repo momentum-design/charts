@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
-import { css, html, LitElement, TemplateResult } from 'lit';
+import { css, CSSResult, CSSResultGroup, CSSResultOrNative, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { COMPONENT_PREFIX } from '../../core';
+import { wrapSelector } from '../../helpers';
 import { createChart } from '../../lib';
 import { Chart } from '../../lib/.internal';
 import { ChartData, ChartOptions, ChartType } from '../../types';
+
+const tag = `${COMPONENT_PREFIX}-chart`;
 
 /**
  * The chart component for rendering all charts that extends {@link LitElement}.
@@ -13,27 +16,32 @@ import { ChartData, ChartOptions, ChartType } from '../../types';
  *
  * @example
  * ```html
- * <mdw-chart data='{
+ * <mdw-chart type="pie"
+ *   data='{
  *    "Alabama": 13,
  *    "Colorado": 17,
  *    "Arizona": 8,
  *    "Vermont": 10}'
- *  options='{"type": "pie"}'></mdw-chart>
+ * ></mdw-chart>
  * ```
  *
  * @typeParam TData - the type of chart data
  * @typeParam TOptions - the type of chart options
  */
-@customElement(`${COMPONENT_PREFIX}-chart`)
+@customElement(tag)
 export class ChartComponent<TData extends ChartData, TOptions extends ChartOptions> extends LitElement {
-  chart?: Chart<ChartData, ChartOptions>;
+  static tag = tag;
+  static disableShadowRoot = true;
+  static get styles(): CSSResult {
+    return css`
+      ${wrapSelector(this, ':host')} {
+        display: block;
+        position: relative;
+      }
+    `;
+  }
 
-  static styles = css`
-    :host {
-      display: block;
-      position: relative;
-    }
-  `;
+  chart?: Chart<ChartData, ChartOptions>;
 
   /**
    * Type of the chart.
@@ -69,6 +77,10 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
   constructor() {
     super();
     this.boundResizeHandler = this.handleResize.bind(this);
+  }
+
+  protected createRenderRoot(): Element | ShadowRoot {
+    return this;
   }
 
   firstUpdated(changedProperties: Map<PropertyKey, unknown>): void {
@@ -124,5 +136,23 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
    */
   protected updateChart(): void {
     this.chart?.update();
+  }
+
+  protected static finalizeStyles(styles?: CSSResultGroup): CSSResultOrNative[] {
+    let elementStyles = super.finalizeStyles(styles);
+    const styleRoot = document.head;
+    if (this.disableShadowRoot) {
+      // WARNING: This break component encapsulation and applies styles to the document.
+      // These styles should be manually scoped.
+      elementStyles.forEach((s: CSSResultOrNative) => {
+        const style = document.createElement('style');
+        if (s instanceof CSSResult) {
+          style.textContent = s.cssText;
+        }
+        styleRoot.appendChild(style);
+      });
+      elementStyles = [];
+    }
+    return elementStyles;
   }
 }
