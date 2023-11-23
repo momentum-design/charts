@@ -2,7 +2,7 @@ import { ChartConfiguration, ChartOptions } from 'chart.js/auto';
 import 'chartjs-adapter-moment';
 import { ChartType } from '../../types';
 import { PieChart } from '../pie';
-import { centerValue } from './donut.plugin';
+import { centerLabel } from './donut.plugin';
 import { DonutData, DonutOptions } from './donut.type';
 export class DonutChart extends PieChart<DonutData, DonutOptions> {
   static readonly donutOptions: DonutOptions = {
@@ -20,7 +20,7 @@ export class DonutChart extends PieChart<DonutData, DonutOptions> {
 
   protected getConfiguration(): ChartConfiguration {
     let donutConfig = super.getConfiguration();
-    donutConfig?.plugins?.push(centerValue(this.options.donutLabel));
+    donutConfig?.plugins?.push(centerLabel(this.options.donutLabel));
     return donutConfig;
   }
 
