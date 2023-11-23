@@ -19,14 +19,14 @@ function showComponent() {
   const options = {
     dataKey: 'time',
     cutout: '80%',
-    doughnutLabel: {
+    donutLabel: {
       enable: true,
     },
   };
 
   return (
     <mdw-chart
-      type="doughnut"
+      type="donut"
       style={{ width: '80%' }}
       data={JSON.stringify(data)}
       options={JSON.stringify(options)}

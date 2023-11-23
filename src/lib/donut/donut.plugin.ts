@@ -1,7 +1,7 @@
-import { Chart, LegendItem } from 'chart.js/auto';
-import { DoughnutLabel } from './pie.types';
+import { Chart, ChartEvent, LegendElement, LegendItem } from 'chart.js/auto';
+import { DonutLabel } from './donut.type';
 
-const getCenterValue = (chart: Chart | any, total: number, label?: string | number) => {
+const getCenterValue = (chart: Chart | any, total?: number, label?: string | number) => {
   const ctx = chart.ctx;
   const centerY = chart.height / 2;
 
@@ -27,25 +27,32 @@ const getCenterValue = (chart: Chart | any, total: number, label?: string | numb
   ctx.save();
 };
 
-const centerValue = (donut?: DoughnutLabel) => {
+const centerValue = (donut?: DonutLabel) => {
   return {
     id: 'centerValue',
-    afterDatasetDraw: (chart: Chart | any) => {
+    afterDatasetDraw: (chart: Chart) => {
       if (!donut?.enable) {
         return;
       }
-      const total = chart.getDatasetMeta(0).total;
-      getCenterValue(chart, total, donut.label);
+
+      const meta = chart.getDatasetMeta(0);
+      if ('total' in meta) {
+        const total = meta.total;
+        getCenterValue(chart, total, donut.label);
+      }
     },
   };
 };
 
-const legendClickHandler = (e: any, item: LegendItem, legend: any): void => {
+const legendClickHandler = (e: ChartEvent, item: LegendItem, legend: LegendElement<'pie'>): void => {
   const chart = legend.chart;
   const index = item.index;
-  chart.toggleDataVisibility(index);
-  const total = chart.getDatasetMeta(0).total;
-  getCenterValue(chart, total);
+  chart.toggleDataVisibility(index as number);
+  const meta = chart.getDatasetMeta(0);
+  if ('total' in meta) {
+    const total = meta.total;
+    getCenterValue(chart, total);
+  }
   chart.update();
 };
 

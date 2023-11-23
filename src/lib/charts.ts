@@ -3,7 +3,7 @@ import { Chart } from './.internal';
 import { AreaChart } from './area';
 import { BarChart } from './bar';
 import { ColumnChart } from './column';
-import { DoughnutChart } from './doughnut';
+import { DonutChart } from './donut';
 import { LineChart } from './line';
 import { PieChart } from './pie';
 import { RangeChart } from './range';
@@ -17,7 +17,7 @@ export const SUPPORTED_CHARTS = new Map<ChartType, typeof Chart<ChartData, Chart
   [ChartType.Area, AreaChart],
   [ChartType.Range, RangeChart],
   [ChartType.Pie, PieChart],
-  [ChartType.Doughnut, DoughnutChart],
+  [ChartType.Donut, DonutChart],
 ]);
 
 export function createChart(

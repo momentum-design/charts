@@ -64,7 +64,7 @@ export enum ChartType {
   Column = 'column',
   Line = 'line',
   Pie = 'pie',
-  Doughnut = 'doughnut',
+  Donut = 'donut',
   Range = 'range',
   WordCloud = 'wordCloud',
   Gauge = 'gauge',

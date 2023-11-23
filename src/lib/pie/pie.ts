@@ -1,14 +1,12 @@
 import { ChartConfiguration, ChartDataset, ChartOptions, ChartType as ChartJSType } from 'chart.js/auto';
-import { merge } from 'lodash-es';
 import { chartA11y, chartLegendA11y } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
 import { ChartType, TableData } from '../../types';
 import { Chart } from '../.internal';
-import { defaultPieChartOptions } from './pie.options';
-import { centerValue, legendClickHandler } from './pie.plugins';
+import { legendClickHandler } from '../donut/donut.plugin';
 import { DataView, GenericDataModel, PieData, PieOptions } from './pie.types';
 
-export abstract class PieChart extends Chart<PieData, PieOptions> {
+export class PieChart<TData extends PieData, TOptions extends PieOptions> extends Chart<TData, TOptions> {
   getTableData(): TableData {
     throw new Error('Method not implemented.');
   }
@@ -16,9 +14,6 @@ export abstract class PieChart extends Chart<PieData, PieOptions> {
   static readonly defaultOptions: PieOptions = {
     legend: {
       position: 'right',
-    },
-    doughnutLabel: {
-      enable: false,
     },
   };
 
@@ -49,7 +44,7 @@ export abstract class PieChart extends Chart<PieData, PieOptions> {
         datasets: chartDatasets,
       },
       options: this.currentChartOptions,
-      plugins: [chartA11y, chartLegendA11y, centerValue(this.options.doughnutLabel)],
+      plugins: [chartA11y, chartLegendA11y],
     };
   }
 
@@ -169,9 +164,11 @@ export abstract class PieChart extends Chart<PieData, PieOptions> {
     return ChartType.Pie;
   }
 
-  protected getDefaultOptions(): PieOptions {
-    return merge(PieChart.defaultOptions, defaultPieChartOptions);
+  protected getDefaultOptions(): TOptions {
+    return PieChart.defaultOptions as TOptions;
   }
 
-  protected abstract afterOptionsCreated(options: ChartOptions): ChartOptions;
+  protected afterOptionsCreated(options: ChartOptions): ChartOptions {
+    return options;
+  }
 }

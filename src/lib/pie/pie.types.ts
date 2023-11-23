@@ -4,12 +4,6 @@ export interface PieOptions extends ChartOptions {
   cutout?: string | number;
   additionalLabel?: string | number;
   dataKey?: string;
-  doughnutLabel?: DoughnutLabel;
-}
-
-export interface DoughnutLabel {
-  enable?: boolean;
-  label?: string;
 }
 
 export type PieData = TableData | JsonData;
