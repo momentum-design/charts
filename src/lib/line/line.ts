@@ -15,15 +15,15 @@ export class LineChart extends XYChart {
 
   protected afterDatasetCreated(
     dataset: ChartDataset<'line', number[]>,
-    seriesOptions: {
+    options: {
       styleOptions?: SeriesStyleOptions;
+      color: string;
     },
-    color: string,
   ): ChartDataset<'line', number[]> {
-    if (seriesOptions?.styleOptions?.type && seriesOptions?.styleOptions?.type === ChartType.Area) {
+    if (options?.styleOptions?.type && options?.styleOptions?.type === ChartType.Area) {
       dataset.fill = {
-        below: alphaColor(color, 0.4),
-        above: alphaColor(color, 0.4),
+        below: alphaColor(options.color, 0.4),
+        above: alphaColor(options.color, 0.4),
         target: 'start',
       };
     }

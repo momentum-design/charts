@@ -1,23 +1,15 @@
-import ChartJS, {
-  ChartConfiguration,
-  ChartDataset,
-  ChartOptions,
-  ChartType as ChartJSType,
-  ChartTypeRegistry,
-  LegendElement,
-  LegendItem,
-} from 'chart.js/auto';
+import { ChartConfiguration, ChartDataset, ChartOptions, ChartType as ChartJSType } from 'chart.js/auto';
 import 'chartjs-adapter-moment';
 import { merge } from 'lodash-es';
 import { ThemeKey, themes } from '../../core';
 import { defaultChartOptions } from '../../core/chart-options';
-import { chartA11y, chartLegendA11y, chartSeriesClick, legendHandleHover, legendHandleLeave } from '../../core/plugins';
-import { externalTooltipHandler } from '../../core/plugins/chart-tooltip';
+import { chartA11y, chartSeriesClick } from '../../core/plugins';
 import { getCurrentTheme } from '../../core/utils';
 import { tableDataToJSON } from '../../helpers/data';
+import { toChartJSType } from '../../helpers/utils';
 import { ChartType, LegendItemOptions, TableData } from '../../types';
 import { Chart } from '../.internal';
-import legendClickHandler from '../legend/legend';
+import { initLegendOptions } from '../legend/legend';
 import { DataTableLike, DataView, GenericDataModel, SeriesStyleOptions, XYChartOptions } from './xy.types';
 
 export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
@@ -33,13 +25,19 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     },
     legend: {
       position: 'bottom',
-      display: true,
     },
   };
   static readonly defaultValueAxisOptions = {
     gridDisplay: true,
     display: true,
     stacked: false,
+  };
+
+  static readonly defaultScaleOptions = {
+    ticks: { padding: 10 },
+    grid: {
+      drawTicks: false,
+    },
   };
 
   protected getDefaultOptions(): XYChartOptions {
@@ -63,13 +61,13 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
       chartDatasets = this.getDatasets();
     }
     return {
-      type: this.toChartJsType(this.getType()) as ChartJSType,
+      type: toChartJSType(this.getType()),
       data: {
         labels: this.chartData.category.labels ?? [],
         datasets: chartDatasets,
       },
       options: this.getChartOptions(),
-      plugins: [chartA11y, chartLegendA11y],
+      plugins: [chartA11y],
     };
   }
 
@@ -96,6 +94,10 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
 
   private getChartOptions(): ChartOptions {
     this.itemSelectable = this.options.legend?.itemSelectable ?? false;
+    if (typeof this.options.legend?.display === 'undefined') {
+      this.options.legend = this.options.legend || {};
+      this.options.legend.display = !(this.options.categoryAxis?.enableColor && this.chartData?.series.length <= 1);
+    }
     const options: ChartOptions = {
       onClick: chartSeriesClick,
       indexAxis: this.isHorizontal(),
@@ -104,42 +106,14 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
           display: !!this.options.title,
           text: this.options.title,
         },
-        legend: {
-          display: this.options.legend?.display,
-          position: this.options.legend?.position,
-          labels: {
-            pointStyle: 'rectRounded',
-            usePointStyle: true,
-            pointStyleWidth: 20,
-            generateLabels(chart) {
-              return ChartJS.defaults.plugins.legend.labels.generateLabels(chart).map(function (data, i) {
-                let dataset = chart.data.datasets.find((dataset) => dataset.label === data.text);
-                if (dataset?.type === 'line') {
-                  data.pointStyle = 'line';
-                  dataset = dataset as ChartDataset<ChartType.Line, number[]>;
-                  if (dataset.borderDash) {
-                    data.lineDash = [3, 3];
-                  }
-                }
-                return data;
-              });
-            },
-          },
-          onClick: (e, legendItem, legend) => {
-            this.onLegendClick(legendItem, legend);
-          },
-          onHover: legendHandleHover,
-          onLeave: legendHandleLeave,
-        },
+        legend: initLegendOptions(toChartJSType(this.getType()), this.options, [{ label: 'Florida' }]),
         tooltip: {
-          enabled: false,
           position: 'nearest',
-          external: externalTooltipHandler,
         },
       },
       scales: {
-        categoryAxis: {},
-        valueAxis: {},
+        categoryAxis: XYChart.defaultScaleOptions,
+        valueAxis: XYChart.defaultScaleOptions,
       },
     };
     if (this.options.padding) {
@@ -160,6 +134,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
           },
           display: this.options.categoryAxis.display,
         };
+        options.scales.categoryAxis = merge({}, XYChart.defaultScaleOptions, options.scales.categoryAxis);
         if (this.options.categoryAxis.position) {
           options.scales.categoryAxis.position = this.options.categoryAxis.position;
         } else {
@@ -169,6 +144,8 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
           options.scales.categoryAxis.type = this.options.categoryAxis.type;
           if (options.scales.categoryAxis.type === 'time' && this.options.categoryAxis) {
             options.scales.categoryAxis.time = { unit: this.options.categoryAxis.timeUnit };
+            options.scales.categoryAxis.ticks = options.scales.categoryAxis.ticks || {};
+            options.scales.categoryAxis.ticks.source = 'labels';
             if (this.options.categoryAxis.labelFormat) {
               options.scales.categoryAxis.time.displayFormats = {
                 [this.options.categoryAxis.timeUnit as string]: this.options.categoryAxis.labelFormat,
@@ -180,37 +157,28 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     }
     if (this.options.valueAxes) {
       this.options.valueAxes.forEach((valueAxis, index) => {
-        valueAxis = {
-          ...XYChart.defaultValueAxisOptions,
-          ...valueAxis,
-        };
+        valueAxis = merge({}, XYChart.defaultValueAxisOptions, valueAxis);
         if (!valueAxis.position) {
           valueAxis.position = this.isHorizontal() === 'x' ? 'left' : 'bottom';
         }
         const valueAxisKey = 'valueAxis' + (index > 0 ? '_' + index : '');
-        options.scales = {
-          ...options.scales,
-        };
-
-        options.scales[valueAxisKey] = {
-          ...options.scales[valueAxisKey],
-        };
-        options.scales[valueAxisKey] = {
-          stacked: valueAxis.stacked,
-          title: {
-            display: !!valueAxis.title,
-            text: valueAxis.title,
+        options.scales = options.scales || {};
+        options.scales[valueAxisKey] = merge(
+          {},
+          XYChart.defaultScaleOptions,
+          {
+            stacked: valueAxis.stacked,
+            title: {
+              display: !!valueAxis.title,
+              text: valueAxis.title,
+            },
+            grid: {
+              display: valueAxis.gridDisplay,
+            },
+            display: valueAxis.display,
           },
-          grid: {
-            display: valueAxis.gridDisplay,
-          },
-          display: valueAxis.display,
-        };
-
-        options.scales[valueAxisKey] = {
-          ...options.scales[valueAxisKey],
-          ...{ position: valueAxis.position },
-        };
+          { position: valueAxis.position },
+        );
       });
     }
     return options;
@@ -254,28 +222,45 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     dataset.label = series.name;
     dataset.borderColor = this.options.categoryAxis?.enableColor ? colors : colors[index];
     dataset.backgroundColor = this.options.categoryAxis?.enableColor ? colors : colors[index];
-    dataset.type = this.toChartJsType(styleMapping?.type);
+    dataset.type = toChartJSType(styleMapping?.type || this.getType());
     dataset = this.setAxisIDs(dataset, styleMapping.valueAxisIndex);
     if (styleMapping.order) {
       dataset.order = styleMapping.order;
     }
     if (dataset.type === 'line') {
-      dataset.borderWidth = 2;
-      dataset = dataset as ChartDataset<ChartType.Line, number[]>;
-      if (styleMapping?.lineStyle === 'dashed') {
-        dataset.borderDash = [3, 3];
-      }
-      if (styleMapping.tension) {
-        dataset.tension = styleMapping.tension;
-      }
+      dataset = this.createLineDataset(dataset, styleMapping);
     }
-    return this.afterDatasetCreated(dataset, { styleOptions: styleMapping }, colors[index], index);
+    if (dataset.type === 'bar') {
+      dataset = this.createBarDataset(dataset);
+    }
+    return this.afterDatasetCreated(dataset, { styleOptions: styleMapping, color: colors[index], index });
   }
+
+  private createLineDataset(
+    dataset: ChartDataset<'line', number[]>,
+    styleMapping: SeriesStyleOptions,
+  ): ChartDataset<'line', number[]> {
+    dataset.borderWidth = 2;
+    dataset = dataset as ChartDataset<'line', number[]>;
+    if (styleMapping?.lineStyle === 'dashed') {
+      dataset.borderDash = [3, 3];
+    }
+    if (styleMapping.tension) {
+      dataset.tension = styleMapping.tension;
+    }
+    return dataset;
+  }
+
+  private createBarDataset(dataset: ChartDataset<'bar', number[]>): ChartDataset<'bar', number[]> {
+    dataset.maxBarThickness = 25;
+    return dataset;
+  }
+
   private setAxisIDs(
     dataset: ChartDataset<ChartJSType, number[]>,
     valueAxisIndex?: number,
   ): ChartDataset<ChartJSType, number[]> {
-    dataset = dataset as ChartDataset<ChartType.Bar, number[]> | ChartDataset<ChartType.Line, number[]>;
+    dataset = dataset as ChartDataset<'bar', number[]> | ChartDataset<'line', number[]>;
     const valueAxisKey = 'valueAxis' + (valueAxisIndex && valueAxisIndex > 0 ? '_' + valueAxisIndex : '');
     dataset.yAxisID = this.isHorizontal() === 'x' ? valueAxisKey : 'categoryAxis';
     dataset.xAxisID = this.isHorizontal() === 'x' ? 'categoryAxis' : valueAxisKey;
@@ -331,25 +316,6 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     return result;
   }
 
-  private toChartJsType(type?: string): ChartJSType {
-    let chartType: ChartJSType;
-    switch (type || this.getType()) {
-      case ChartType.Bar:
-      case ChartType.Column:
-        chartType = 'bar';
-        break;
-      case ChartType.Line:
-      case ChartType.Area:
-      case ChartType.Range:
-        chartType = 'line';
-        break;
-      default:
-        chartType = 'line';
-        break;
-    }
-    return chartType;
-  }
-
   private isHorizontal(): 'x' | 'y' {
     const firstValueAxis = this.options.valueAxes?.[0];
     if (!this.options.categoryAxis?.position && !firstValueAxis?.position) {
@@ -366,25 +332,16 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     return isHorizontal ? 'y' : 'x';
   }
 
-  private onLegendClick(item: LegendItem, legend: LegendElement<keyof ChartTypeRegistry>): void {
-    if (this.options.legend?.onItemClick) {
-      // TODO(yiwei): Implementation of callback
-      legendClickHandler(item, legend, this.selectedLegends, this.options.legend?.onItemClick);
-    } else {
-      if (typeof item.datasetIndex !== 'undefined') {
-        legend.chart?.setDatasetVisibility(item.datasetIndex, !legend.chart.isDatasetVisible(item.datasetIndex));
-        legend.chart?.update();
-      }
-    }
-  }
-
   protected abstract getType(): ChartType;
-  protected abstract afterDatasetCreated(
+
+  protected afterDatasetCreated(
     dataset: ChartDataset<ChartJSType, number[]>,
-    seriesOptions?: {
+    options?: {
       styleOptions?: SeriesStyleOptions;
+      color?: string;
+      index?: number;
     },
-    color?: string,
-    index?: number,
-  ): ChartDataset<ChartJSType, number[]>;
+  ): ChartDataset<ChartJSType, number[]> {
+    return dataset;
+  }
 }

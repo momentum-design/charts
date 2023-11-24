@@ -8,35 +8,111 @@ Line chart is a way of plotting data points on a line. Often, it is used to show
 
 ```jsx live
 function showComponent() {
-  const data = mdwd.xy;
+  const data = [
+    {
+      dateTime: '2022-12-01T06:37:35.217Z',
+      'New Mexico': 8757,
+      Florida: 5588,
+      Nevada: 7370,
+      Wyoming: 8478,
+      Arkansas: 2174,
+    },
+    {
+      dateTime: '2023-01-01T06:37:35.217Z',
+      'New Mexico': 2602,
+      Florida: 8134,
+      Nevada: 198,
+      Wyoming: 1204,
+      Arkansas: 894,
+    },
+    {
+      dateTime: '2023-02-01T06:37:35.217Z',
+      'New Mexico': 4191,
+      Florida: 3375,
+      Nevada: 3473,
+      Wyoming: 6359,
+      Arkansas: 7669,
+    },
+    {
+      dateTime: '2023-03-01T06:37:35.217Z',
+      'New Mexico': 7684,
+      Florida: 8590,
+      Nevada: 3483,
+      Wyoming: 792,
+      Arkansas: 9651,
+    },
+    {
+      dateTime: '2023-04-01T06:37:35.217Z',
+      'New Mexico': 5332,
+      Florida: 5670,
+      Nevada: 3803,
+      Wyoming: 8538,
+      Arkansas: 7468,
+    },
+    {
+      dateTime: '2023-05-01T06:37:35.217Z',
+      'New Mexico': 8579,
+      Florida: 627,
+      Nevada: 1531,
+      Wyoming: 6598,
+      Arkansas: 3762,
+    },
+    {
+      dateTime: '2023-06-01T06:37:35.217Z',
+      'New Mexico': 3409,
+      Florida: 2120,
+      Nevada: 7987,
+      Wyoming: 6407,
+      Arkansas: 6416,
+    },
+    {
+      dateTime: '2023-07-01T06:37:35.217Z',
+      'New Mexico': 5513,
+      Florida: 6070,
+      Nevada: 3558,
+      Wyoming: 351,
+      Arkansas: 8387,
+    },
+    {
+      dateTime: '2023-08-01T06:37:35.217Z',
+      'New Mexico': 1015,
+      Florida: 4560,
+      Nevada: 6241,
+      Wyoming: 6344,
+      Arkansas: 7394,
+    },
+    {
+      dateTime: '2023-09-01T06:37:35.217Z',
+      'New Mexico': 3060,
+      Florida: 6139,
+      Nevada: 9757,
+      Wyoming: 4808,
+      Arkansas: 1121,
+    },
+  ];
   const options = {
     categoryAxis: {
       gridDisplay: true,
-      title: 'category',
+      title: 'Month',
       dataKey: 'dateTime',
       type: 'time',
       timeUnit: 'month',
-      labelFormat: 'MM DD, YYYY',
+      labelFormat: 'MM/YYYY',
     },
     valueAxes: [
       {
         gridDisplay: false,
         position: 'left',
-        title: 'value',
       },
     ],
     seriesOptions: {
       styleMapping: {
         Florida: {
-          tension: 0.5,
+          tension: 0.3,
           lineStyle: 'dashed',
           order: 1,
         },
       },
-    },
-    title: 'My First Line Chart',
-    legend: {
-      isLegendClick: false,
     },
   };
   return (

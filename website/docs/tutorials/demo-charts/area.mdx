@@ -10,26 +10,26 @@ Area chart support a fill area on the dataset object which can be used to create
 function showComponent() {
   const data = [
     ['Year', 'Area', 'Line'],
-    ['2004', 1000, 400],
-    ['2005', 1170, 460],
-    ['2006', 660, 1120],
-    ['2007', 1030, 540],
-    ['2008', 430, 340],
-    ['2009', 630, 840],
-    ['2010', 1030, 440],
-    ['2011', 730, 740],
+    ['2016', 1000, 400],
+    ['2017', 1170, 460],
+    ['2018', 660, 1120],
+    ['2019', 1030, 540],
+    ['2020', 430, 340],
+    ['2021', 630, 840],
+    ['2022', 1030, 440],
+    ['2023', 730, 740],
   ];
   const options = {
-    title: 'My First Area Chart',
     seriesOptions: {
       styleMapping: {
         Line: {
           type: 'line',
+          tension: 0.3,
+        },
+        Area: {
+          tension: 0.3,
         },
       },
-    },
-    legend: {
-      isLegendClick: true,
     },
   };
   return (
