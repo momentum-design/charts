@@ -10,7 +10,7 @@ export interface WordCloudOptions extends ChartOptions {
   onWordClick?: (context: WordClickContext) => void;
 }
 
-export type WordCloudData = { key: string; value: number }[] | { [key: string]: number };
+export type WordCloudData = { word: string; value: number }[] | { [key: string]: number };
 
 export type WordCloudTooltipContext = TooltipItem<'wordCloud'> & { parsed: { y: number | null } };
 

@@ -32,7 +32,7 @@ ChartJS.register(WordCloudController, WordElement);
 export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
   private minValue = 0;
   private maxValue = 1;
-  private finalData?: { key: string; value: number }[];
+  private finalData?: { word: string; value: number }[];
 
   /**
    * The default options for Word Cloud chart.
@@ -51,23 +51,23 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
     if (Array.isArray(this.data)) {
       this.finalData = this.data.map((item) => {
         if (typeof item === 'string') {
-          return { key: item, value: Math.floor(Math.random() * 10) };
+          return { word: item, value: Math.floor(Math.random() * 10) };
         }
         const dKeys = Object.keys(item);
-        if (!dKeys.includes('key')) {
-          throw new Error('The data you provided for Word Cloud does not have the property named `key`.');
+        if (!dKeys.includes('word')) {
+          throw new Error('The data you provided for Word Cloud does not have the property named `word`.');
         }
         return item;
       });
     } else {
-      this.finalData = Object.keys(this.data).map((key) => ({ key, value: (<any>this.data)[key] }));
+      this.finalData = Object.keys(this.data).map((key) => ({ word: key, value: (<any>this.data)[key] }));
     }
 
     if (!this.finalData) {
       return null;
     }
 
-    const words = this.finalData.map((item) => item.key);
+    const words = this.finalData.map((item) => item.word);
     const values = this.finalData.map((item) => item.value);
     this.minValue = Math.min(...values);
     this.maxValue = Math.max(...values);
@@ -91,11 +91,11 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
             return;
           }
           const selectedWord = (clickedElements[0].element as WordElement).getProps(['text']).text;
-          const selectedItem = this.finalData?.find((item) => item.key === selectedWord);
+          const selectedItem = this.finalData?.find((item) => item.word === selectedWord);
           if (selectedItem) {
             const clickContext: WordClickContext = {
               data: {
-                text: selectedItem.key,
+                text: selectedItem.word,
                 value: selectedItem.value,
               },
               chart: this,
@@ -147,7 +147,7 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
           }
 
           label += this.getValueWithUnit(
-            this.finalData?.find((item) => item.key === context.label)?.value || 0,
+            this.finalData?.find((item) => item.word === context.label)?.value || 0,
             this.options.valueUnit,
           );
           return label;
