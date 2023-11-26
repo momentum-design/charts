@@ -6,7 +6,7 @@ export interface PieOptions extends ChartOptions {
   dataKey?: string;
 }
 
-export type PieData = TableData | JsonData;
+export type PieData = TableData | JsonData | Record<string, string | number>;
 
 export type DataView = {
   category: { name?: string; labels?: unknown[] };

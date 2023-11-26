@@ -54,16 +54,18 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
     if (!this.data) {
       return;
     }
+
     try {
       if (this.data instanceof String) {
         data = JSON.parse(this.data as unknown as string) as PieData;
-      } else if (this.data instanceof Array) {
+      } else {
         data = this.data;
       }
 
-      if (data.length > 0) {
+      if (data) {
         const genericData = this.transformGenericData(data);
         this.chartData = this.genericToDataView(genericData);
+        console.log('--chartData', this.chartData);
       }
     } catch (e) {
       throw new Error(`Chart data format incorrect.`);
@@ -104,16 +106,21 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
       data: [],
     };
 
-    if (typeof sourceData[0] === 'object' && !Array.isArray(sourceData[0])) {
+    if (!Array.isArray(sourceData)) {
+      const data = [sourceData] as Record<string, string | number>[];
+      result.dataKey = result.dataKey ?? '';
+      result.data = data;
+    } else if (typeof sourceData[0] === 'object' && !Array.isArray(sourceData[0])) {
       const data = sourceData as Record<string, string | number>[];
-      result.dataKey = result.dataKey ?? Object.keys(data[0])[0];
+      result.dataKey = result.dataKey ?? '';
       result.data = data;
     } else if (Array.isArray(sourceData[0])) {
       const data = sourceData as unknown[][];
-      result.dataKey = result.dataKey ?? (data[0][0] as string);
+      result.dataKey = result.dataKey ?? '';
       result.data = tableDataToJSON(data);
     }
 
+    console.log('----', result);
     return result;
   }
 
@@ -126,10 +133,6 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
       series: [],
     };
 
-    if (!data?.dataKey) {
-      return result;
-    }
-
     result.category.labels = Object.keys(data.data[0]).filter((key) => key !== data.dataKey);
     const seriesData = data.data.map((_data) => {
       return {
@@ -139,6 +142,7 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
     });
 
     result.series = seriesData;
+
     return result;
   }
 

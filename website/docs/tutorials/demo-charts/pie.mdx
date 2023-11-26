@@ -11,9 +11,27 @@ They are excellent at showing the relational proportions between data.
 ```jsx live
 function showComponent() {
   const data = mdwd.pie;
-  const options = {
-    dataKey: 'time',
+  const options = {};
+
+  return (
+    <mdw-chart
+      type="pie"
+      style={{ width: '80%' }}
+      data={JSON.stringify(data)}
+      options={JSON.stringify(options)}
+    ></mdw-chart>
+  );
+}
+```
+
+```jsx live
+function showComponent() {
+  const data = {
+    good: 3000,
+    poor: 16,
   };
+
+  const options = {};
 
   return (
     <mdw-chart
