@@ -65,7 +65,6 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
       if (data) {
         const genericData = this.transformGenericData(data);
         this.chartData = this.genericToDataView(genericData);
-        console.log('--chartData', this.chartData);
       }
     } catch (e) {
       throw new Error(`Chart data format incorrect.`);
@@ -119,8 +118,6 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
       result.dataKey = result.dataKey ?? '';
       result.data = tableDataToJSON(data);
     }
-
-    console.log('----', result);
     return result;
   }
 
