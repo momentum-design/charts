@@ -4,6 +4,7 @@ import { AreaChart } from './area';
 import { BarChart } from './bar';
 import { ColumnChart } from './column';
 import { DonutChart } from './donut';
+import { GaugeChart } from './gauge';
 import { LineChart } from './line';
 import { PieChart } from './pie';
 import { RangeChart } from './range';
@@ -18,6 +19,7 @@ export const SUPPORTED_CHARTS = new Map<ChartType, typeof Chart<ChartData, Chart
   [ChartType.Range, RangeChart],
   [ChartType.Pie, PieChart],
   [ChartType.Donut, DonutChart],
+  [ChartType.Gauge, GaugeChart],
 ]);
 
 export function createChart(
