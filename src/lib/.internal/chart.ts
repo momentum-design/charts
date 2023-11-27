@@ -1,8 +1,9 @@
-import { Chart as ChartJS, FontSpec } from 'chart.js/auto';
+import { Chart as CJ, FontSpec } from 'chart.js/auto';
 import { merge } from 'lodash-es';
 import { settings, ThemeKey } from '../../core';
 import { darkenColor, getRandomColor, lightenColor } from '../../helpers';
 import { ChartContainer, ChartData, ChartOptions, ColorMode, Font, TableData } from '../../types';
+import { Legend } from '../legend';
 
 export abstract class Chart<TData extends ChartData, TOptions extends ChartOptions> {
   static defaults: ChartOptions = {
@@ -16,9 +17,10 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
     },
   };
 
-  api?: ChartJS;
+  api?: CJ;
   canvasElement?: HTMLCanvasElement;
   rootElement?: HTMLElement;
+  legend?: Legend<typeof this>;
 
   private colors?: string[];
   private lastColor?: string;
@@ -36,14 +38,14 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   }
 
   init(): void {
-    ChartJS.defaults.font = this.getChartJSFont();
+    CJ.defaults.font = this.getCJFont();
 
     this.initColors();
   }
 
   render(container: ChartContainer): void {
     const config = this.getConfiguration();
-    this.api = new ChartJS(container, config);
+    this.api = new CJ(container, config);
     this.canvasElement = this.api.canvas;
     this.rootElement = this.canvasElement.parentElement || this.api.canvas;
   }
@@ -56,11 +58,15 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
     this.api?.update();
   }
 
+  protected enableLegend(): void {
+    this.legend = new Legend(this);
+  }
+
   protected getColorsForKeys(keys: string[]): string[] {
     return keys.map((key) => this.getColorForKey(key, keys.length));
   }
 
-  protected getChartJSFont(...fonts: Font[]): Partial<FontSpec> {
+  protected getCJFont(...fonts: Font[]): Partial<FontSpec> {
     if (Chart.defaults.font) {
       fonts.push(Chart.defaults.font);
     }
@@ -150,3 +156,5 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   protected abstract getConfiguration(): any;
   protected abstract getDefaultOptions(): TOptions;
 }
+
+export type TypedChart = typeof Chart<ChartData, ChartOptions>;

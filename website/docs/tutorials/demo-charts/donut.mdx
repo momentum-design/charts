@@ -12,13 +12,17 @@ It is a circular chart, similar to a pie chart, but unlike a pie chart, a donut 
 
 ```jsx live
 function showComponent() {
-  const data = [
-    ['time', 'good', 'poor'],
-    ['2022', '2565', '90'],
-  ];
+  const data = {
+    'Brunei Darussalam': 739,
+    'Jordan': 763,
+    'Burkina Faso': 604,
+    'Cook Islands': 509,
+    'Monaco': 205,
+    'Switzerland': 108,
+  };
   const options = {
     dataKey: 'time',
-    cutout: '80%',
+    cutout: '75%',
     donutLabel: {
       enable: true,
     },
@@ -27,7 +31,7 @@ function showComponent() {
   return (
     <mdw-chart
       type="donut"
-      style={{ width: '80%' }}
+      style={{ width: '300px' }}
       data={JSON.stringify(data)}
       options={JSON.stringify(options)}
     ></mdw-chart>

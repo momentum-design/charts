@@ -1,6 +1,5 @@
 import { TooltipItem } from 'chart.js/auto';
-import { EventContext } from '../../events';
-import { ChartOptions } from '../../types';
+import { ChartOptions, EventContext } from '../../types';
 
 export interface WordCloudOptions extends ChartOptions {
   hoverColor?: string;

@@ -1,30 +1,50 @@
 var mdwd = {
-  pie: [
-    {
-      'Brunei Darussalam': 739,
-      'Jordan': 763,
-      'Burkina Faso': 604,
-      'Cook Islands': 509,
-      'Monaco': 205,
-      'Switzerland': 108,
-    },
-    {
-      'Brunei Darussalam': 79,
-      'Jordan': 743,
-      'Burkina Faso': 504,
-      'Cook Islands': 809,
-      'Monaco': 605,
-      'Switzerland': 708,
-    },
-    {
-      'Brunei Darussalam': 79,
-      Jordan: 743,
-      'Burkina Faso': 504,
-      'Cook Islands': 809,
-      Monaco: 605,
-      Switzerland: 708,
-    },
-  ],
+  pie: {
+    'Brunei Darussalam': 739,
+    'Jordan': 763,
+    'Burkina Faso': 604,
+    'Cook Islands': 509,
+    'Monaco': 205,
+    'Switzerland': 108,
+  },
+  nestedPie:
+    [{
+      country: "Lithuania",
+      litres: 501.9,
+      bottles: 1500
+    }, {
+      country: "Czech Republic",
+      litres: 301.9,
+      bottles: 990
+    }, {
+      country: "Ireland",
+      litres: 201.1,
+      bottles: 785
+    }, {
+      country: "Germany",
+      litres: 165.8,
+      bottles: 255
+    }, {
+      country: "Australia",
+      litres: 139.9,
+      bottles: 452
+    }, {
+      country: "Austria",
+      litres: 128.3,
+      bottles: 332
+    }, {
+      country: "UK",
+      litres: 99,
+      bottles: 150
+    }, {
+      country: "Belgium",
+      litres: 60,
+      bottles: 178
+    }, {
+      country: "The Netherlands",
+      litres: 50,
+      bottles: 50
+    }],
   wordCloud: [
     {
       word: 'word',

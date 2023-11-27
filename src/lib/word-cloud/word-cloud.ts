@@ -1,6 +1,6 @@
 import {
   ActiveElement,
-  Chart as ChartJS,
+  Chart as CJ,
   ChartConfiguration,
   ChartEvent,
   TooltipLabelStyle,
@@ -8,17 +8,17 @@ import {
 } from 'chart.js/auto';
 import { _DeepPartialObject } from 'chart.js/dist/types/utils';
 import { WordCloudController, WordElement } from 'chartjs-chart-wordcloud';
-import { EventType } from '../../events';
 import { alphaColor } from '../../helpers';
 import { TableData } from '../../types';
+import { EventType } from '../../types/chart.event.types';
 import { Chart } from '../.internal';
 import { WordClickContext, WordCloudData, WordCloudOptions, WordCloudTooltipContext } from './word-cloud.types';
 
 // remove the default value, otherwise the tooltip point appears with the hover color sometimes.
-// see https://github.com/sgratzl/chartjs-chart-wordcloud/blob/main/src/elements/WordElement.ts#L99
+// see https://github.com/sgratzl/CJ-chart-wordcloud/blob/main/src/elements/WordElement.ts#L99
 WordElement.defaults.hoverColor = undefined;
 
-ChartJS.register(WordCloudController, WordElement);
+CJ.register(WordCloudController, WordElement);
 
 /**
  * A chart about word cloud.
@@ -133,9 +133,9 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
   private getTooltipConfiguration(): _DeepPartialObject<TooltipOptions<'wordCloud'>> {
     return {
       usePointStyle: true,
-      titleFont: this.getChartJSFont(),
-      bodyFont: this.getChartJSFont(),
-      footerFont: this.getChartJSFont(),
+      titleFont: this.getCJFont(),
+      bodyFont: this.getCJFont(),
+      footerFont: this.getCJFont(),
       callbacks: {
         title: (context: WordCloudTooltipContext[]): string | void | string[] =>
           (context.length > 0 && context[0].dataset.label) || '',
