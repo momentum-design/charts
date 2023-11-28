@@ -60,9 +60,9 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
     if (!this.data) {
       return;
     }
-    const { dialData, value } = this.convertToData();
-    if (dialData.length > 0) {
-      const genericData = this.transformGenericData(dialData);
+    const { scales, value } = this.convertToData();
+    if (scales.length > 0) {
+      const genericData = this.transformGenericData(scales);
       this.chartData = this.convertToDataView(genericData, value);
     }
   }
@@ -110,17 +110,17 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
 
   private convertToData(): GaugeData {
     let data: GaugeData = {
-      dialData: [],
+      scales: [],
       value: 0,
     };
     if (this.data instanceof Array) {
       data = {
-        dialData: this.data[0].dialData ? [this.data[0].dialData] : [],
+        scales: this.data[0].scales ? [this.data[0].scales] : [],
         value: this.data[0].value || 0,
       };
     } else if (typeof this.data === 'object') {
       data = {
-        dialData: this.data.dialData ? [this.data.dialData] : [],
+        scales: this.data.scales ? [this.data.scales] : [],
         value: this.data.value || 0,
       };
     }
@@ -182,6 +182,7 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
         const cy = chart.getDatasetMeta(0).data[0].y;
         const fontColor = this.options.font?.color;
         const fontFamily = this.options.font?.family;
+        const averageY = chart.height - cy - 6;
         ctx.save();
 
         // Needle
@@ -206,7 +207,7 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
         ctx.textAlign = 'center';
         ctx.fillText(chartValue.toString(), cx, cy + 20);
         ctx.textAlign = 'center';
-        ctx.fillText(averageValue.toString(), cx, 40);
+        ctx.fillText(averageValue.toString(), cx, averageY);
         ctx.textAlign = 'left';
         ctx.fillText('0', left - 20, cy);
         ctx.textAlign = 'right';
