@@ -7,13 +7,7 @@ import { Chart } from '../.internal';
 import { DataView, GaugeData, GaugeDataModel, GaugeOptions } from './gauge.type';
 
 export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
-  private chartColors: string[] = [];
-
-  getTableData(): TableData {
-    throw new Error('Method not implemented.');
-  }
-
-  static readonly defaultsOptions: GaugeOptions = {
+  static readonly defaults: GaugeOptions = {
     legend: {
       display: false,
     },
@@ -24,7 +18,8 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
     },
   };
 
-  protected chartData: DataView = {
+  private chartColors: string[] = [];
+  private chartData: DataView = {
     category: {
       name: undefined,
       labels: undefined,
@@ -33,12 +28,12 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
     value: 0,
   };
 
-  protected getType(): ChartType {
-    return ChartType.Gauge;
+  getTableData(): TableData {
+    throw new Error('Method not implemented.');
   }
 
   protected getDefaultOptions(): GaugeOptions {
-    return GaugeChart.defaultsOptions;
+    return GaugeChart.defaults;
   }
 
   protected getConfiguration(): ChartConfiguration {
@@ -61,7 +56,7 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
     };
   }
 
-  protected getChartData(): void {
+  private getChartData(): void {
     if (!this.data) {
       return;
     }
@@ -87,7 +82,7 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
   }
 
   private getChartOptions(): ChartOptions {
-    let options: ChartOptions = {
+    return {
       plugins: {
         legend: {
           display: this.options.legend?.display,
@@ -96,16 +91,19 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
       layout: {
         padding: this.options.padding,
       },
-    };
-    options = this.afterOptionsCreated(options);
-    return options;
+      responsive: true,
+      aspectRatio: 1.6,
+      circumference: 180,
+      rotation: 270,
+      cutout: this.options.innerRadius,
+    } as ChartOptions;
   }
 
-  protected getChartDataset(series: { name?: string; data?: number[] }): ChartDataset<ChartJSType, number[]> {
+  private getChartDataset(series: { name?: string; data?: number[] }): ChartDataset<ChartJSType, number[]> {
     return {
       data: Object.values(series.data ?? []) as number[],
       label: series.name,
-      type: toChartJSType(this.getType()),
+      type: toChartJSType(ChartType.Gauge),
       backgroundColor: this.chartColors,
     };
   }
@@ -134,12 +132,12 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
       data: [],
     };
 
-    if (typeof sourceData[0] === 'object' && !Array.isArray(sourceData[0])) {
-      const data = sourceData as Record<string, string | number>[];
-      result.data = data;
-    } else if (Array.isArray(sourceData[0])) {
+    if (Array.isArray(sourceData[0])) {
       const data = sourceData as unknown[][];
       result.data = tableDataToJSON(data);
+    } else if (typeof sourceData[0] === 'object') {
+      const data = sourceData as Record<string, string | number>[];
+      result.data = data;
     }
 
     return result;
@@ -216,15 +214,5 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
         ctx.restore();
       },
     };
-  }
-
-  protected afterOptionsCreated(options: ChartOptions): ChartOptions {
-    const _options = options as ChartOptions<'doughnut'>;
-    _options.responsive = true;
-    _options.aspectRatio = 1.6;
-    _options.circumference = 180;
-    _options.rotation = 270;
-    _options.cutout = this.options.innerRadius;
-    return _options as ChartOptions;
   }
 }
