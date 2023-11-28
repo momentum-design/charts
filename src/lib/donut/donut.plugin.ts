@@ -1,4 +1,4 @@
-import { Chart, ChartEvent, LegendItem } from 'chart.js/auto';
+import { Chart, ChartEvent, ChartTypeRegistry, LegendElement, LegendItem } from 'chart.js/auto';
 import { DonutLabel } from './donut.type';
 
 const getCenterValue = (chart: Chart | any, total?: number, label?: string | number) => {
@@ -8,7 +8,7 @@ const getCenterValue = (chart: Chart | any, total?: number, label?: string | num
   const innerRadius = chart.getDatasetMeta(0).data[0].innerRadius;
   const outerRadius = chart.getDatasetMeta(0).data[0].outerRadius;
 
-  let scaleNum = innerRadius / 120;
+  const scaleNum = innerRadius / 120;
   const valueFontSize = scaleNum < 1 ? 36 * scaleNum : 36;
   const totalFontSize = scaleNum < 1 ? 14 * scaleNum : 14;
 
@@ -40,7 +40,7 @@ const centerLabel = (donut?: DonutLabel) => {
   };
 };
 
-const legendClickHandler = (e: ChartEvent, item: LegendItem, legend: any): void => {
+const legendClickHandler = (e: ChartEvent, item: LegendItem, legend: LegendElement<keyof ChartTypeRegistry>): void => {
   const chart = legend.chart;
   const index = item.index;
   chart.toggleDataVisibility(index as number);
