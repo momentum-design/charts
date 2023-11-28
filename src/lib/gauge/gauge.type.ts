@@ -1,7 +1,7 @@
 import { ChartData, ChartOptions } from '../../types';
 
 export type GaugeData = {
-  dialData: ChartData;
+  scales: ChartData;
   value: number;
 };
 

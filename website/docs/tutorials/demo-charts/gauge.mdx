@@ -13,7 +13,7 @@ Gauge charts usually consist of a circular ruler (gauge) and an indicator (needl
 ```jsx live
 function showComponent() {
   const data = {
-    dialData: {
+    scales: {
       Low: 30,
       Normal: 80,
       High: 10,
@@ -51,8 +51,8 @@ Supports data formats:
 
 | Mode                  | Type                               | Example                                                                                                                  |
 | --------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Array                 | {dialData: object; value: number}[]|[{dialData: { Low: 30,Normal: 80,High: 10,},value: 65}]                                               |
-| Object                | {dialData: object; value: number}  | {dialData: { Low: 30,Normal: 80,High: 10,},value: 65}|
+| Array                 | {scales: object; value: number}[]|[{scales: { Low: 30,Normal: 80,High: 10,},value: 65}]                                               |
+| Object                | {scales: object; value: number}  | {scales: { Low: 30,Normal: 80,High: 10,},value: 65}|
 
 ## Options
 
