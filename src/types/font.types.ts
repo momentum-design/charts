@@ -5,5 +5,6 @@ export type Font = {
   family?: string;
   style?: string;
   weight?: FontWeight;
+  color?: string;
   lineHeight: string | number;
 };

@@ -10,6 +10,7 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
       size: 13,
       family: 'CiscoSansTT Regular,Helvetica Neue,Helvetica,Arial,sans-serif',
       style: 'normal',
+      color: '#000000',
       weight: undefined,
       lineHeight: 1.2,
     },
