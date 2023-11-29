@@ -1,7 +1,7 @@
 import { ChartOptions, JsonData, TableData } from '../../types';
 
 export interface PieOptions extends ChartOptions {
-  cutout?: string | number;
+  innerRadius?: string | number;
   additionalLabel?: string | number;
   dataKey?: string;
 }
