@@ -4,7 +4,7 @@ import { ChartType } from '../../types';
 import { PieChart } from '../pie';
 import { CenterLabel, DonutData, DonutOptions } from './donut.type';
 export class DonutChart extends PieChart<DonutData, DonutOptions> {
-  static readonly defaultOptions: DonutOptions = {
+  static readonly defaults: DonutOptions = {
     legend: {
       position: 'right',
     },
@@ -22,7 +22,7 @@ export class DonutChart extends PieChart<DonutData, DonutOptions> {
   }
 
   protected getDefaultOptions(): DonutOptions {
-    return DonutChart.defaultOptions;
+    return DonutChart.defaults;
   }
 
   protected afterOptionsCreated(options: ChartOptions): ChartOptions {
