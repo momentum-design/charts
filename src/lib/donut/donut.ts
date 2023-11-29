@@ -4,7 +4,7 @@ import { ChartType } from '../../types';
 import { PieChart } from '../pie';
 import { CenterLabel, DonutData, DonutOptions } from './donut.type';
 export class DonutChart extends PieChart<DonutData, DonutOptions> {
-  static readonly donutOptions: DonutOptions = {
+  static readonly defaultOptions: DonutOptions = {
     legend: {
       position: 'right',
     },
@@ -52,7 +52,7 @@ export class DonutChart extends PieChart<DonutData, DonutOptions> {
 
     const ctx = this.api.ctx;
     const centerY = this.api.height / 2;
-    const centerLabels = this.options.centerLabels;
+    const centerLabels = JSON.parse(JSON.stringify(this.options.centerLabels));
 
     const meta = this.api.getDatasetMeta(0);
     let innerRadius = 0;
@@ -68,24 +68,26 @@ export class DonutChart extends PieChart<DonutData, DonutOptions> {
       outerRadius = metaSets[0].data[0].outerRadius as number;
     }
 
-    const scaleNum = innerRadius / 120 > 1 ? 1 : innerRadius / 120;
-
-    ctx.save();
+    const scaleNum = innerRadius / 80 > 1 ? 1 : innerRadius / 80;
     centerLabels?.forEach((label: CenterLabel, index: number) => {
-      const labelFont = this.getChartJSFont(label.font!, { size: index === 0 ? 30 : 14 });
+      const labelFont = this.getCJFont(label.font!, { size: index === 0 ? 30 : 14 });
       labelFont.size = labelFont.size! * scaleNum;
       if (label) {
         label.font = label.font || {};
         label.font.size = labelFont.size;
       }
-      const offsetSize = centerLabels[0]?.font?.size ?? 0;
+      const TopOffset = centerLabels.length > 1 ? centerLabels[0]?.font?.size : 0;
+
       const curFont = getFontStyleAbbreviation(labelFont);
       const text: string = label.text ? label.text : total.toString();
       ctx.font = curFont;
       ctx.textBaseline = 'middle';
-      ctx.fillStyle = label.font?.style ?? 'black';
-      ctx.fillText(text, outerRadius - ctx.measureText(text).width / 2, index === 0 ? centerY : centerY + offsetSize);
+      ctx.fillStyle = label.font?.color ?? 'black';
+      ctx.fillText(
+        text,
+        outerRadius - ctx.measureText(text).width / 2,
+        index === 0 ? centerY - TopOffset / 3 : centerY + TopOffset / 2,
+      );
     });
-    ctx.restore();
   }
 }
