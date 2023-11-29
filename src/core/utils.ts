@@ -1,3 +1,4 @@
+import { FontSpec } from 'chart.js/auto';
 import { settings } from './settings';
 
 /**
@@ -59,4 +60,14 @@ export function getColorForChart(index: number, colors?: string[], chartTheme?: 
   }
 
   return '';
+}
+
+/**
+ * By FontSpec object, get the font abbreviation style.
+ *
+ * @param fontSpec FontSpec object
+ * @returns Abbreviation Style: [font-weight][font-size][font-family]
+ */
+export function getFontStyleAbbreviation(fontSpec: Partial<FontSpec>): string {
+  return `${fontSpec.weight ?? ''} ${fontSpec.size}px ${fontSpec.family ?? ''}`;
 }

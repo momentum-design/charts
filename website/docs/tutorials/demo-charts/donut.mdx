@@ -22,10 +22,16 @@ function showComponent() {
   };
   const options = {
     dataKey: 'time',
-    cutout: '75%',
-    donutLabel: {
-      enable: true,
-    },
+    cutout: '80%',
+    centerLabels: [
+      {},
+      {
+        text: 'Total22',
+        font: {
+          style: 'blue',
+        },
+      },
+    ],
   };
 
   return (
