@@ -70,7 +70,13 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
   private getDatasets(): ChartDataset<ChartJSType, number[]>[] {
     const chartDataset: ChartDataset<ChartJSType, number[]>[] = [];
     if (Array.isArray(this.chartData?.series)) {
-      this.chartColors = this.getColorsForKeys(this.chartData?.category?.labels as string[]);
+      let colorKeys: string[] = [];
+      if (this.chartData?.category?.labels?.length) {
+        colorKeys = this.chartData.category.labels as string[];
+      } else if (this.chartData?.series?.[0]?.data) {
+        colorKeys = new Array(this.chartData.series[0].data.length).fill('');
+      }
+      this.chartColors = this.getColorsForKeys(colorKeys);
       this.chartData?.series?.forEach((series) => {
         const dataset: ChartDataset<ChartJSType, number[]> = this.getChartDataset(series);
         if (dataset) {
@@ -131,15 +137,13 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
     const result: GaugeDataModel = {
       data: [],
     };
-
-    if (Array.isArray(sourceData[0])) {
+    if (sourceData.length > 1 && Array.isArray(sourceData[0])) {
       const data = sourceData as unknown[][];
       result.data = tableDataToJSON(data);
     } else if (typeof sourceData[0] === 'object') {
       const data = sourceData as Record<string, string | number>[];
       result.data = data;
     }
-
     return result;
   }
 
@@ -152,12 +156,13 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
       series: [],
       value,
     };
-
-    result.category.labels = Object.keys(data.data[0]);
+    result.category.labels = Array.isArray(data.data[0]) ? [] : Object.keys(data.data[0]);
     const seriesData = data.data.map((_data) => {
       return {
         name: '',
-        data: result.category.labels?.map((key) => _data[key as string]) as number[],
+        data: Array.isArray(data.data[0])
+          ? data.data[0]
+          : (result.category.labels?.map((key) => _data[key as string]) as number[]),
       };
     });
 
