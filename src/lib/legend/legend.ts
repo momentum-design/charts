@@ -1,80 +1,84 @@
-import { Chart, ChartDataset, ChartEvent, ChartType, LegendElement, LegendItem, LegendOptions } from 'chart.js';
+import {
+  Chart as CJ,
+  ChartEvent as CJChartEvent,
+  ChartType as CJChartType,
+  LegendElement as CJLegendElement,
+  LegendItem as CJLegendItem,
+  LegendOptions as CJLegendOptions,
+} from 'chart.js/auto';
 import { _DeepPartialObject } from 'chart.js/dist/types/utils';
-import { ChartOptions, LegendItemOptions } from '../../types';
+import { ChartData, ChartOptions } from '../../types';
+import { EventType, LegendItemClickContext } from '../../types/chart.event.types';
+import { LegendItem } from '../../types/chart.legend.types';
+import { Chart } from '../.internal';
 
-const legendClickHandler = function (
-  legendItem: LegendItem,
-  legend: LegendElement<ChartType>,
-  selectedLegends?: LegendItemOptions[],
-  callback?: (legends: LegendItemOptions[]) => void,
-): void {
-  let legendObj: LegendItemOptions = {};
-  legendObj = {
-    label: legendItem.text,
-    value: legendItem.text,
-  };
-  const legends = selectedLegends ?? [];
-  const legendIndex = legends?.findIndex((data: LegendItemOptions) => data.label === legendItem.text);
-  if (legendIndex !== -1) {
-    legends.splice(legendIndex, 1);
-  } else {
-    legends.push(legendObj);
-  }
-  if (callback) callback(legends);
-};
+export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
+  private selectedItems: LegendItem[] = [];
 
-const initLegendOptions = function <TOptions extends ChartOptions>(
-  type: ChartType,
-  options: TOptions,
-  selectedLegends?: LegendItemOptions[],
-): _DeepPartialObject<LegendOptions<ChartType>> {
-  return {
-    display: options.legend?.display ?? true,
-    position: options.legend?.position ?? 'top',
-    labels: {
-      pointStyle: 'rectRounded',
-      usePointStyle: true,
-      generateLabels(chart: Chart<ChartType>) {
-        let labels;
-        if (type === 'pie' || type === 'doughnut') {
-          labels = Chart.overrides.pie.plugins.legend.labels.generateLabels;
-        } else {
-          labels = Chart.defaults.plugins.legend.labels.generateLabels;
-        }
-        return labels(chart).map((data) => {
-          let dataset = chart.data.datasets.find((dataset) => dataset.label === data.text);
-          if (dataset?.type === 'line') {
-            data.pointStyle = 'line';
-            dataset = dataset as ChartDataset<'line', number[]>;
-            if (dataset.borderDash) {
-              data.lineDash = [3, 3];
-            }
+  constructor(public chart: TChart) {}
+
+  getChartJSConfiguration(opts?: {
+    generateLabels?: (chart: CJ<CJChartType>) => CJLegendItem[];
+    overwriteLabels?: (labels: CJLegendItem[], chart: CJ<CJChartType>) => CJLegendItem[];
+    onItemClick?: (chart: TChart, legendItem: CJLegendItem) => void;
+  }): _DeepPartialObject<CJLegendOptions<CJChartType>> {
+    const chartOptions = this.chart.options;
+    return {
+      display: chartOptions.legend?.display ?? true,
+      position: chartOptions.legend?.position ?? 'top',
+      labels: {
+        pointStyle: 'rectRounded',
+        usePointStyle: true,
+        generateLabels: (chart: CJ<CJChartType>) => {
+          let gl = CJ.defaults.plugins.legend.labels.generateLabels;
+          if (typeof opts?.generateLabels === 'function') {
+            gl = opts?.generateLabels;
           }
-          return data;
-        });
+          const labels = gl(chart);
+          return opts?.overwriteLabels ? opts.overwriteLabels(labels, chart) : labels;
+        },
       },
-    },
-    onClick: (e: ChartEvent, legendItem: LegendItem, legend: LegendElement<ChartType>) => {
-      onLegendClick(legendItem, legend, options, selectedLegends);
-    },
-  };
-};
+      onClick: (cjEvent: CJChartEvent, cjLegendItem: CJLegendItem, cjLegend: CJLegendElement<CJChartType>) => {
+        const canBeSelected = this.chart.options.legend?.itemSelectable;
+        const legendItem: LegendItem = {
+          text: cjLegendItem.text,
+          color: cjLegendItem.fillStyle as string,
+          isSelected: canBeSelected
+            ? !this.selectedItems.find((item) => item.text === cjLegendItem.text)?.isSelected
+            : undefined,
+        };
 
-const onLegendClick = function <TOptions extends ChartOptions>(
-  item: LegendItem,
-  legend: LegendElement<ChartType>,
-  options: TOptions,
-  selectedLegends?: LegendItemOptions[],
-): void {
-  if (options.legend?.onItemClick) {
-    // TODO(yiwei): Implementation of callback
-    legendClickHandler(item, legend, selectedLegends, options.legend?.onItemClick);
-  } else {
-    if (typeof item.datasetIndex !== 'undefined') {
-      legend.chart?.setDatasetVisibility(item.datasetIndex, !legend.chart.isDatasetVisible(item.datasetIndex));
-      legend.chart?.update();
-    }
+        if (canBeSelected) {
+          const index = this.selectedItems.findIndex((item) => item.text === legendItem.text);
+          if (index >= 0) {
+            this.selectedItems.splice(index, 1);
+          }
+          this.selectedItems.push(legendItem);
+        }
+
+        if (typeof opts?.onItemClick === 'function') {
+          opts.onItemClick(this.chart, cjLegendItem);
+        }
+
+        const eventContext: LegendItemClickContext = {
+          chart: this.chart,
+          data: legendItem,
+          event: cjEvent,
+        };
+
+        if (this.chart.options.legend?.onItemClick) {
+          this.chart.options.legend.onItemClick(eventContext);
+        }
+
+        this.chart.rootElement?.dispatchEvent(
+          new CustomEvent<LegendItemClickContext>(EventType.LegendItemClick, {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+            detail: eventContext,
+          }),
+        );
+      },
+    };
   }
-};
-
-export { initLegendOptions };
+}

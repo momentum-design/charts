@@ -1,6 +1,5 @@
 import { TooltipItem } from 'chart.js/auto';
-import { EventContext } from '../../events';
-import { ChartOptions } from '../../types';
+import { ChartOptions, EventContext } from '../../types';
 
 export interface WordCloudOptions extends ChartOptions {
   hoverColor?: string;
@@ -10,7 +9,7 @@ export interface WordCloudOptions extends ChartOptions {
   onWordClick?: (context: WordClickContext) => void;
 }
 
-export type WordCloudData = { key: string; value: number }[] | { [key: string]: number };
+export type WordCloudData = { word: string; value: number }[] | { [key: string]: number };
 
 export type WordCloudTooltipContext = TooltipItem<'wordCloud'> & { parsed: { y: number | null } };
 

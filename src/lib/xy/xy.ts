@@ -7,9 +7,8 @@ import { chartA11y, chartSeriesClick } from '../../core/plugins';
 import { getCurrentTheme } from '../../core/utils';
 import { tableDataToJSON } from '../../helpers/data';
 import { toChartJSType } from '../../helpers/utils';
-import { ChartType, LegendItemOptions, TableData } from '../../types';
+import { ChartType, TableData } from '../../types';
 import { Chart } from '../.internal';
-import { initLegendOptions } from '../legend/legend';
 import { DataTableLike, DataView, GenericDataModel, SeriesStyleOptions, XYChartOptions } from './xy.types';
 
 export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
@@ -52,7 +51,8 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     series: [],
   };
 
-  private selectedLegends: LegendItemOptions[] = [];
+  // TODO:
+  // private selectedLegends: LegendItemOptions[] = [];
   private itemSelectable = false;
   protected getConfiguration(): ChartConfiguration {
     let chartDatasets: ChartDataset<ChartJSType, number[]>[] = [];
@@ -98,6 +98,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
       this.options.legend = this.options.legend || {};
       this.options.legend.display = !(this.options.categoryAxis?.enableColor && this.chartData?.series.length <= 1);
     }
+    this.enableLegend();
     const options: ChartOptions = {
       onClick: chartSeriesClick,
       indexAxis: this.isHorizontal(),
@@ -106,7 +107,35 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
           display: !!this.options.title,
           text: this.options.title,
         },
-        legend: initLegendOptions(toChartJSType(this.getType()), this.options, [{ label: 'Florida' }]),
+        legend: this.legend?.getChartJSConfiguration({
+          overwriteLabels: (labels, chart) => {
+            labels.map((label) => {
+              let dataset = chart.data.datasets.find((dataset) => dataset.label === label.text);
+              if (dataset?.type === 'line') {
+                label.pointStyle = 'line';
+                dataset = dataset as ChartDataset<'line', number[]>;
+                if (dataset.borderDash) {
+                  label.lineDash = [2, 2];
+                }
+              }
+              return label;
+            });
+            return labels;
+          },
+          onItemClick: (chart, legendItem) => {
+            if (this.options.legend?.itemSelectable) {
+              // TODO: selected style
+            } else {
+              if (typeof legendItem.datasetIndex !== 'undefined') {
+                chart.api?.setDatasetVisibility(
+                  legendItem.datasetIndex,
+                  !chart.api.isDatasetVisible(legendItem.datasetIndex),
+                );
+                chart.api?.update();
+              }
+            }
+          },
+        }),
         tooltip: {
           position: 'nearest',
         },

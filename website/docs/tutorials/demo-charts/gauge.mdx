@@ -12,27 +12,52 @@ Gauge charts usually consist of a circular ruler (gauge) and an indicator (needl
 
 ```jsx live
 function showComponent() {
-  const data = [
-    {
-      Low: 10,
+  const data = {
+    scales: {
+      Low: 30,
       Normal: 80,
       High: 10,
     },
-  ];
+    value: 65
+  }
+  
   const options = {
-    cutout: '90%',
-    value: 51,
-    theme: 'qualitative-colors-tertiary',
+    innerRadius: '90%',
+    padding: {
+      left: 30,
+      right: 30,
+    },
+    font: {
+      family: 'CiscoSansTT Regular,Helvetica Neue,Helvetica,Arial,sans-serif',
+      color: '#000000'
+    }
   };
-  return <mdw-gauge style={{ width: '50%' }} data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-gauge>;
+  return <mdw-chart
+      type="gauge"
+      style={{ width: '50%' }}
+      data={JSON.stringify(data)}
+      options={JSON.stringify(options)}
+    ></mdw-chart>;
 }
 ```
 
-## [Options Defaults](doughnut#options-defaults)
+## Type
 
-## Private Configuration
+type = 'gauge'
+
+## Data
+
+Supports data formats:
+
+| Mode                  | Type                               | Example                                                                                                                  |
+| --------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Array                 | {scales: object; value: number}[]|[{scales: { Low: 30,Normal: 80,High: 10,},value: 65}]                                               |
+| Object                | {scales: object; value: number}  | {scales: { Low: 30,Normal: 80,High: 10,},value: 65}|
+
+## Options
 
 | Name   | Type   | Default | Description                                             |
 | ------ | ------ | ------- | ------------------------------------------------------- |
-| value  | number | 0       | pointer value                                           |
-| cutout | string | 90%     | The portion of the chart that is cut out of the middle. |
+| innerRadius | string | 90%     | The portion of the chart that is cut out of the middle. |
+| padding | number \| { top: number;right: number;bottom: number;left: number; } | {left: 30,right: 30} | Padding values in Chart options can be supplied in a couple of different formats.|
+| font | {family: string; color: string;} | {family: 'CiscoSansTT Regular,Helvetica Neue,Helvetica,Arial,sans-serif', color: '#000000'}     | The font and color of the scale |

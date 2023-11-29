@@ -1,10 +1,8 @@
-import { ChartConfiguration, ChartDataset, ChartOptions, ChartType as ChartJSType } from 'chart.js/auto';
+import { Chart as CJ, ChartConfiguration, ChartDataset, ChartOptions, ChartType as CJType } from 'chart.js/auto';
 import { chartA11y, chartLegendA11y } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
-import { toChartJSType } from '../../helpers/utils';
 import { ChartType, TableData } from '../../types';
 import { Chart } from '../.internal';
-import { initLegendOptions } from '../legend/legend';
 import { DataView, GenericDataModel, PieData, PieOptions } from './pie.types';
 
 export class PieChart<TData extends PieData, TOptions extends PieOptions> extends Chart<TData, TOptions> {
@@ -30,7 +28,7 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
 
   protected getConfiguration(): ChartConfiguration {
     let chartLabels: unknown[] = [];
-    let chartDatasets: ChartDataset<ChartJSType, number[]>[] = [];
+    let chartDatasets: ChartDataset<CJType, number[]>[] = [];
     this.getChartData();
     if (this.chartData) {
       chartLabels = this.chartData.category.labels ?? [];
@@ -71,13 +69,13 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
     }
   }
 
-  private getDatasets(): ChartDataset<ChartJSType, number[]>[] {
-    const chartDataset: ChartDataset<ChartJSType, number[]>[] = [];
+  private getDatasets(): ChartDataset<CJType, number[]>[] {
+    const chartDataset: ChartDataset<CJType, number[]>[] = [];
     if (Array.isArray(this.chartData?.series)) {
       const chartBG = this.getColorsForKeys(this.chartData?.category?.labels as string[]);
       const colors: string[] = [];
       this.chartData?.series?.forEach((series) => {
-        let dataset: ChartDataset<ChartJSType, number[]> = { data: [] };
+        let dataset: ChartDataset<CJType, number[]> = { data: [] };
         dataset = this.getChartDataset(series, chartBG);
         if (dataset) {
           chartDataset.push(dataset);
@@ -88,9 +86,22 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
   }
 
   private getChartOptions(): ChartOptions {
+    this.enableLegend();
     let options: ChartOptions = {
       plugins: {
-        legend: initLegendOptions(toChartJSType(this.getType()), this.options),
+        legend: this.legend?.getChartJSConfiguration({
+          generateLabels: CJ.overrides.pie.plugins.legend.labels.generateLabels,
+          onItemClick: (chart, legendItem) => {
+            if (this.options.legend?.itemSelectable) {
+              // TODO: selected style
+            } else {
+              if (typeof legendItem.index !== 'undefined') {
+                chart.api?.toggleDataVisibility(legendItem.index as number);
+                chart.api?.update();
+              }
+            }
+          },
+        }),
       },
     };
     if (this.getType() !== ChartType.Pie) {
@@ -149,8 +160,8 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
       data?: number[];
     },
     chartBG: string[],
-  ): ChartDataset<ChartJSType, number[]> {
-    const dataset: ChartDataset<ChartJSType, number[]> = { data: [] };
+  ): ChartDataset<CJType, number[]> {
+    const dataset: ChartDataset<CJType, number[]> = { data: [] };
     dataset.data = Object.values(series.data ?? []) as number[];
     dataset.label = series.name;
     dataset.type = ChartType.Pie;

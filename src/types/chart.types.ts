@@ -1,4 +1,4 @@
-import { Font, Padding } from '.';
+import { Font, LegendOptions, Padding } from '.';
 
 export type Position = 'left' | 'top' | 'right' | 'bottom';
 
@@ -28,21 +28,6 @@ export interface ChartOptions {
   };
   colors?: string[];
   colorMode?: ColorMode;
-}
-
-export interface LegendOptions {
-  itemSelectable?: boolean;
-  onItemClick?(legendItem: LegendItemOptions[]): void;
-  display?: boolean;
-  position?: Position;
-  tooltip?: TooltipOptions;
-}
-
-export interface LegendItemOptions {
-  label?: string | number;
-  value?: string | number;
-  isSelected?: boolean;
-  color?: string;
 }
 
 export interface TooltipOptions {
