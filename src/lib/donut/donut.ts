@@ -27,7 +27,7 @@ export class DonutChart extends PieChart<DonutData, DonutOptions> {
 
   protected afterOptionsCreated(options: ChartOptions): ChartOptions {
     const _options = options as ChartOptions<'doughnut'>;
-    _options.cutout = this.options.cutout;
+    _options.cutout = this.options.innerRadius;
     return _options as ChartOptions;
   }
 
