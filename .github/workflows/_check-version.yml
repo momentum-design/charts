@@ -6,6 +6,9 @@ on:
       NEXT_RELEASE_VERSION:
         description: 'The next version. That means no version to be released if empty.'
         value: ${{ jobs.check.outputs.NEXT_RELEASE_VERSION }}
+      NEXT_RELEASE_CHANGELOG:
+        description: 'The changelog of next release.'
+        value: ${{ jobs.check.outputs.NEXT_RELEASE_CHANGELOG }}
 
 jobs:
   check:
@@ -13,6 +16,7 @@ jobs:
 
     outputs:
       NEXT_RELEASE_VERSION: ${{ steps.chkVersion.outputs.NEXT_RELEASE_VERSION }}
+      NEXT_RELEASE_CHANGELOG: ${{ steps.chkVersion.outputs.NEXT_RELEASE_CHANGELOG }}
 
     steps:
       - name: Checkout code
@@ -30,9 +34,9 @@ jobs:
         run: npm run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_CISCO_MD }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Print next version
         run: |
-          echo ${{ steps.chkVersion.outputs.NEXT_RELEASE_VERSION }}
+          echo "${{ steps.chkVersion.outputs.NEXT_RELEASE_CHANGELOG }}"
           echo "The next version is ${{ steps.chkVersion.outputs.NEXT_RELEASE_VERSION && steps.chkVersion.outputs.NEXT_RELEASE_VERSION || 'N/A' }}" >> $GITHUB_STEP_SUMMARY
