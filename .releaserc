@@ -1,64 +1,65 @@
 {
-    "branches": [
-      "+([0-9])?(.{+([0-9]),x}).x",
-      "main",
-      "master",
-      "next",
-      "next-major",
+  "branches": [
+    "+([0-9])?(.{+([0-9]),x}).x",
+    "main",
+    "master",
+    "next",
+    "next-major",
+    {
+      "name": "beta",
+      "prerelease": true
+    },
+    {
+      "name": "alpha",
+      "prerelease": true
+    }
+  ],
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
       {
-        "name": "beta",
-        "prerelease": true
-      },
-      {
-        "name": "alpha",
-        "prerelease": true
+        "preset": "angular",
+        "releaseRules": [
+          {
+            "type": "breaking",
+            "release": "major"
+          }
+        ]
       }
     ],
-    "plugins": [
-      [
-        "@semantic-release/commit-analyzer",
-        {
-          "preset": "angular",
-          "releaseRules": [
-            {
-              "type": "breaking",
-              "release": "major"
-            }
-          ]
-        }
-      ],
-      [
-        "@semantic-release/exec",
-        {
-          "verifyReleaseCmd": "echo \"NEXT_RELEASE_VERSION=${nextRelease.version}\" >> $GITHUB_OUTPUT"
-        }
-      ],
-      "@semantic-release/release-notes-generator",
-      [
-        "@semantic-release/changelog",
-        {
-          "changelogFile": "CHANGELOG.md"
-        }
-      ],
-      [
-        "@semantic-release/npm",
-        {
-          "npmPublish": false
-        }
-      ],
-      "@semantic-release/github",
-      [
-        "@semantic-release/git",
-        {
-          "assets": [
-            "package.json",
-            "package-lock.json",
-            "CHANGELOG.md"
-          ],
-          "message": "chore(release): v${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-        }
-      ]
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/exec",
+      {
+        "verifyReleaseCmd": "echo \"NEXT_RELEASE_VERSION=${nextRelease.version}\" >> $GITHUB_OUTPUT",
+        "successCmd": "<% print('echo \"NEXT_RELEASE_CHANGELOG=' + (nextRelease.notes || '').replaceAll('\\n', '%0A').replaceAll('\\r', '%0D').replaceAll('%', '%25') + '\" >> $GITHUB_OUTPUT') %>"
+      }
     ],
-    "dryRun": false,
-    "preset": "angular"
-  }
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md"
+      }
+    ],
+    [
+      "@semantic-release/npm",
+      {
+        "npmPublish": false
+      }
+    ],
+    "@semantic-release/github",
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "package.json",
+          "package-lock.json",
+          "CHANGELOG.md"
+        ],
+        "message": "chore(release): v${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ]
+  ],
+  "dryRun": false,
+  "preset": "angular"
+}
