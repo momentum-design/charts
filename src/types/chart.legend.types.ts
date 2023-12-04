@@ -1,4 +1,4 @@
-import { Position, TooltipOptions } from '.';
+import { MarkerStyle, Position, TooltipOptions } from '.';
 import { LegendItemClickContext } from './chart.event.types';
 
 export interface LegendItem {
@@ -8,9 +8,10 @@ export interface LegendItem {
 }
 
 export interface LegendOptions {
-  itemSelectable?: boolean;
+  selectable?: boolean;
   onItemClick?(context: LegendItemClickContext): void;
   display?: boolean;
   position?: Position;
+  markerStyle?: MarkerStyle;
   tooltip?: TooltipOptions;
 }
