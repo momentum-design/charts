@@ -91,9 +91,21 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
       plugins: {
         legend: this.legend?.getChartJSConfiguration({
           generateLabels: CJ.overrides.pie.plugins.legend.labels.generateLabels,
+          overwriteLabels: (labels) => {
+            labels.map((label) => {
+              if (this.options.legend?.markerStyle) {
+                label.pointStyle = this.options.legend?.markerStyle;
+                return label;
+              }
+              label.pointStyle = 'rectRounded';
+              return label;
+            });
+            return labels;
+          },
           onItemClick: (chart, legendItem) => {
-            if (this.options.legend?.itemSelectable) {
+            if (this.options.legend?.selectable) {
               // TODO: selected style
+              chart.api?.update();
             } else {
               if (typeof legendItem.index !== 'undefined') {
                 chart.api?.toggleDataVisibility(legendItem.index as number);

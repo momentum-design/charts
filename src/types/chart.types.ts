@@ -61,3 +61,5 @@ export enum ColorMode {
   Lighten = 'lighten',
   Darken = 'darken',
 }
+
+export type MarkerStyle = 'circle' | 'rect' | 'rectRounded' | 'rectRot' | 'triangle' | false;

@@ -27,19 +27,25 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
       display: chartOptions.legend?.display ?? true,
       position: chartOptions.legend?.position ?? 'top',
       labels: {
-        pointStyle: 'rectRounded',
         usePointStyle: true,
+        pointStyle: chartOptions.legend?.markerStyle,
         generateLabels: (chart: CJ<CJChartType>) => {
           let gl = CJ.defaults.plugins.legend.labels.generateLabels;
           if (typeof opts?.generateLabels === 'function') {
             gl = opts?.generateLabels;
           }
           const labels = gl(chart);
+          //TODO(yiwei): replace label color with plugin mode
+          labels.map((label) => {
+            if (this.selectedItems.find((item) => item.text === label.text)?.isSelected) {
+              label.fontColor = '#000';
+            }
+          });
           return opts?.overwriteLabels ? opts.overwriteLabels(labels, chart) : labels;
         },
       },
       onClick: (cjEvent: CJChartEvent, cjLegendItem: CJLegendItem, cjLegend: CJLegendElement<CJChartType>) => {
-        const canBeSelected = this.chart.options.legend?.itemSelectable;
+        const canBeSelected = this.chart.options.legend?.selectable;
         const legendItem: LegendItem = {
           text: cjLegendItem.text,
           color: cjLegendItem.fillStyle as string,
