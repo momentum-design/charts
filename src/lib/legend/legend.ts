@@ -33,12 +33,6 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
             gl = opts?.generateLabels;
           }
           const labels = gl(chart);
-          //TODO(yiwei): replace label color with plugin mode
-          labels.map((label) => {
-            if (this.selectedItems.find((item) => item.text === label.text)?.selected) {
-              label.fontColor = '#000';
-            }
-          });
           return opts?.overwriteLabels ? opts.overwriteLabels(labels, chart) : labels;
         },
       },
@@ -62,6 +56,7 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
           if (legendItem.selected) {
             this.selectedItems.push(legendItem);
           }
+          this.setLegendSelectedStyle(legendItem, cjLegend);
         }
 
         if (typeof opts?.onItemClick === 'function') {
@@ -81,5 +76,33 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
         this.chart.rootElement?.dispatchEvent(evt);
       },
     };
+  }
+
+  private setLegendSelectedStyle(legendItem: LegendItem, cjLegend: CJLegendElement<CJChartType>): void {
+    const index = cjLegend.legendItems?.findIndex((item) => item.text === legendItem.text);
+    let focusBox = cjLegend.chart.canvas.parentElement?.querySelector('#legend-index-' + index);
+    if (legendItem.selected) {
+      if (!focusBox) {
+        focusBox = document.createElement('div');
+        focusBox.setAttribute('id', 'legend-index-' + index);
+      }
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const { left, top, width, height } = cjLegend.legendHitBoxes[index];
+      const newLeft = `${left - 10}px`;
+      const newTop = `${top - 4}px`;
+      const newWidth = `${width + 20}px`;
+      const newHeight = `${height + 8}px`;
+      focusBox.setAttribute(
+        'style',
+        `pointer-events:none;position:absolute; background-color:#2b2b2b1a; border-radius: 10px;left: ${newLeft}; top:${newTop}; width:${newWidth}; height:${newHeight}`,
+      );
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      focusBox.setAttribute('aria-label', `${legendItem.text}, ${index + 1} of ${cjLegend.legendHitBoxes.length}`);
+      cjLegend.chart.canvas.insertAdjacentElement('afterend', focusBox);
+    } else {
+      focusBox?.remove();
+    }
   }
 }

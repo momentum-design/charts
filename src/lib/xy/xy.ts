@@ -149,11 +149,13 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
         valueAxis: XYChart.defaultScaleOptions,
       },
     };
-    if (this.options.padding) {
-      options.layout = {
-        padding: this.options.padding,
-      };
+    if (options?.plugins?.legend?.labels) {
+      options.plugins.legend.labels.padding = 25;
     }
+    if (this.options.padding) {
+      options.layout = merge({}, options.layout, { padding: this.options.padding });
+    }
+
     if (this.options.categoryAxis) {
       if (options.scales?.categoryAxis) {
         options.scales.categoryAxis = {
