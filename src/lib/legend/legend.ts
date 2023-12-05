@@ -7,13 +7,11 @@ import {
   LegendOptions as CJLegendOptions,
 } from 'chart.js/auto';
 import { _DeepPartialObject } from 'chart.js/dist/types/utils';
-import { ChartData, ChartOptions } from '../../types';
-import { EventType, LegendItemClickContext } from '../../types/chart.event.types';
-import { LegendItem } from '../../types/chart.legend.types';
+import { ChartData, ChartEvent, ChartEventType, ChartOptions, EventContext, LegendItem } from '../../types';
 import { Chart } from '../.internal';
 
 export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
-  private selectedItems: LegendItem[] = [];
+  selectedItems: LegendItem[] = [];
 
   constructor(public chart: TChart) {}
 
@@ -37,7 +35,7 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
           const labels = gl(chart);
           //TODO(yiwei): replace label color with plugin mode
           labels.map((label) => {
-            if (this.selectedItems.find((item) => item.text === label.text)?.isSelected) {
+            if (this.selectedItems.find((item) => item.text === label.text)?.selected) {
               label.fontColor = '#000';
             }
           });
@@ -49,8 +47,10 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
         const legendItem: LegendItem = {
           text: cjLegendItem.text,
           color: cjLegendItem.fillStyle as string,
-          isSelected: canBeSelected
-            ? !this.selectedItems.find((item) => item.text === cjLegendItem.text)?.isSelected
+          index: cjLegendItem.index,
+          hidden: cjLegendItem.hidden,
+          selected: canBeSelected
+            ? !this.selectedItems.find((item) => item.text === cjLegendItem.text)?.selected
             : undefined,
         };
 
@@ -59,31 +59,26 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
           if (index >= 0) {
             this.selectedItems.splice(index, 1);
           }
-          this.selectedItems.push(legendItem);
+          if (legendItem.selected) {
+            this.selectedItems.push(legendItem);
+          }
         }
 
         if (typeof opts?.onItemClick === 'function') {
           opts.onItemClick(this.chart, cjLegendItem);
         }
 
-        const eventContext: LegendItemClickContext = {
+        const eventContext: EventContext<LegendItem> = {
           chart: this.chart,
           data: legendItem,
           event: cjEvent,
         };
+        const evt = new ChartEvent(ChartEventType.LegendItemClick, eventContext);
 
         if (this.chart.options.legend?.onItemClick) {
-          this.chart.options.legend.onItemClick(eventContext);
+          this.chart.options.legend.onItemClick(evt);
         }
-
-        this.chart.rootElement?.dispatchEvent(
-          new CustomEvent<LegendItemClickContext>(EventType.LegendItemClick, {
-            bubbles: true,
-            cancelable: true,
-            composed: true,
-            detail: eventContext,
-          }),
-        );
+        this.chart.rootElement?.dispatchEvent(evt);
       },
     };
   }

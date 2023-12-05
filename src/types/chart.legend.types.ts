@@ -1,15 +1,17 @@
 import { MarkerStyle, Position, TooltipOptions } from '.';
-import { LegendItemClickContext } from './chart.event.types';
+import { ChartEvent } from './chart.event.types';
 
 export interface LegendItem {
   text: string;
   color: string;
-  isSelected?: boolean;
+  selected?: boolean;
+  hidden?: boolean;
+  index?: number;
 }
 
 export interface LegendOptions {
   selectable?: boolean;
-  onItemClick?(context: LegendItemClickContext): void;
+  onItemClick?(event: ChartEvent<LegendItem>): void;
   display?: boolean;
   position?: Position;
   markerStyle?: MarkerStyle;
