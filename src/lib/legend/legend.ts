@@ -7,13 +7,33 @@ import {
   LegendOptions as CJLegendOptions,
 } from 'chart.js/auto';
 import { _DeepPartialObject } from 'chart.js/dist/types/utils';
-import { ChartData, ChartEvent, ChartEventType, ChartOptions, EventContext, LegendItem } from '../../types';
+import {
+  ChartData,
+  ChartEvent,
+  ChartEventType,
+  ChartOptions,
+  EventContext,
+  inactiveColor,
+  LegendItem,
+} from '../../types';
 import { Chart } from '../.internal';
 
 export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
   selectedItems: LegendItem[] = [];
 
   constructor(public chart: TChart) {}
+
+  setItemInactiveStyle(item: LegendItem): void {
+    if (this.chart.options?.legend?.states?.setItemInactiveStyle) {
+      this.chart.options.legend.states.setItemInactiveStyle(item);
+    }
+  }
+
+  setItemActiveStyle(item: LegendItem): void {
+    if (this.chart?.options?.legend?.states?.setItemActiveStyle) {
+      this.chart.options.legend.states.setItemActiveStyle(item);
+    }
+  }
 
   getChartJSConfiguration(opts?: {
     generateLabels?: (chart: CJ<CJChartType>) => CJLegendItem[];
@@ -33,6 +53,19 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
             gl = opts?.generateLabels;
           }
           const labels = gl(chart);
+          if (!this.chart.options.legend?.selectable) {
+            labels.map((label) => {
+              const item = this.toLegendItem(label);
+
+              if (label.hidden) {
+                this.setItemInactiveStyle(item);
+                label.hidden = false;
+                label.fontColor = inactiveColor;
+              } else {
+                this.setItemActiveStyle(item);
+              }
+            });
+          }
           return opts?.overwriteLabels ? opts.overwriteLabels(labels, chart) : labels;
         },
       },
@@ -56,7 +89,7 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
           if (legendItem.selected) {
             this.selectedItems.push(legendItem);
           }
-          this.setLegendSelectedStyle(legendItem, cjLegend);
+          this.setItemSelectedStyle(legendItem, cjLegend);
         }
 
         if (typeof opts?.onItemClick === 'function') {
@@ -78,7 +111,21 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
     };
   }
 
-  private setLegendSelectedStyle(legendItem: LegendItem, cjLegend: CJLegendElement<CJChartType>): void {
+  private toLegendItem(cjLegendItem: CJLegendItem): LegendItem {
+    const canBeSelected = this.chart.options.legend?.selectable;
+    const legendItem: LegendItem = {
+      text: cjLegendItem.text,
+      color: cjLegendItem.fillStyle as string,
+      index: cjLegendItem.index,
+      hidden: cjLegendItem.hidden,
+      selected: canBeSelected
+        ? !this.selectedItems.find((item) => item.text === cjLegendItem.text)?.selected
+        : undefined,
+    };
+    return legendItem;
+  }
+
+  private setItemSelectedStyle(legendItem: LegendItem, cjLegend: CJLegendElement<CJChartType>): void {
     const index = cjLegend.legendItems?.findIndex((item) => item.text === legendItem.text);
     let focusBox = cjLegend.chart.canvas.parentElement?.querySelector('#legend-index-' + index);
     if (legendItem.selected) {

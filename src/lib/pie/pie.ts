@@ -1,7 +1,7 @@
-import { Chart as CJ, ChartConfiguration, ChartDataset, ChartOptions, ChartType as CJType } from 'chart.js/auto';
+import { Chart as CJ, ChartConfiguration, ChartDataset, ChartOptions, ChartType as CJType, Color } from 'chart.js/auto';
 import { chartA11y, chartLegendA11y } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
-import { ChartType, TableData } from '../../types';
+import { ChartType, inactiveColor, LegendItem, TableData } from '../../types';
 import { Chart } from '../.internal';
 import { DataView, GenericDataModel, PieData, PieOptions } from './pie.types';
 
@@ -25,6 +25,7 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
   };
 
   private currentChartOptions: ChartOptions | undefined;
+  private hiddenDatasets: { label?: string; backgroundColor?: Color }[] = [];
 
   protected getConfiguration(): ChartConfiguration {
     let chartLabels: unknown[] = [];
@@ -86,13 +87,22 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
   }
 
   private getChartOptions(): ChartOptions {
+    this.options.legend = this.options.legend || {};
+    this.options.legend.states = {
+      setItemInactiveStyle: (legendItem): void => {
+        return this.setItemInactiveStyle(legendItem);
+      },
+      setItemActiveStyle: (legendItem): void => {
+        return this.setItemActiveStyle(legendItem);
+      },
+    };
     this.enableLegend();
     let options: ChartOptions = {
       plugins: {
         legend: this.legend?.getChartJSConfiguration({
           generateLabels: CJ.overrides.pie.plugins.legend.labels.generateLabels,
-          overwriteLabels: (labels) => {
-            labels.map((label) => {
+          overwriteLabels: (labels, chart) => {
+            labels.map((label, index) => {
               if (this.options.legend?.markerStyle) {
                 label.pointStyle = this.options.legend?.markerStyle;
                 return label;
@@ -191,5 +201,42 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
 
   protected afterOptionsCreated(options: ChartOptions): ChartOptions {
     return options;
+  }
+
+  private setItemInactiveStyle(legend: LegendItem): void {
+    const datasets = this.api?.data.datasets;
+    if (!datasets) {
+      return;
+    }
+    const index = legend.index ?? -1;
+    if (index < 0) {
+      return;
+    }
+    this.hiddenDatasets.push({
+      label: legend.text,
+      backgroundColor: (datasets[0].backgroundColor as Color[])[index],
+    });
+    datasets.map((dataset) => {
+      (dataset.backgroundColor as Color[]).splice(index, 1, inactiveColor);
+    });
+  }
+
+  private setItemActiveStyle(legend: LegendItem): void {
+    const datasets = this.api?.data.datasets;
+    if (!datasets) {
+      return;
+    }
+    const index = legend.index ?? -1;
+    if (index < 0) {
+      return;
+    }
+    const hiddenDataset = this.hiddenDatasets.find((dataset) => dataset.label === legend.text);
+    if (hiddenDataset?.backgroundColor) {
+      const backgroundColor = hiddenDataset.backgroundColor;
+      datasets.map((dataset) => {
+        (dataset.backgroundColor as Color[]).splice(index, 1, backgroundColor);
+      });
+      this.hiddenDatasets = this.hiddenDatasets.filter((dataset) => dataset.label !== legend.text);
+    }
   }
 }
