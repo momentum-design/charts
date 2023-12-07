@@ -1,8 +1,8 @@
-import { ChartType as ChartJSType } from 'chart.js';
+import { ChartType as CJType } from 'chart.js';
 import { ChartType } from '../types';
 
-export function toChartJSType(type?: string): ChartJSType {
-  let chartType: ChartJSType;
+export function toChartJSType(type?: string): CJType {
+  let chartType: CJType;
   switch (type) {
     case ChartType.Bar:
     case ChartType.Column:

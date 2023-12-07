@@ -1,6 +1,7 @@
 import { MarkerStyle, Position, TooltipOptions } from '.';
 import { ChartEvent } from './chart.event.types';
 
+export const inactiveColor = '#c9c9c9';
 export interface LegendItem {
   text: string;
   color: string;
@@ -16,4 +17,10 @@ export interface LegendOptions {
   position?: Position;
   markerStyle?: MarkerStyle;
   tooltip?: TooltipOptions;
+  states?: {
+    setSelected?: (item: LegendItem) => void;
+    setUnSelected?: (item: LegendItem) => void;
+    setItemInactiveStyle?: (item: LegendItem) => void;
+    setItemActiveStyle?: (item: LegendItem) => void;
+  };
 }
