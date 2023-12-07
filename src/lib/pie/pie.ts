@@ -188,6 +188,7 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
     dataset.label = series.name;
     dataset.type = ChartType.Pie;
     dataset.backgroundColor = chartBG;
+    dataset.borderWidth = 1;
     return dataset;
   }
 

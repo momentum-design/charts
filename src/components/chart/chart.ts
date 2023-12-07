@@ -83,13 +83,6 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     return this;
   }
 
-  firstUpdated(changedProperties: Map<PropertyKey, unknown>): void {
-    if (!this.type || !this.data) {
-      throw new Error('The type and data properties are required.');
-    }
-    this.initChart();
-  }
-
   connectedCallback(): void {
     super.connectedCallback();
     window.addEventListener('resize', this.boundResizeHandler);
@@ -109,9 +102,8 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
 
   updated(changedProperties: Map<PropertyKey, unknown>): void {
     super.updated(changedProperties);
-    if (changedProperties.has('data') || changedProperties.has('options')) {
-      // TODO(bndynet): script error sometimes
-      this.updateChart();
+    if (changedProperties.has('type') || changedProperties.has('data') || changedProperties.has('options')) {
+      this.initChart();
     }
   }
 
