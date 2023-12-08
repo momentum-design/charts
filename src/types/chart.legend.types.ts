@@ -1,16 +1,26 @@
-import { Position, TooltipOptions } from '.';
-import { LegendItemClickContext } from './chart.event.types';
+import { MarkerStyle, Position, TooltipOptions } from '.';
+import { ChartEvent } from './chart.event.types';
 
+export const inactiveColor = '#c9c9c9';
 export interface LegendItem {
   text: string;
   color: string;
-  isSelected?: boolean;
+  selected?: boolean;
+  hidden?: boolean;
+  index?: number;
 }
 
 export interface LegendOptions {
-  itemSelectable?: boolean;
-  onItemClick?(context: LegendItemClickContext): void;
+  selectable?: boolean;
+  onItemClick?(event: ChartEvent<LegendItem>): void;
   display?: boolean;
   position?: Position;
+  markerStyle?: MarkerStyle;
   tooltip?: TooltipOptions;
+  states?: {
+    setSelected?: (item: LegendItem) => void;
+    setUnSelected?: (item: LegendItem) => void;
+    setItemInactiveStyle?: (item: LegendItem) => void;
+    setItemActiveStyle?: (item: LegendItem) => void;
+  };
 }

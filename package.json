@@ -16,7 +16,7 @@
     "api": "typedoc",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "watch": "rollup --config ./rollup.config.ts --configPlugin typescript --bundleConfigAsCjs -w",
-    "start": "concurrently --kill-others \"npm run watch\" \"npm run site-serv\"",
+    "start": "npm run dev",
     "site-serv": "npm run docs && npm run test && lite-server",
     "dev": "concurrently --kill-others \"npm run watch\" \"npm run website:start\"",
     "website:start": "npm run build && npm start --prefix website",
@@ -29,10 +29,9 @@
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "semantic-release": "semantic-release",
     "precommit": "lint-staged",
-    "postinstall": "npm install --prefix website",
+    "init": "npm i && npm install --prefix website",
     "republish": "ts-node tools/prepare-republish.ts",
-    "data": "ts-node tools/data.ts",
-    "init": "ts-node tools/init.ts"
+    "data": "ts-node tools/data.ts"
   },
   "keywords": [
     "web components",

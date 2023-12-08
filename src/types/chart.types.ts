@@ -19,7 +19,6 @@ export interface ChartOptions {
   theme?: string;
   font?: Font;
   valueUnit?: string;
-  aspectRatio?: number; //TODO: calculate this property for all charts, remove it here
   padding?: Padding | number;
   legend?: LegendOptions;
   tooltip?: TooltipOptions;
@@ -61,3 +60,5 @@ export enum ColorMode {
   Lighten = 'lighten',
   Darken = 'darken',
 }
+
+export type MarkerStyle = 'circle' | 'rect' | 'rectRounded' | 'rectRot' | 'triangle' | false;

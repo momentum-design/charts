@@ -84,8 +84,8 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
   }
 
   firstUpdated(changedProperties: Map<PropertyKey, unknown>): void {
-    if (!this.options || !this.data) {
-      throw new Error('The options and data properties are required.');
+    if (!this.type || !this.data) {
+      throw new Error('The type and data properties are required.');
     }
     this.initChart();
   }
@@ -110,6 +110,7 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
   updated(changedProperties: Map<PropertyKey, unknown>): void {
     super.updated(changedProperties);
     if (changedProperties.has('data') || changedProperties.has('options')) {
+      // TODO(bndynet): script error sometimes
       this.updateChart();
     }
   }

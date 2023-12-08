@@ -2,7 +2,7 @@
  * The default options for xy chart.
  */
 import { TimeUnit } from 'chart.js';
-import { ChartOptions, JsonData, TableData } from '../../types';
+import { ChartOptions, JsonData, MarkerStyle, TableData } from '../../types';
 
 /**
  * Interface `AxisOptions` provides a set of configurations for the axis in a chart.
@@ -70,6 +70,7 @@ export interface SeriesStyleOptions {
   valueAxisIndex?: number;
   tension?: number;
   order?: number;
+  markerStyle?: MarkerStyle;
 }
 
 export interface XYChartOptions extends ChartOptions {

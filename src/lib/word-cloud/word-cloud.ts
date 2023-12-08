@@ -2,17 +2,22 @@ import {
   ActiveElement,
   Chart as CJ,
   ChartConfiguration,
-  ChartEvent,
+  ChartEvent as CJEvent,
   TooltipLabelStyle,
   TooltipOptions,
 } from 'chart.js/auto';
 import { _DeepPartialObject } from 'chart.js/dist/types/utils';
 import { WordCloudController, WordElement } from 'chartjs-chart-wordcloud';
 import { alphaColor } from '../../helpers';
-import { TableData } from '../../types';
-import { EventType } from '../../types/chart.event.types';
+import { ChartEvent, ChartEventType, TableData } from '../../types';
 import { Chart } from '../.internal';
-import { WordClickContext, WordCloudData, WordCloudOptions, WordCloudTooltipContext } from './word-cloud.types';
+import {
+  WordClickContext,
+  WordClickData,
+  WordCloudData,
+  WordCloudOptions,
+  WordCloudTooltipContext,
+} from './word-cloud.types';
 
 // remove the default value, otherwise the tooltip point appears with the hover color sometimes.
 // see https://github.com/sgratzl/CJ-chart-wordcloud/blob/main/src/elements/WordElement.ts#L99
@@ -26,7 +31,7 @@ CJ.register(WordCloudController, WordElement);
  * @example The data can be following formats:
  * ```json
  * {'hello': 100, 'world': 30} // or
- * [{key: 'hello', value: 100}, {key: 'world', value: 30}}]
+ * [{word: 'hello', value: 100}, {word: 'world', value: 30}}]
  * ```
  */
 export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
@@ -86,7 +91,7 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
         ],
       },
       options: {
-        onClick: (event: ChartEvent, clickedElements: ActiveElement[]) => {
+        onClick: (event: CJEvent, clickedElements: ActiveElement[]) => {
           if (clickedElements?.length === 0) {
             return;
           }
@@ -95,20 +100,16 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
           if (selectedItem) {
             const clickContext: WordClickContext = {
               data: {
-                text: selectedItem.word,
+                word: selectedItem.word,
                 value: selectedItem.value,
               },
               chart: this,
             };
+            const evt = new ChartEvent<WordClickData>(ChartEventType.WorkClick, clickContext);
             if (this.options.onWordClick) {
-              this.options.onWordClick(clickContext);
+              this.options.onWordClick(evt);
             }
-            this.rootElement?.dispatchEvent(
-              new CustomEvent<WordClickContext>(EventType.WorkClick, {
-                bubbles: true,
-                detail: clickContext,
-              }),
-            );
+            this.rootElement?.dispatchEvent(evt);
           }
         },
         elements: {

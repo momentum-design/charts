@@ -42,7 +42,7 @@ function showComponent() {
   ];
   const options = {
     dataKey: 'year',
-    colors: ['#00cf64', '#d4371c']
+    colors: ['#00cf64', '#d4371c'],
   };
 
   return (
@@ -54,6 +54,39 @@ function showComponent() {
     ></mdw-chart>
   );
 }
+```
+
+## Events for Legend
+
+```jsx live noInline
+const data = {
+  'Brunei Darussalam': 739,
+  Jordan: 763,
+  'Burkina Faso': 604,
+  'Cook Islands': 509,
+  Monaco: 205,
+  Switzerland: 108,
+};
+const options = {
+  legend: {
+    selectable: true,
+  },
+};
+
+const Example = () => {
+  const myRef = createRefWithListener('legendItemClick', (e) => e.context.chart.legend.selectedItems);
+  return (<WithActions>
+    <mdw-chart
+      ref={myRef}
+      type="pie"
+      style={{ width: '300px' }}
+      data={JSON.stringify(data)}
+      options={JSON.stringify(options)}
+    ></mdw-chart>
+  </WithActions>);
+}
+
+render(<Example />);
 ```
 
 ## [Options Defaults](doughnut#options-defaults)
