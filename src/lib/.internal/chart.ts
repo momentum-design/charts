@@ -1,7 +1,7 @@
 import { Chart as CJ, FontSpec } from 'chart.js/auto';
 import { merge } from 'lodash-es';
-import { settings, ThemeKey } from '../../core';
-import { darkenColor, getRandomColor, lightenColor } from '../../helpers';
+import { formatBigNumber as fbn, settings, ThemeKey } from '../../core';
+import { darkenColor, formatNumber, getRandomColor, lightenColor } from '../../helpers';
 import { ChartContainer, ChartData, ChartOptions, ColorMode, Font, TableData } from '../../types';
 import { Legend } from '../legend';
 
@@ -11,10 +11,12 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
       size: 13,
       family: 'CiscoSansTT Regular,Helvetica Neue,Helvetica,Arial,sans-serif',
       style: 'normal',
-      color: '#000000',
+      color: '#121212',
       weight: undefined,
       lineHeight: 1.2,
     },
+    mutedColor: '#535759',
+    valuePrecision: 2,
   };
 
   api?: CJ;
@@ -72,6 +74,15 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
     }
     fonts.reverse();
     return merge({}, ...fonts);
+  }
+
+  protected formatBigNumber(value: number): string {
+    return fbn(value, this.options.valuePrecision);
+  }
+
+  protected formatValueWithUnit(value: number, unit?: string): string {
+    const u = unit || this.options.valueUnit;
+    return `${this.formatValue(value)}${u ? ' ' + u : ''}`;
   }
 
   protected getValueWithUnit(value: number, unit?: string): string {
@@ -149,6 +160,10 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
 
     this.colors = themeModel.colors || [];
     this.lastColor = this.colors[this.colors.length - 1];
+  }
+
+  private formatValue(value: number): string {
+    return formatNumber(value, this.options.valuePrecision || 0);
   }
 
   abstract getTableData(): TableData;

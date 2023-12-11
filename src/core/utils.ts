@@ -1,4 +1,5 @@
 import { FontSpec } from 'chart.js/auto';
+import * as helper from '../helpers';
 import { settings } from './settings';
 
 /**
@@ -70,4 +71,14 @@ export function getColorForChart(index: number, colors?: string[], chartTheme?: 
  */
 export function getFontStyleAbbreviation(fontSpec: Partial<FontSpec>): string {
   return `${fontSpec.weight ?? ''} ${fontSpec.size}px ${fontSpec.family ?? ''}`;
+}
+
+/**
+ * Formats the big number with specified suffix({@link settings.bigNumberSuffixes})
+ * @param value The number
+ * @param precision The number of digits
+ * @returns The formatted number(e.g. 1.5K)
+ */
+export function formatBigNumber(value: number, precision = 0): string {
+  return helper.formatNumber(value, precision, settings.bigNumberSuffixes);
 }

@@ -9,6 +9,12 @@ export interface Settings {
   themes: Map<ThemeKey | string, string[]>;
 
   /**
+   * Suffixed for big numbers. It's an array of objects of number/suffix pairs.
+   * E.g. as per above 1500 will be converted to 1.5K.
+   */
+  bigNumberSuffixes: { number: number; suffix: string }[];
+
+  /**
    * Changes the default settings with the partial object of {@link Settings}.
    *
    * @param partialSettings a partial object of {@link Settings} which will be merged into the default settings.
@@ -37,6 +43,16 @@ export interface Settings {
  * ```
  */
 export const settings: Settings = {
+  bigNumberSuffixes: [
+    { number: 1e3, suffix: 'K' },
+    { number: 1e6, suffix: 'M' },
+    { number: 1e9, suffix: 'G' },
+    { number: 1e12, suffix: 'T' },
+    { number: 1e15, suffix: 'P' },
+    { number: 1e18, suffix: 'E' },
+    { number: 1e21, suffix: 'Z' },
+    { number: 1e24, suffix: 'Y' },
+  ],
   theme: defaultTheme,
   themes,
 
