@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import { css, CSSResult, CSSResultGroup, CSSResultOrNative, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { merge } from 'lodash-es';
 import { COMPONENT_PREFIX } from '../../core';
 import { wrapSelector } from '../../helpers';
 import { createChart } from '../../lib';
@@ -115,24 +114,21 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     this.chart?.resize();
   }
 
-  protected setOptions(): void {
-    this.options = merge({}, this.options);
-    this.options.aspectRatio = this.clientWidth / this.clientHeight;
-  }
-
   /**
    * Initializes and renders the chart.
    */
   protected initChart(): void {
     if (this.data && this.type) {
-      this.setOptions();
+      if (this.options) {
+        this.options.aspectRatio = this.clientWidth / this.clientHeight;
+      }
       this.chart = createChart(this.type as ChartType, this.data, this.options);
-      let canvasElement = this.renderRoot.querySelector('canvas') as HTMLCanvasElement;
+      const canvasElement = this.renderRoot.querySelector('canvas') as HTMLCanvasElement;
       if (canvasElement) {
         canvasElement.width = this.clientWidth;
         canvasElement.height = this.clientHeight;
-        this.chart.render(canvasElement);
       }
+      this.chart.render(canvasElement);
     }
   }
 
