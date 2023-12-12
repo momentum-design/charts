@@ -65,12 +65,12 @@ export interface ValueAxisOptions extends AxisOptions {
 }
 
 export interface SeriesStyleOptions {
-  type?: 'bar' | 'line' | 'area';
-  lineStyle?: 'solid' | 'dashed';
+  type?: 'bar' | 'line' | 'area' | 'dashed';
   valueAxisIndex?: number;
   tension?: number;
   order?: number;
   markerStyle?: MarkerStyle;
+  fillGaps?: boolean;
 }
 
 export interface XYChartOptions extends ChartOptions {
@@ -81,7 +81,7 @@ export interface XYChartOptions extends ChartOptions {
     /**
      * The style mapping is an object where keys are string identifiers.
      */
-    styleMapping: {
+    styleMapping?: {
       [key: string]: SeriesStyleOptions;
     };
   };
@@ -107,7 +107,7 @@ export type DataView = {
   category: { name?: string; labels?: string[] };
   series: {
     name: string;
-    data?: number[];
+    data?: (number | null)[];
   }[];
 };
 
@@ -120,6 +120,6 @@ export interface GenericDataModel {
    */
   dataKey?: string;
   data: {
-    [key: string]: string | number;
+    [key: string]: string | number | null;
   }[];
 }

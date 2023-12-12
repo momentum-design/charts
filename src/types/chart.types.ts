@@ -1,6 +1,8 @@
 import { Font, LegendOptions, Padding } from '.';
 
 export type Position = 'left' | 'top' | 'right' | 'bottom';
+export type MarkerStyle = 'circle' | 'rect' | 'rectRounded' | 'rectRot' | 'triangle' | false;
+export type SeriesType = 'bar' | 'line' | 'area' | 'dashed';
 
 export type ChartContainer =
   | string
@@ -29,6 +31,7 @@ export interface ChartOptions {
   };
   colors?: string[];
   colorMode?: ColorMode;
+  aspectRatio?: number;
 }
 
 export interface TooltipOptions {
@@ -62,5 +65,3 @@ export enum ColorMode {
   Lighten = 'lighten',
   Darken = 'darken',
 }
-
-export type MarkerStyle = 'circle' | 'rect' | 'rectRounded' | 'rectRot' | 'triangle' | false;

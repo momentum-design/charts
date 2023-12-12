@@ -136,10 +136,10 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const { left, top, width, height } = cjLegend.legendHitBoxes[index];
-      const newLeft = `${left - 10}px`;
-      const newTop = `${top - 4}px`;
-      const newWidth = `${width + 20}px`;
-      const newHeight = `${height + 8}px`;
+      const newLeft = `${left - 7}px`;
+      const newTop = `${top - 3}px`;
+      const newWidth = `${width + 14}px`;
+      const newHeight = `${height + 6}px`;
       focusBox.setAttribute(
         'style',
         `pointer-events:none;position:absolute; background-color:#2b2b2b1a; border-radius: 10px;left: ${newLeft}; top:${newTop}; width:${newWidth}; height:${newHeight}`,
