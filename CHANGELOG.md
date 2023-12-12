@@ -1,3 +1,19 @@
+# [1.0.0-alpha.13](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.12...v1.0.0-alpha.13) (2023-12-12)
+
+
+### Bug Fixes
+
+* **core:** the chart component does not work under angular routing ([7dabcdc](https://github.com/momentum-design/momentum-widgets/commit/7dabcdcb772e46d54d395e070011587982bc8428))
+* **xy:** fix some issues for line, column, bar and mixed charts ([#34](https://github.com/momentum-design/momentum-widgets/issues/34)) ([157bf7f](https://github.com/momentum-design/momentum-widgets/commit/157bf7fa97625e748ca9c620ca97208ac1a3c5fa))
+
+
+### Features
+
+* **core:** number format and suffix for big number ([f3bb6c2](https://github.com/momentum-design/momentum-widgets/commit/f3bb6c2c300569e76282b6ff013d85e9f839c7fe))
+* **legend:** click event for legend item ([949476c](https://github.com/momentum-design/momentum-widgets/commit/949476cddba5ec538d273d2c380d5a1158fb287a))
+* **legend:** legend selectable and hidden styles ([#32](https://github.com/momentum-design/momentum-widgets/issues/32)) ([be3394f](https://github.com/momentum-design/momentum-widgets/commit/be3394f8798c7b976988c39291410f3ece34f0c2))
+* **legend:** support customizing marker icon of legend item ([#31](https://github.com/momentum-design/momentum-widgets/issues/31)) ([cbb78b7](https://github.com/momentum-design/momentum-widgets/commit/cbb78b7b522199c728a9eeddaa3c0f76edfcdbdd))
+
 # [1.0.0-alpha.12](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.11...v1.0.0-alpha.12) (2023-11-30)
 
 
