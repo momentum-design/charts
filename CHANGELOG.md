@@ -1,3 +1,10 @@
+# [1.0.0-alpha.14](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.13...v1.0.0-alpha.14) (2023-12-12)
+
+
+### Bug Fixes
+
+* **core:** lint error for some variables ([7397be9](https://github.com/momentum-design/momentum-widgets/commit/7397be94fd6cbc458fab642b385745eba60618d6))
+
 # [1.0.0-alpha.13](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.12...v1.0.0-alpha.13) (2023-12-12)
 
 
