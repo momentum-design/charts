@@ -2,7 +2,7 @@ import { ChartConfiguration, ChartDataset, ChartOptions, ChartType as CJType, Co
 import 'chartjs-adapter-moment';
 import { merge } from 'lodash-es';
 import { chartA11y, chartSeriesClick } from '../../core/plugins';
-import { tableDataToJSON } from '../../helpers/data';
+import { getCombinedKeys, tableDataToJSON } from '../../helpers/data';
 import { toChartJSType } from '../../helpers/utils';
 import { ChartType, inactiveColor, LegendItem, MarkerStyle, TableData } from '../../types';
 import { Chart } from '../.internal';
@@ -30,7 +30,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
   };
 
   static readonly defaultScaleOptions = {
-    ticks: { padding: 10 },
+    ticks: { padding: 10, maxRotation: 0 },
     grid: {
       drawTicks: false,
     },
@@ -104,6 +104,9 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     this.enableLegend();
     const options: ChartOptions = {
       onClick: chartSeriesClick,
+      maintainAspectRatio: false,
+      responsive: true,
+      aspectRatio: this.options.aspectRatio || 2,
       indexAxis: this.isHorizontal(),
       plugins: {
         title: {
@@ -157,7 +160,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
       },
     };
     if (options?.plugins?.legend?.labels) {
-      options.plugins.legend.labels.padding = 25;
+      options.plugins.legend.labels.padding = 16;
     }
     if (this.options.padding) {
       options.layout = merge({}, options.layout, { padding: this.options.padding });
@@ -187,7 +190,6 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
           if (options.scales.categoryAxis.type === 'time' && this.options.categoryAxis) {
             options.scales.categoryAxis.time = { unit: this.options.categoryAxis.timeUnit };
             options.scales.categoryAxis.ticks = options.scales.categoryAxis.ticks || {};
-            options.scales.categoryAxis.ticks.maxRotation = 0;
             if (this.options.categoryAxis.labelFormat) {
               options.scales.categoryAxis.time.displayFormats = {
                 [this.options.categoryAxis.timeUnit as string]: this.options.categoryAxis.labelFormat,
@@ -254,13 +256,13 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
   protected createChartDataset(
     series: {
       name: string;
-      data?: number[];
+      data?: (number | null)[];
     },
     colors: string[],
     index: number,
   ): ChartDataset<CJType, number[]> {
     let dataset: ChartDataset<CJType, number[]> = { data: [] };
-    const styleMapping = this.options.seriesOptions?.styleMapping[series.name] ?? {};
+    const styleMapping = this.options.seriesOptions?.styleMapping?.[series.name] ?? {};
     dataset.data = Object.values(series.data ?? []) as number[];
     dataset.label = series.name;
     dataset.borderColor = this.options.categoryAxis?.enableColor ? colors : colors[index];
@@ -285,8 +287,15 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
   ): ChartDataset<'line', number[]> {
     dataset.borderWidth = 2;
     dataset = dataset as ChartDataset<'line', number[]>;
+    if (styleMapping.fillGaps) {
+      dataset.spanGaps = styleMapping.fillGaps;
+      dataset.segment = {
+        borderColor: (ctx) => this.skipped(ctx, dataset.borderColor),
+        borderDash: (ctx) => this.skipped(ctx, [3, 3]),
+      };
+    }
     dataset.pointStyle = this.setPointStyle(dataset, styleMapping);
-    if (styleMapping?.lineStyle === 'dashed') {
+    if (styleMapping.type === 'dashed') {
       dataset.borderDash = [3, 3];
     }
     if (styleMapping.tension) {
@@ -305,7 +314,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     styleMapping: SeriesStyleOptions,
   ): MarkerStyle | undefined {
     dataset.pointRadius = dataset.data.length > 1 ? 0 : 2;
-    dataset.pointHoverRadius = 3;
+    dataset.pointHoverRadius = 5;
     return styleMapping.markerStyle ?? this.options.legend?.markerStyle;
   }
 
@@ -323,7 +332,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
       data: [],
     };
     if (typeof sourceData[0] === 'object' && !Array.isArray(sourceData[0])) {
-      const data = sourceData as Record<string, string | number>[];
+      const data = sourceData as Record<string, string | number | null>[];
       result.dataKey = result.dataKey ?? Object.keys(data[0])[0];
       result.data = data;
     } else if (Array.isArray(sourceData[0])) {
@@ -347,12 +356,11 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
       return result;
     }
     result.category.labels = data.data.map((item) => item[data.dataKey as string] as string);
-    const seriesNames = Object.keys(data.data[0]).filter((key) => key !== data.dataKey);
-
+    const seriesNames = getCombinedKeys(data.data).filter((key) => key !== data.dataKey);
     const seriesData = seriesNames.map((name) => {
       return {
         name: name,
-        data: data.data.map((item) => item[name] as number),
+        data: data.data.map((item) => (item[name] as number) || null),
       };
     });
 
@@ -416,5 +424,9 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
       dataset.backgroundColor = hiddenDataset?.backgroundColor;
       this.hiddenDatasets = this.hiddenDatasets.filter((dataset) => dataset.label !== legend.text);
     }
+  }
+
+  private skipped(ctx: any, color: any) {
+    return ctx.p0.skip || ctx.p1.skip ? color : undefined;
   }
 }
