@@ -18,7 +18,9 @@ export interface ChartOptions {
   chartLabel?: string | number | string[]; // TODO: remove it, please use series name.
   theme?: string;
   font?: Font;
+  mutedColor?: string;
   valueUnit?: string;
+  valuePrecision?: number;
   padding?: Padding | number;
   legend?: LegendOptions;
   tooltip?: TooltipOptions;

@@ -1,23 +1,30 @@
-import { ChartConfiguration, ChartOptions } from 'chart.js/auto';
+import {
+  ChartConfiguration as CJChartConfiguration,
+  ChartOptions as CJChartOptions,
+  Plugin as CJPlugin,
+} from 'chart.js/auto';
+import { cloneDeep } from 'lodash-es';
 import { getFontStyleAbbreviation } from '../../core';
 import { ChartType } from '../../types';
 import { PieChart } from '../pie';
 import { CenterLabel, DonutData, DonutOptions } from './donut.type';
+
 export class DonutChart extends PieChart<DonutData, DonutOptions> {
   static readonly defaults: DonutOptions = {
+    innerRadius: '80%',
     legend: {
       position: 'right',
     },
-    centerLabels: [],
+    centerLabels: [{}, {}],
   };
 
   getType(): ChartType {
     return ChartType.Donut;
   }
 
-  protected getConfiguration(): ChartConfiguration {
+  protected getConfiguration(): CJChartConfiguration {
     const donutConfig = super.getConfiguration();
-    donutConfig?.plugins?.push(this.centerLabel());
+    donutConfig?.plugins?.push(this.centerLabelsPlugin());
     return donutConfig;
   }
 
@@ -25,22 +32,22 @@ export class DonutChart extends PieChart<DonutData, DonutOptions> {
     return DonutChart.defaults;
   }
 
-  protected afterOptionsCreated(options: ChartOptions): ChartOptions {
-    const _options = options as ChartOptions<'doughnut'>;
+  protected afterOptionsCreated(options: CJChartOptions): CJChartOptions {
+    const _options = options as CJChartOptions<'doughnut'>;
     _options.cutout = this.options.innerRadius;
-    return _options as ChartOptions;
+    return _options as CJChartOptions;
   }
 
-  private centerLabel() {
+  private centerLabelsPlugin(): CJPlugin {
     return {
-      id: 'centerLabel',
+      id: 'centerLabels',
       afterDatasetDraw: () => {
-        this.getCenterValue();
+        this.setCenterLabels();
       },
     };
   }
 
-  private getCenterValue(): void {
+  private setCenterLabels(): void {
     if (!this.api) {
       return;
     }
@@ -52,7 +59,13 @@ export class DonutChart extends PieChart<DonutData, DonutOptions> {
 
     const ctx = this.api.ctx;
     const centerY = this.api.height / 2;
-    const centerLabels = JSON.parse(JSON.stringify(this.options.centerLabels));
+    const centerLabels = this.options.centerLabels ? cloneDeep<CenterLabel[]>(this.options.centerLabels) : [];
+
+    // remove the unit placeholder if no unit specified
+    // in order to put total label in the middle
+    if (!this.options.valueUnit && centerLabels.length > 1 && !centerLabels[1].text) {
+      centerLabels.splice(1, 1);
+    }
 
     const meta = this.api.getDatasetMeta(0);
     let innerRadius = 0;
@@ -70,23 +83,61 @@ export class DonutChart extends PieChart<DonutData, DonutOptions> {
 
     const scaleNum = innerRadius / 80 > 1 ? 1 : innerRadius / 80;
     centerLabels?.forEach((label: CenterLabel, index: number) => {
-      const labelFont = this.getCJFont(label.font!, { size: index === 0 ? 30 : 14 });
-      labelFont.size = labelFont.size! * scaleNum;
-      if (label) {
-        label.font = label.font || {};
-        label.font.size = labelFont.size;
+      if (index > 1) {
+        // ignore items after second one
+        return;
       }
-      const TopOffset = centerLabels.length > 1 ? centerLabels[0]?.font?.size : 0;
 
-      const curFont = getFontStyleAbbreviation(labelFont);
-      const text: string = label.text ? label.text : total.toString();
-      ctx.font = curFont;
+      if (!label.font) {
+        label.font = {};
+      }
+
+      const cjFont = this.getCJFont(label.font || {}, {
+        size: index === 0 ? 36 : 14,
+      });
+      if (cjFont.size) {
+        cjFont.size = cjFont.size * scaleNum;
+      }
+      // required as the following offset will use the size.
+      label.font.size = cjFont.size;
+
+      let topOffset = 0;
+      if (centerLabels.length > 1 && centerLabels[0]?.font?.size) {
+        topOffset = centerLabels[0]?.font?.size;
+      }
+
+      if (index === 0) {
+        // The first placeholder, the total will be shown.
+        if (!label.text) {
+          label.text = this.formatBigNumber(total);
+        }
+        if (!label.font.color) {
+          label.font.color = this.options.font?.color;
+        }
+      }
+      if (index === 1) {
+        // The second placeholder, the unit will be shown
+        if (!label.text) {
+          label.text = this.options.valueUnit || '';
+        }
+        // if the font color does not specified
+        if (!label.font?.color) {
+          // set the muted color
+          label.font.color = this.options.mutedColor;
+        }
+      }
+
+      if (!label.text) {
+        return;
+      }
+
+      ctx.font = getFontStyleAbbreviation(cjFont);
       ctx.textBaseline = 'middle';
-      ctx.fillStyle = label.font?.color ?? 'black';
+      ctx.fillStyle = label.font?.color || '';
       ctx.fillText(
-        text,
-        outerRadius - ctx.measureText(text).width / 2,
-        index === 0 ? centerY - TopOffset / 3 : centerY + TopOffset / 2,
+        label.text,
+        outerRadius - ctx.measureText(label.text).width / 2,
+        index === 0 ? centerY - topOffset / 3 : centerY + topOffset / 2,
       );
     });
   }
