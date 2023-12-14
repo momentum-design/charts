@@ -74,7 +74,7 @@ export function isEmptyObject(value: Record<string, unknown>): boolean {
   return false;
 }
 
-export function getCombinedKeys(data: Record<string, any>[]): string[] {
+export function getCombinedKeys(data: Record<string, unknown>[]): string[] {
   const mergedKeys = new Set<string>();
   data.forEach((item) => {
     Object.keys(item).forEach((key) => {
