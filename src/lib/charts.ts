@@ -27,6 +27,7 @@ export function createChart(
   chartData: ChartData,
   chartOptions?: ChartOptions,
 ): Chart<ChartData, ChartOptions> {
+  // eslint-disable-next-line
   const ctor = SUPPORTED_CHARTS.get(chartType) as any;
 
   if (ctor) {

@@ -13,6 +13,7 @@ export type ChartContainer =
 
 export type TableData = Array<Array<string | number | boolean>>;
 export type JsonData = Record<string, string | number>[];
+// eslint-disable-next-line
 export type ChartData = any | TableData | JsonData;
 
 export interface ChartOptions {

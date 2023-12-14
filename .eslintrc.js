@@ -1,27 +1,14 @@
 module.exports = {
-  extends: [
-    'plugin:@typescript-eslint/recommended',
-    'prettier/@typescript-eslint',
-    'plugin:wc/recommended',
-    'plugin:lit/recommended',
-    'prettier',
-  ],
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaVersion: 2018,
-    sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true,
+    "env": {
+        "browser": true,
+        "es2021": true
     },
-    project: './tsconfig.json',
-    tsconfigRootDir: __dirname,
-  },
-  settings: {
-    react: {
-        version: 'detect',
-    },
-  },
-  rules: {
-    '@typescript-eslint/no-unused-vars': 'off'
-  },
-};
+    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint"],
+    "rules": {
+        // Note: you must disable the base rule as it can report incorrect errors
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    }
+}

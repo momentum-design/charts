@@ -14,6 +14,7 @@ export function wrapSelector(
     if (!selector.includes(':host')) {
       selector = `:host ${selector}`;
     }
+    // eslint-disable-next-line
     selector = selector.replace(/\:host/g, e.tag);
   }
   return unsafeCSS(selector);
