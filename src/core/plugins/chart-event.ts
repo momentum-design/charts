@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Chart, { ActiveElement, ChartEvent } from 'chart.js/auto';
 import { LegendClickData } from './plugin.types';
 

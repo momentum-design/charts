@@ -388,7 +388,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
 
   protected afterDatasetCreated(
     dataset: ChartDataset<CJType, number[]>,
-    options?: {
+    _options?: {
       styleOptions?: SeriesStyleOptions;
       color?: string;
       index?: number;
@@ -426,6 +426,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     }
   }
 
+  // eslint-disable-next-line
   private skipped(ctx: any, color: any) {
     return ctx.p0.skip || ctx.p1.skip ? color : undefined;
   }
