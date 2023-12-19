@@ -1,6 +1,8 @@
 import { Font, LegendOptions, Padding } from '.';
 
 export type Position = 'left' | 'top' | 'right' | 'bottom';
+export type MarkerStyle = 'circle' | 'rect' | 'rectRounded' | 'rectRot' | 'triangle' | false;
+export type SeriesType = 'bar' | 'line' | 'area' | 'dashed';
 
 export type ChartContainer =
   | string
@@ -11,6 +13,7 @@ export type ChartContainer =
 
 export type TableData = Array<Array<string | number | boolean>>;
 export type JsonData = Record<string, string | number>[];
+// eslint-disable-next-line
 export type ChartData = any | TableData | JsonData;
 
 export interface ChartOptions {
@@ -18,7 +21,9 @@ export interface ChartOptions {
   chartLabel?: string | number | string[]; // TODO: remove it, please use series name.
   theme?: string;
   font?: Font;
+  mutedColor?: string;
   valueUnit?: string;
+  valuePrecision?: number;
   padding?: Padding | number;
   legend?: LegendOptions;
   tooltip?: TooltipOptions;
@@ -27,6 +32,7 @@ export interface ChartOptions {
   };
   colors?: string[];
   colorMode?: ColorMode;
+  aspectRatio?: number;
 }
 
 export interface TooltipOptions {
@@ -60,5 +66,3 @@ export enum ColorMode {
   Lighten = 'lighten',
   Darken = 'darken',
 }
-
-export type MarkerStyle = 'circle' | 'rect' | 'rectRounded' | 'rectRot' | 'triangle' | false;

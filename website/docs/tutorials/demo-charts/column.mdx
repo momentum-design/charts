@@ -151,7 +151,13 @@ function showComponent() {
   };
   return (
     <div>
-      <mdw-chart key={key} type="column" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-chart>
+      <mdw-chart
+        key={key}
+        style={{ height: '300px' }}
+        type="column"
+        data={JSON.stringify(data)}
+        options={JSON.stringify(options)}
+      ></mdw-chart>
       <button style={actionStyle} onClick={handleButtonClick}>
         Default
       </button>

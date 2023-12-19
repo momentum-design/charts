@@ -1,4 +1,5 @@
 import { Chart as CJ, ChartConfiguration, ChartDataset, ChartOptions, ChartType as CJType, Color } from 'chart.js/auto';
+import { merge } from 'lodash-es';
 import { chartA11y, chartLegendA11y } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
 import { ChartType, inactiveColor, LegendItem, TableData } from '../../types';
@@ -74,7 +75,6 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
     const chartDataset: ChartDataset<CJType, number[]>[] = [];
     if (Array.isArray(this.chartData?.series)) {
       const chartBG = this.getColorsForKeys(this.chartData?.category?.labels as string[]);
-      const colors: string[] = [];
       this.chartData?.series?.forEach((series) => {
         let dataset: ChartDataset<CJType, number[]> = { data: [] };
         dataset = this.getChartDataset(series, chartBG);
@@ -101,8 +101,8 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
       plugins: {
         legend: this.legend?.getChartJSConfiguration({
           generateLabels: CJ.overrides.pie.plugins.legend.labels.generateLabels,
-          overwriteLabels: (labels, chart) => {
-            labels.map((label, index) => {
+          overwriteLabels: (labels) => {
+            labels.map((label) => {
               if (this.options.legend?.markerStyle) {
                 label.pointStyle = this.options.legend?.markerStyle;
                 return label;
@@ -114,7 +114,6 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
           },
           onItemClick: (chart, legendItem) => {
             if (this.options.legend?.selectable) {
-              // TODO: selected style
               chart.api?.update();
             } else {
               if (typeof legendItem.index !== 'undefined') {
@@ -129,6 +128,10 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
     if (this.getType() !== ChartType.Pie) {
       options = this.afterOptionsCreated(options);
     }
+    if (this.options.padding) {
+      options.layout = merge({}, options.layout, { padding: this.options.padding });
+    }
+
     return options;
   }
 
@@ -188,6 +191,7 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
     dataset.label = series.name;
     dataset.type = ChartType.Pie;
     dataset.backgroundColor = chartBG;
+    dataset.borderWidth = 1;
     return dataset;
   }
 

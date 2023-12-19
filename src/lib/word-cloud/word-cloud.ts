@@ -65,7 +65,11 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
         return item;
       });
     } else {
-      this.finalData = Object.keys(this.data).map((key) => ({ word: key, value: (<any>this.data)[key] }));
+      this.finalData = Object.keys(this.data).map((key: string) => ({
+        word: key,
+        // eslint-disable-next-line
+        value: (<any>this.data)[key],
+      }));
     }
 
     if (!this.finalData) {
@@ -161,7 +165,7 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
             borderRadius: 2,
           };
         },
-        labelPointStyle: (context) => {
+        labelPointStyle: () => {
           return {
             pointStyle: 'rectRounded',
             rotation: 0,

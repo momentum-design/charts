@@ -34,7 +34,12 @@ function showComponent() {
   };
   return (
     <div>
-      <mdw-chart type="area" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-chart>
+      <mdw-chart
+        type="area"
+        style={{ height: '300px' }}
+        data={JSON.stringify(data)}
+        options={JSON.stringify(options)}
+      ></mdw-chart>
     </div>
   );
 }

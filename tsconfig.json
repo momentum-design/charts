@@ -6,7 +6,6 @@
     "lib": ["es2017", "dom"],
     "strict": true,
     "jsx": "react",
-    "sourceMap": true,
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,

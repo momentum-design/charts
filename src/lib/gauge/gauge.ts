@@ -173,6 +173,7 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
   private createPointerNeedle() {
     return {
       id: 'gaugeNeedle',
+      // eslint-disable-next-line
       afterDatasetDraw: (chart: any, args: any) => {
         const {
           ctx,

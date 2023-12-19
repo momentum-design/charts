@@ -11,6 +11,7 @@ export function toChartJSType(type?: string): CJType {
     case ChartType.Line:
     case ChartType.Area:
     case ChartType.Range:
+    case 'dashed':
       chartType = 'line';
       break;
     case ChartType.Pie:

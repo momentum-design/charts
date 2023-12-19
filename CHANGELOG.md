@@ -1,3 +1,52 @@
+# [1.0.0-alpha.14](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.13...v1.0.0-alpha.14) (2023-12-12)
+
+
+### Bug Fixes
+
+* **core:** lint error for some variables ([7397be9](https://github.com/momentum-design/momentum-widgets/commit/7397be94fd6cbc458fab642b385745eba60618d6))
+
+# [1.0.0-alpha.13](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.12...v1.0.0-alpha.13) (2023-12-12)
+
+
+### Bug Fixes
+
+* **core:** the chart component does not work under angular routing ([7dabcdc](https://github.com/momentum-design/momentum-widgets/commit/7dabcdcb772e46d54d395e070011587982bc8428))
+* **xy:** fix some issues for line, column, bar and mixed charts ([#34](https://github.com/momentum-design/momentum-widgets/issues/34)) ([157bf7f](https://github.com/momentum-design/momentum-widgets/commit/157bf7fa97625e748ca9c620ca97208ac1a3c5fa))
+
+
+### Features
+
+* **core:** number format and suffix for big number ([f3bb6c2](https://github.com/momentum-design/momentum-widgets/commit/f3bb6c2c300569e76282b6ff013d85e9f839c7fe))
+* **legend:** click event for legend item ([949476c](https://github.com/momentum-design/momentum-widgets/commit/949476cddba5ec538d273d2c380d5a1158fb287a))
+* **legend:** legend selectable and hidden styles ([#32](https://github.com/momentum-design/momentum-widgets/issues/32)) ([be3394f](https://github.com/momentum-design/momentum-widgets/commit/be3394f8798c7b976988c39291410f3ece34f0c2))
+* **legend:** support customizing marker icon of legend item ([#31](https://github.com/momentum-design/momentum-widgets/issues/31)) ([cbb78b7](https://github.com/momentum-design/momentum-widgets/commit/cbb78b7b522199c728a9eeddaa3c0f76edfcdbdd))
+
+# [1.0.0-alpha.12](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.11...v1.0.0-alpha.12) (2023-11-30)
+
+
+### Bug Fixes
+
+* **core:** chart options cannot be merged into this.options ([46e7177](https://github.com/momentum-design/momentum-widgets/commit/46e717725dfc45343dac444dad1be5401afc54bb))
+* **gauge:** fix some bug for gauge chart ([#28](https://github.com/momentum-design/momentum-widgets/issues/28)) ([7022bc2](https://github.com/momentum-design/momentum-widgets/commit/7022bc2592220dff613a905b88830bf988516fe8))
+* **pie:** Resolve pie chart dataKey issue ([#25](https://github.com/momentum-design/momentum-widgets/issues/25)) ([03e27fa](https://github.com/momentum-design/momentum-widgets/commit/03e27faed1bd238acf3626ceefa378087a392546))
+* **word-cloud:** color does not work in tooltip sometimes ([d85413e](https://github.com/momentum-design/momentum-widgets/commit/d85413e27152efac7fb2be15cb5f3d9633189fa6))
+
+
+### Features
+
+* **core:** color system implementation ([b7ed061](https://github.com/momentum-design/momentum-widgets/commit/b7ed06112ede197e0e1bbc54489c40abdbf51f38))
+* **core:** enable global font ([48ae14b](https://github.com/momentum-design/momentum-widgets/commit/48ae14ba2ba26c878b4b93465a554d033ee62085))
+* **core:** events structure and wordClick for Word Cloud ([abe59d1](https://github.com/momentum-design/momentum-widgets/commit/abe59d199432f9a03bfa1a1d55847641ebd9204f))
+* **core:** function to get value with unit ([7e306b4](https://github.com/momentum-design/momentum-widgets/commit/7e306b4e5c844e60eaa1786a683742ad4fbb8b71))
+* **core:** remove some built-in themes ([2894dae](https://github.com/momentum-design/momentum-widgets/commit/2894daee323d7712bf3feb69007a6759433a450f))
+* **core:** supplement colors for material theme ([443e0b6](https://github.com/momentum-design/momentum-widgets/commit/443e0b6ad6a86d5375175fece0fcb24b7d976b98))
+* **donut:** support labels customization  ([#29](https://github.com/momentum-design/momentum-widgets/issues/29)) ([4504126](https://github.com/momentum-design/momentum-widgets/commit/450412646ad5416e5ea2f9a7cff90f28cfedf830))
+* **gauge:** support array for scales ([#30](https://github.com/momentum-design/momentum-widgets/issues/30)) ([33bd437](https://github.com/momentum-design/momentum-widgets/commit/33bd4372431f8fa247058025998a05e976fd0c4b))
+* **pie:** pie chart and donut chart ([#23](https://github.com/momentum-design/momentum-widgets/issues/23)) ([c1c722c](https://github.com/momentum-design/momentum-widgets/commit/c1c722c774d7d27726bc04c1d52ff891a4450037))
+* **word-cloud:** font size settings and automatically compute font size ([017d804](https://github.com/momentum-design/momentum-widgets/commit/017d804d0aa60375802138b121c31dc49b28ea47))
+* **word-cloud:** new chart type support about wordCloud ([c4a614e](https://github.com/momentum-design/momentum-widgets/commit/c4a614e12c42919b8f26cbab1d090f3cbf171ad3))
+* **xy:** support multiple value axes for XYChart ([#20](https://github.com/momentum-design/momentum-widgets/issues/20)) ([6a6d1f4](https://github.com/momentum-design/momentum-widgets/commit/6a6d1f4ba9702b858449b0540b3723b79db78e48))
+
 # [1.0.0-alpha.11](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.10...v1.0.0-alpha.11) (2023-10-30)
 
 
