@@ -60,8 +60,9 @@ interface CategoryAxisOptions extends AxisOptions {
    */
   tooltipFormat?: string;
 }
+
 export interface ValueAxisOptions extends AxisOptions {
-  unit?: string;
+  callback?: (tickValue: number | string, index: number) => string | string[] | number | number[] | null | undefined;
 }
 
 export interface SeriesStyleOptions {
@@ -98,28 +99,4 @@ export interface XYChartOptions extends ChartOptions {
 /**
  * The "DataTableLike" type can be a two-dimensional array (unknown[][]) or an array of objects (Record<string, string | number>[]).
  */
-export type DataTableLike = TableData | JsonData;
-
-/**
- * Data model required for chart rendering.
- */
-export type DataView = {
-  category: { name?: string; labels?: string[] };
-  series: {
-    name: string;
-    data?: (number | null)[];
-  }[];
-};
-
-/**
- * Common data model
- */
-export interface GenericDataModel {
-  /**
-   *  The category field on the category axis.
-   */
-  dataKey?: string;
-  data: {
-    [key: string]: string | number | null;
-  }[];
-}
+export type XYData = TableData | JsonData;

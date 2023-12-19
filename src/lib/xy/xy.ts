@@ -1,14 +1,29 @@
-import { ChartConfiguration, ChartDataset, ChartOptions, ChartType as CJType, Color } from 'chart.js/auto';
+import {
+  ChartConfiguration,
+  ChartDataset,
+  ChartOptions,
+  ChartType as CJType,
+  Color,
+  ScriptableLineSegmentContext,
+} from 'chart.js/auto';
 import 'chartjs-adapter-moment';
 import { merge } from 'lodash-es';
 import { chartA11y, chartSeriesClick } from '../../core/plugins';
-import { getCombinedKeys, tableDataToJSON } from '../../helpers/data';
+import { tableDataToJSON } from '../../helpers/data';
 import { toChartJSType } from '../../helpers/utils';
-import { ChartType, inactiveColor, LegendItem, MarkerStyle, TableData } from '../../types';
+import {
+  ChartDataView,
+  ChartType,
+  GenericDataModel,
+  inactiveColor,
+  LegendItem,
+  MarkerStyle,
+  TableData,
+} from '../../types';
 import { Chart } from '../.internal';
-import { DataTableLike, DataView, GenericDataModel, SeriesStyleOptions, XYChartOptions } from './xy.types';
+import { SeriesStyleOptions, XYChartOptions, XYData } from './xy.types';
 
-export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
+export abstract class XYChart extends Chart<XYData, XYChartOptions> {
   getTableData(): TableData {
     throw new Error('Method not implemented.');
   }
@@ -40,7 +55,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     return merge({}, XYChart.defaults);
   }
 
-  protected chartData: DataView = {
+  protected chartData: ChartDataView = {
     category: {
       name: undefined,
       labels: undefined,
@@ -49,6 +64,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
   };
 
   private hiddenDatasets: { label?: string; borderColor?: Color; backgroundColor?: Color }[] = [];
+  private borderDash = [3, 3];
 
   protected getConfiguration(): ChartConfiguration {
     let chartDatasets: ChartDataset<CJType, number[]>[] = [];
@@ -68,13 +84,13 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
   }
 
   protected getChartData(): void {
-    let data: DataTableLike = [];
+    let data: XYData = [];
     if (!this.data) {
       return;
     }
     try {
       if (this.data instanceof String) {
-        data = JSON.parse(this.data as unknown as string) as DataTableLike;
+        data = JSON.parse(this.data as unknown as string) as XYData;
       } else if (this.data instanceof Array) {
         data = this.data;
       }
@@ -106,7 +122,6 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
       onClick: chartSeriesClick,
       maintainAspectRatio: false,
       responsive: true,
-      aspectRatio: this.options.aspectRatio || 2,
       indexAxis: this.isHorizontal(),
       plugins: {
         title: {
@@ -185,11 +200,12 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
         } else {
           options.scales.categoryAxis.position = this.isHorizontal() === 'x' ? 'bottom' : 'left';
         }
+        options.scales.categoryAxis.ticks = options.scales.categoryAxis.ticks || {};
         if (this.options.categoryAxis.type) {
           options.scales.categoryAxis.type = this.options.categoryAxis.type;
           if (options.scales.categoryAxis.type === 'time' && this.options.categoryAxis) {
             options.scales.categoryAxis.time = { unit: this.options.categoryAxis.timeUnit };
-            options.scales.categoryAxis.ticks = options.scales.categoryAxis.ticks || {};
+
             if (this.options.categoryAxis.labelFormat) {
               options.scales.categoryAxis.time.displayFormats = {
                 [this.options.categoryAxis.timeUnit as string]: this.options.categoryAxis.labelFormat,
@@ -221,7 +237,16 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
             },
             display: valueAxis.display,
           },
-          // TODO(yiwei): support format and stepSize.  { tick: { stepSize: 1 } },
+          {
+            ticks: {
+              callback: valueAxis.callback
+                ? valueAxis.callback
+                : (tickValue: number | string) => {
+                    return Number(tickValue) ? this.formatBigNumber(tickValue as number) : tickValue;
+                  },
+            },
+          },
+          // TODO(yiwei): stepSize.  { tick: { stepSize: 1 } },
           { position: valueAxis.position },
         );
       });
@@ -290,13 +315,14 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     if (styleMapping.fillGaps) {
       dataset.spanGaps = styleMapping.fillGaps;
       dataset.segment = {
-        borderColor: (ctx) => this.skipped(ctx, dataset.borderColor),
-        borderDash: (ctx) => this.skipped(ctx, [3, 3]),
+        borderColor: (ctx: ScriptableLineSegmentContext) =>
+          ctx.p0.skip || ctx.p1.skip ? (dataset.borderColor as Color) : undefined,
+        borderDash: (ctx: ScriptableLineSegmentContext) => (ctx.p0.skip || ctx.p1.skip ? this.borderDash : undefined),
       };
     }
     dataset.pointStyle = this.setPointStyle(dataset, styleMapping);
     if (styleMapping.type === 'dashed') {
-      dataset.borderDash = [3, 3];
+      dataset.borderDash = this.borderDash;
     }
     if (styleMapping.tension) {
       dataset.tension = styleMapping.tension;
@@ -326,7 +352,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     return dataset;
   }
 
-  private transformGenericData(sourceData: DataTableLike): GenericDataModel {
+  private transformGenericData(sourceData: XYData): GenericDataModel {
     const result: GenericDataModel = {
       dataKey: this.options.categoryAxis?.dataKey,
       data: [],
@@ -343,8 +369,8 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     return result;
   }
 
-  private genericToDataView(data: GenericDataModel): DataView {
-    const result: DataView = {
+  private genericToDataView(data: GenericDataModel): ChartDataView {
+    const result: ChartDataView = {
       category: {
         name: data.dataKey ?? '',
         labels: [],
@@ -356,7 +382,7 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
       return result;
     }
     result.category.labels = data.data.map((item) => item[data.dataKey as string] as string);
-    const seriesNames = getCombinedKeys(data.data).filter((key) => key !== data.dataKey);
+    const seriesNames = this.getCombinedKeys(data.data).filter((key) => key !== data.dataKey);
     const seriesData = seriesNames.map((name) => {
       return {
         name: name,
@@ -426,8 +452,13 @@ export abstract class XYChart extends Chart<DataTableLike, XYChartOptions> {
     }
   }
 
-  // eslint-disable-next-line
-  private skipped(ctx: any, color: any) {
-    return ctx.p0.skip || ctx.p1.skip ? color : undefined;
+  private getCombinedKeys(data: Record<string, string | number | null>[]): string[] {
+    const mergedKeys = new Set<string>();
+    data.forEach((item) => {
+      Object.keys(item).forEach((key) => {
+        mergedKeys.add(key);
+      });
+    });
+    return Array.from(mergedKeys);
   }
 }
