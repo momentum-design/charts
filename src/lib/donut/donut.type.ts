@@ -1,9 +1,9 @@
 import { Font } from '../../types';
-import { PieData, PieOptions } from '../pie/pie.types';
+import { PieChartOptions, PieData } from '../pie/pie.types';
 
 export type DonutData = PieData;
 
-export interface DonutOptions extends PieOptions {
+export interface DonutChartOptions extends PieChartOptions {
   centerLabels?: CenterLabel[];
 }
 
