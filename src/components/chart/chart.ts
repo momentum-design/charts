@@ -119,16 +119,8 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
    */
   protected initChart(): void {
     if (this.data && this.type) {
-      if (this.options) {
-        this.options.aspectRatio = this.clientWidth / this.clientHeight;
-      }
       this.chart = createChart(this.type as ChartType, this.data, this.options);
-      const canvasElement = this.renderRoot.querySelector('canvas') as HTMLCanvasElement;
-      if (canvasElement) {
-        canvasElement.width = this.clientWidth;
-        canvasElement.height = this.clientHeight;
-      }
-      this.chart.render(canvasElement);
+      this.chart.render(this.renderRoot.querySelector('canvas') as HTMLCanvasElement);
     }
   }
 
