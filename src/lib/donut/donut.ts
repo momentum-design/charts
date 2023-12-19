@@ -7,10 +7,10 @@ import { cloneDeep } from 'lodash-es';
 import { getFontStyleAbbreviation } from '../../core';
 import { ChartType } from '../../types';
 import { PieChart } from '../pie';
-import { CenterLabel, DonutData, DonutOptions } from './donut.type';
+import { CenterLabel, DonutChartOptions, DonutData } from './donut.type';
 
-export class DonutChart extends PieChart<DonutData, DonutOptions> {
-  static readonly defaults: DonutOptions = {
+export class DonutChart extends PieChart<DonutData, DonutChartOptions> {
+  static readonly defaults: DonutChartOptions = {
     innerRadius: '80%',
     legend: {
       position: 'right',
@@ -28,7 +28,7 @@ export class DonutChart extends PieChart<DonutData, DonutOptions> {
     return donutConfig;
   }
 
-  protected getDefaultOptions(): DonutOptions {
+  protected getDefaultOptions(): DonutChartOptions {
     return DonutChart.defaults;
   }
 

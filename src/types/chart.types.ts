@@ -32,7 +32,6 @@ export interface ChartOptions {
   };
   colors?: string[];
   colorMode?: ColorMode;
-  aspectRatio?: number;
 }
 
 export interface TooltipOptions {
@@ -47,6 +46,30 @@ export interface TooltipOptions {
   legendTooltipFooter?: string;
   legendTooltipFloor?: number;
 }
+
+/**
+ * Common data model
+ */
+export interface GenericDataModel {
+  /**
+   *  The category field on the category axis.
+   */
+  dataKey?: string;
+  data: {
+    [key: string]: string | number | null;
+  }[];
+}
+
+/**
+ * Data model required for chart rendering.
+ */
+export type ChartDataView = {
+  category: { name?: string; labels?: string[] };
+  series: {
+    name: string;
+    data?: (number | null)[];
+  }[];
+};
 
 export enum ChartType {
   Area = 'area',

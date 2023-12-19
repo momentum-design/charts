@@ -2,22 +2,22 @@ import { Chart as CJ, ChartConfiguration, ChartDataset, ChartOptions, ChartType 
 import { merge } from 'lodash-es';
 import { chartA11y, chartLegendA11y } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
-import { ChartType, inactiveColor, LegendItem, TableData } from '../../types';
+import { ChartDataView, ChartType, GenericDataModel, inactiveColor, LegendItem, TableData } from '../../types';
 import { Chart } from '../.internal';
-import { DataView, GenericDataModel, PieData, PieOptions } from './pie.types';
+import { PieChartOptions, PieData } from './pie.types';
 
-export class PieChart<TData extends PieData, TOptions extends PieOptions> extends Chart<TData, TOptions> {
+export class PieChart<TData extends PieData, TOptions extends PieChartOptions> extends Chart<TData, TOptions> {
   getTableData(): TableData {
     throw new Error('Method not implemented.');
   }
 
-  static readonly defaultOptions: PieOptions = {
+  static readonly defaultOptions: PieChartOptions = {
     legend: {
       position: 'right',
     },
   };
 
-  protected chartData: DataView = {
+  protected chartData: ChartDataView = {
     category: {
       name: undefined,
       labels: undefined,
@@ -157,8 +157,8 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
     return result;
   }
 
-  private genericToDataView(data: GenericDataModel): DataView {
-    const result: DataView = {
+  private genericToDataView(data: GenericDataModel): ChartDataView {
+    const result: ChartDataView = {
       category: {
         name: '',
         labels: [],
@@ -182,7 +182,7 @@ export class PieChart<TData extends PieData, TOptions extends PieOptions> extend
   protected getChartDataset(
     series: {
       name?: string;
-      data?: number[];
+      data?: (number | null)[];
     },
     chartBG: string[],
   ): ChartDataset<CJType, number[]> {
