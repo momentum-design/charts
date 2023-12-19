@@ -60,6 +60,10 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
     this.api?.update();
   }
 
+  destroy(): void {
+    this.api?.destroy();
+  }
+
   protected enableLegend(): void {
     this.legend = new Legend(this);
   }
