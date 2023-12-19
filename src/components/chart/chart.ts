@@ -91,6 +91,8 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
   disconnectedCallback(): void {
     super.disconnectedCallback();
     window.removeEventListener('resize', this.boundResizeHandler);
+
+    this.destroy();
   }
 
   render(): TemplateResult {
@@ -107,6 +109,10 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     }
   }
 
+  destroy(): void {
+    this.chart?.destroy();
+  }
+
   /**
    * Resizes the chart and something else that will be useful if the window changed.
    */
@@ -119,6 +125,7 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
    */
   protected initChart(): void {
     if (this.data && this.type) {
+      this.destroy();
       this.chart = createChart(this.type as ChartType, this.data, this.options);
       this.chart.render(this.renderRoot.querySelector('canvas') as HTMLCanvasElement);
     }
