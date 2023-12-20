@@ -73,16 +73,12 @@ export class DonutChart extends PieChart<DonutData, DonutChartOptions> {
 
     const meta = this.api.getDatasetMeta(0);
     let innerRadius = 0;
-    let outerRadius = 0;
     let total = 0;
     if ('total' in meta) {
       total = meta.total as number;
     }
     if ('innerRadius' in meta.data[0]) {
       innerRadius = meta.data[0].innerRadius as number;
-    }
-    if ('outerRadius' in metaSets[0].data[0]) {
-      outerRadius = metaSets[0].data[0].outerRadius as number;
     }
 
     const scaleNum = innerRadius / 80 > 1 ? 1 : innerRadius / 80;
