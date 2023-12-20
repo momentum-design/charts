@@ -58,7 +58,11 @@ export class DonutChart extends PieChart<DonutData, DonutChartOptions> {
     }
 
     const ctx = this.api.ctx;
-    const centerY = this.api.height / 2;
+    const chartArea = this.api.chartArea;
+    const chartWidth = chartArea.right - chartArea.left;
+    const chartHeight = chartArea.bottom - chartArea.top;
+    const canvasCenterX = chartWidth / 2 + chartArea.left;
+    const canvasCenterY = chartHeight / 2 + chartArea.top;
     const centerLabels = this.options.centerLabels ? cloneDeep<CenterLabel[]>(this.options.centerLabels) : [];
 
     // remove the unit placeholder if no unit specified
@@ -69,16 +73,12 @@ export class DonutChart extends PieChart<DonutData, DonutChartOptions> {
 
     const meta = this.api.getDatasetMeta(0);
     let innerRadius = 0;
-    let outerRadius = 0;
     let total = 0;
     if ('total' in meta) {
       total = meta.total as number;
     }
     if ('innerRadius' in meta.data[0]) {
       innerRadius = meta.data[0].innerRadius as number;
-    }
-    if ('outerRadius' in metaSets[0].data[0]) {
-      outerRadius = metaSets[0].data[0].outerRadius as number;
     }
 
     const scaleNum = innerRadius / 80 > 1 ? 1 : innerRadius / 80;
@@ -136,8 +136,8 @@ export class DonutChart extends PieChart<DonutData, DonutChartOptions> {
       ctx.fillStyle = label.font?.color || '';
       ctx.fillText(
         label.text,
-        outerRadius - ctx.measureText(label.text).width / 2,
-        index === 0 ? centerY - topOffset / 3 : centerY + topOffset / 2,
+        canvasCenterX - ctx.measureText(label.text).width / 2,
+        index === 0 ? canvasCenterY - topOffset / 4 : canvasCenterY + topOffset / 2,
       );
     });
   }
