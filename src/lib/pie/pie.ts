@@ -98,6 +98,8 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
     };
     this.enableLegend();
     let options: ChartOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
       plugins: {
         legend: this.legend?.getChartJSConfiguration({
           generateLabels: CJ.overrides.pie.plugins.legend.labels.generateLabels,

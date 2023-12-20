@@ -58,7 +58,11 @@ export class DonutChart extends PieChart<DonutData, DonutChartOptions> {
     }
 
     const ctx = this.api.ctx;
-    const centerY = this.api.height / 2;
+    const chartArea = this.api.chartArea;
+    const chartWidth = chartArea.right - chartArea.left;
+    const chartHeight = chartArea.bottom - chartArea.top;
+    const canvasCenterX = chartWidth / 2 + chartArea.left;
+    const canvasCenterY = chartHeight / 2 + chartArea.top;
     const centerLabels = this.options.centerLabels ? cloneDeep<CenterLabel[]>(this.options.centerLabels) : [];
 
     // remove the unit placeholder if no unit specified
@@ -136,8 +140,8 @@ export class DonutChart extends PieChart<DonutData, DonutChartOptions> {
       ctx.fillStyle = label.font?.color || '';
       ctx.fillText(
         label.text,
-        outerRadius - ctx.measureText(label.text).width / 2,
-        index === 0 ? centerY - topOffset / 3 : centerY + topOffset / 2,
+        canvasCenterX - ctx.measureText(label.text).width / 2,
+        index === 0 ? canvasCenterY - topOffset / 4 : canvasCenterY + topOffset / 2,
       );
     });
   }
