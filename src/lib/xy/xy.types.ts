@@ -1,13 +1,12 @@
 /**
  * The default options for xy chart.
  */
-import { TimeUnit } from 'chart.js';
+import { Tick, TimeUnit } from 'chart.js';
 import { ChartOptions, JsonData, MarkerStyle, TableData } from '../../types';
-
 /**
  * Interface `AxisOptions` provides a set of configurations for the axis in a chart.
  */
-interface AxisOptions {
+export interface AxisOptions {
   /**
    * Title of the axis.
    */
@@ -32,12 +31,22 @@ interface AxisOptions {
    * Controls the grid of axis global visibility (visible when true, hidden when false)
    */
   gridDisplay?: boolean;
-}
 
+  /**
+   * Padding between the ticks on the horizontal axis when autoSkip is enabled.
+   */
+  ticksPadding?: number;
+
+  callback?: (
+    tickValue: number | string,
+    index?: number,
+    ticks?: Tick[],
+  ) => string | string[] | number | number[] | null | undefined;
+}
 /**
  * This interface provides options for configuring the category axis.
  */
-interface CategoryAxisOptions extends AxisOptions {
+export interface CategoryAxisOptions extends AxisOptions {
   /**
    * Set to true, the colors of each category of the series are recycled.
    * Set to false, all categories of each series are one color
@@ -60,20 +69,33 @@ interface CategoryAxisOptions extends AxisOptions {
    */
   tooltipFormat?: string;
 }
-
 export interface ValueAxisOptions extends AxisOptions {
-  callback?: (tickValue: number | string, index: number) => string | string[] | number | number[] | null | undefined;
+  /**
+   * User defined minimum value for the scale, overrides minimum value from data.
+   */
+  min?: number;
+  /**
+   * User defined maximum value for the scale, overrides maximum value from data.
+   */
+  max?: number;
+  /**
+   * Adjustment used when calculating the maximum data value.
+   */
+  suggestedMin?: number;
+  /**
+   * Adjustment used when calculating the minimum data value.
+   */
+  suggestedMax?: number;
 }
 
 export interface SeriesStyleOptions {
-  type?: 'bar' | 'line' | 'area' | 'dashed';
+  type?: 'bar' | 'line' | 'area' | 'dashed' | 'dashedArea';
   valueAxisIndex?: number;
   tension?: number;
   order?: number;
   markerStyle?: MarkerStyle;
   fillGaps?: boolean;
 }
-
 export interface XYChartOptions extends ChartOptions {
   /**
    * The options for the series.
@@ -95,7 +117,6 @@ export interface XYChartOptions extends ChartOptions {
    */
   valueAxes?: ValueAxisOptions[];
 }
-
 /**
  * The "DataTableLike" type can be a two-dimensional array (unknown[][]) or an array of objects (Record<string, string | number>[]).
  */

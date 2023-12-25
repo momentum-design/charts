@@ -1,4 +1,3 @@
-import 'chartjs-adapter-moment';
 import { ChartType, TableData } from '../../types';
 import { XYChart } from '../xy';
 

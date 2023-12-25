@@ -5,6 +5,7 @@ import {
   ChartType as CJType,
   Color,
   ScriptableLineSegmentContext,
+  Tick,
 } from 'chart.js/auto';
 import 'chartjs-adapter-moment';
 import { merge } from 'lodash-es';
@@ -180,7 +181,6 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     if (this.options.padding) {
       options.layout = merge({}, options.layout, { padding: this.options.padding });
     }
-
     if (this.options.categoryAxis) {
       if (options.scales?.categoryAxis) {
         options.scales.categoryAxis = {
@@ -191,6 +191,9 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
           },
           grid: {
             display: this.options.categoryAxis.gridDisplay,
+          },
+          ticks: {
+            autoSkipPadding: this.options.categoryAxis.ticksPadding || 3,
           },
           display: this.options.categoryAxis.display,
         };
@@ -213,8 +216,24 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
             }
           }
         }
+
+        if (
+          this.options.categoryAxis.callback &&
+          (!this.options.categoryAxis.type || this.options.categoryAxis.type === 'category')
+        ) {
+          const categoryCallback = this.options.categoryAxis.callback;
+          options.scales.categoryAxis.ticks = {
+            ...options.scales.categoryAxis.ticks,
+            callback: function (val: number | string, index: number, ticks: Tick[]) {
+              return typeof categoryCallback === 'function'
+                ? categoryCallback(this.getLabelForValue(val as number), index, ticks)
+                : this.getLabelForValue(val as number);
+            },
+          };
+        }
       }
     }
+
     if (this.options.valueAxes) {
       this.options.valueAxes.forEach((valueAxis, index) => {
         valueAxis = merge({}, XYChart.defaultValueAxisOptions, valueAxis);
@@ -238,12 +257,19 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
             display: valueAxis.display,
           },
           {
+            max: valueAxis.max,
+            min: valueAxis.min,
+            suggestedMax: valueAxis.suggestedMax,
+            suggestedMin: valueAxis.suggestedMin,
             ticks: {
-              callback: valueAxis.callback
-                ? valueAxis.callback
-                : (tickValue: number | string) => {
-                    return Number(tickValue) ? this.formatBigNumber(tickValue as number) : tickValue;
-                  },
+              autoSkipPadding: valueAxis.ticksPadding || 3,
+              callback: (tickValue: number | string, index: number) => {
+                return typeof valueAxis.callback === 'function'
+                  ? valueAxis.callback(tickValue, index)
+                  : Number(tickValue)
+                  ? this.formatBigNumber(tickValue as number)
+                  : tickValue;
+              },
             },
           },
           // TODO(yiwei): stepSize.  { tick: { stepSize: 1 } },
@@ -321,7 +347,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       };
     }
     dataset.pointStyle = this.setPointStyle(dataset, styleMapping);
-    if (styleMapping.type === 'dashed') {
+    if (styleMapping.type === 'dashed' || styleMapping.type === 'dashedArea') {
       dataset.borderDash = this.borderDash;
     }
     if (styleMapping.tension) {
