@@ -44,6 +44,7 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
     return {
       display: chartOptions.legend?.display ?? true,
       position: chartOptions.legend?.position ?? 'top',
+      reverse: chartOptions.legend?.reverse ?? false,
       labels: {
         usePointStyle: true,
         pointStyle: chartOptions.legend?.markerStyle,

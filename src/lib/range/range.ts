@@ -1,5 +1,4 @@
 import { ChartDataset } from 'chart.js/auto';
-import 'chartjs-adapter-moment';
 import { alphaColor } from '../../helpers';
 import { ChartType, TableData } from '../../types';
 import { XYChart } from '../xy';
