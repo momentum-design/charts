@@ -1,5 +1,4 @@
 import { ChartDataset } from 'chart.js/auto';
-import 'chartjs-adapter-moment';
 import { alphaColor } from '../../helpers';
 import { ChartType, TableData } from '../../types';
 import { XYChart } from '../xy';
@@ -19,11 +18,16 @@ export class AreaChart extends XYChart {
       color: string;
     },
   ): ChartDataset<'line', number[]> {
-    if (!options?.styleOptions?.type || options?.styleOptions?.type === ChartType.Area) {
+    if (
+      !options?.styleOptions?.type ||
+      options.styleOptions.type === ChartType.Area ||
+      options.styleOptions.type === 'dashedArea'
+    ) {
+      const stacked = this.options?.valueAxes?.[options.styleOptions?.valueAxisIndex ?? 0].stacked;
       dataset.fill = {
         below: alphaColor(options.color, 0.4),
         above: alphaColor(options.color, 0.4),
-        target: 'start',
+        target: stacked ? 'stack' : 'origin',
       };
     }
     return dataset;

@@ -15,6 +15,7 @@ export interface LegendOptions {
   onItemClick?(event: ChartEvent<LegendItem>): void;
   display?: boolean;
   position?: Position;
+  reverse?: boolean;
   markerStyle?: MarkerStyle;
   tooltip?: TooltipOptions;
   states?: {
