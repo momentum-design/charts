@@ -193,7 +193,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
             display: this.options.categoryAxis.gridDisplay,
           },
           ticks: {
-            autoSkipPadding: this.options.categoryAxis.ticksPadding || 3,
+            maxTicksLimit: this.options.categoryAxis.maxTicksLimit || 11,
           },
           display: this.options.categoryAxis.display,
         };
@@ -262,7 +262,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
             suggestedMax: valueAxis.suggestedMax,
             suggestedMin: valueAxis.suggestedMin,
             ticks: {
-              autoSkipPadding: valueAxis.ticksPadding || 3,
+              maxTicksLimit: valueAxis.maxTicksLimit || 11,
               callback: (tickValue: number | string, index: number) => {
                 return typeof valueAxis.callback === 'function'
                   ? valueAxis.callback(tickValue, index)
