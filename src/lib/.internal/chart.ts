@@ -54,6 +54,7 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
 
   resize(): void {
     this.api?.resize();
+    this.legend?.resetSelectedLegendItems();
   }
 
   update(): void {

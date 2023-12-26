@@ -33,9 +33,9 @@ export interface AxisOptions {
   gridDisplay?: boolean;
 
   /**
-   * Padding between the ticks on the horizontal axis when autoSkip is enabled.
+   * Maximum number of ticks and gridlines to show.
    */
-  ticksPadding?: number;
+  maxTicksLimit?: number;
 
   callback?: (
     tickValue: number | string,

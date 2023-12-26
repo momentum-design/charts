@@ -73,6 +73,8 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
   options?: TOptions;
 
   private boundResizeHandler: () => void;
+  private canvasResizeObserver: ResizeObserver | undefined;
+  private chartResizeObserver: ResizeObserver | undefined;
 
   constructor() {
     super();
@@ -85,13 +87,12 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
 
   connectedCallback(): void {
     super.connectedCallback();
-    window.addEventListener('resize', this.boundResizeHandler);
+    window.addEventListener('resize', this.boundResizeHandler); //TODO(yiwei): Check whether windows resize still needs to be retained
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
     window.removeEventListener('resize', this.boundResizeHandler);
-
     this.destroy();
   }
 
@@ -110,6 +111,7 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
   }
 
   destroy(): void {
+    this.unobserveResize();
     this.chart?.destroy();
   }
 
@@ -128,6 +130,8 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
       this.destroy();
       this.chart = createChart(this.type as ChartType, this.data, this.options);
       this.chart.render(this.renderRoot.querySelector('canvas') as HTMLCanvasElement);
+      this.observeChartResize();
+      this.observeCanvasResize();
     }
   }
 
@@ -154,5 +158,32 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
       elementStyles = [];
     }
     return elementStyles;
+  }
+
+  private observeChartResize(): void {
+    this.chartResizeObserver = new ResizeObserver(() => {
+      this.chart?.api?.resize();
+    });
+    if (this.chart?.api?.canvas.parentElement) {
+      this.chartResizeObserver.observe(this.chart.api.canvas.parentElement);
+    }
+  }
+
+  private observeCanvasResize(): void {
+    this.canvasResizeObserver = new ResizeObserver(() => {
+      this.chart?.resize();
+    });
+    if (this.chart?.api?.canvas) {
+      this.canvasResizeObserver.observe(this.chart.api.canvas);
+    }
+  }
+
+  private unobserveResize(): void {
+    if (this.canvasResizeObserver && this.chart?.api?.canvas) {
+      this.canvasResizeObserver.unobserve(this.chart.api.canvas);
+    }
+    if (this.chartResizeObserver && this.chart?.api?.canvas.parentElement) {
+      this.chartResizeObserver?.unobserve(this.chart.api.canvas.parentElement);
+    }
   }
 }
