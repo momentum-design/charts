@@ -153,4 +153,15 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
       focusBox?.remove();
     }
   }
+
+  public resetSelectedLegendItems(): void {
+    this.selectedItems.forEach((legendItem) => {
+      const cjLegend = this.chart.api?.legend;
+      if (cjLegend) {
+        const index = this.chart.api?.legend?.legendItems?.findIndex((item) => item.text === legendItem.text);
+        cjLegend.chart.canvas.parentElement?.querySelector('#legend-index-' + index)?.remove();
+        this.setItemSelectedStyle(legendItem, cjLegend);
+      }
+    });
+  }
 }
