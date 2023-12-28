@@ -48,6 +48,7 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
       labels: {
         usePointStyle: true,
         pointStyle: chartOptions.legend?.markerStyle,
+        font: { size: 12 },
         generateLabels: (chart: CJ<CJChartType>) => {
           let gl = CJ.defaults.plugins.legend.labels.generateLabels;
           if (typeof opts?.generateLabels === 'function') {
@@ -129,21 +130,28 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
   private setItemSelectedStyle(legendItem: LegendItem, cjLegend: CJLegendElement<CJChartType>): void {
     const index = cjLegend.legendItems?.findIndex((item) => item.text === legendItem.text);
     let focusBox = cjLegend.chart.canvas.parentElement?.querySelector('#legend-index-' + index);
+    if (!cjLegend.chart.canvas.parentElement) {
+      return;
+    }
     if (legendItem.selected) {
       if (!focusBox) {
         focusBox = document.createElement('div');
         focusBox.setAttribute('id', 'legend-index-' + index);
       }
+      const canvasRect = cjLegend.chart.canvas.getBoundingClientRect();
+      const parentRect = cjLegend.chart.canvas.parentElement?.getBoundingClientRect();
+      const leftOffset = canvasRect.left - parentRect.left;
+      const topOffset = canvasRect.top - parentRect.top;
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const { left, top, width, height } = cjLegend.legendHitBoxes[index];
-      const newLeft = `${left - 7}px`;
-      const newTop = `${top - 3}px`;
+      const newLeft = `${left - 7 + leftOffset}px`;
+      const newTop = `${top - 4 + topOffset}px`;
       const newWidth = `${width + 14}px`;
-      const newHeight = `${height + 6}px`;
+      const newHeight = `${height + 8}px`;
       focusBox.setAttribute(
         'style',
-        `pointer-events:none;position:absolute; background-color:#2b2b2b1a; border-radius: 10px;left: ${newLeft}; top:${newTop}; width:${newWidth}; height:${newHeight}`,
+        `left:${newLeft};top:${newTop};width:${newWidth};height:${newHeight};background-color:#2b2b2b1a;pointer-events:none;position:absolute;border-radius:10px;`,
       );
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
