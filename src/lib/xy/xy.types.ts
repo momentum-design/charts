@@ -31,11 +31,22 @@ export interface AxisOptions {
    * Controls the grid of axis global visibility (visible when true, hidden when false)
    */
   gridDisplay?: boolean;
-
   /**
    * Maximum number of ticks and gridlines to show.
    */
   maxTicksLimit?: number;
+  /**
+   * Padding between the ticks on the horizontal axis when autoSkip is enabled.
+   */
+  ticksPadding?: number;
+  /**
+   * User defined minimum value for the scale, overrides minimum value from data.
+   */
+  min?: number;
+  /**
+   * User defined maximum value for the scale, overrides maximum value from data.
+   */
+  max?: number;
 
   callback?: (
     tickValue: number | string,
@@ -70,14 +81,6 @@ export interface CategoryAxisOptions extends AxisOptions {
   tooltipFormat?: string;
 }
 export interface ValueAxisOptions extends AxisOptions {
-  /**
-   * User defined minimum value for the scale, overrides minimum value from data.
-   */
-  min?: number;
-  /**
-   * User defined maximum value for the scale, overrides maximum value from data.
-   */
-  max?: number;
   /**
    * Adjustment used when calculating the maximum data value.
    */
