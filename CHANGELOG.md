@@ -1,3 +1,21 @@
+# [1.0.0-alpha.15](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.14...v1.0.0-alpha.15) (2023-12-28)
+
+
+### Bug Fixes
+
+* **core:** chart cannot be destroyed when rerendered ([36569de](https://github.com/momentum-design/momentum-widgets/commit/36569de7556588afcef3386eb95f0efeb204633b))
+* **core:** circular function calls that will lead to all charts not work ([d752efb](https://github.com/momentum-design/momentum-widgets/commit/d752efbaac2e709bf5e626f46be2b47aafd0d35b))
+* **core:** export chart-related interfaces ([#39](https://github.com/momentum-design/momentum-widgets/issues/39)) ([6b74d13](https://github.com/momentum-design/momentum-widgets/commit/6b74d13e8450c9b489af566ef6aa5634ef02ad3b))
+* **core:** fix no resize canvas when resize chart ([81dd263](https://github.com/momentum-design/momentum-widgets/commit/81dd263d42d686b0ee75ba67b4f177da27e2f4cf))
+* **legend:** position is offset when the parent element has padding ([#42](https://github.com/momentum-design/momentum-widgets/issues/42)) ([bad47bc](https://github.com/momentum-design/momentum-widgets/commit/bad47bc765cb90a6329e61d9a7c72e3f672fcfe5))
+* **pie:** pie and donut chart can not be resized ([#40](https://github.com/momentum-design/momentum-widgets/issues/40)) ([996e91c](https://github.com/momentum-design/momentum-widgets/commit/996e91c6d8e00470bb7bd95a55c72feb4a5d2d56))
+* **pkg:** cannot find the types definition as a wrong path ([e0a9054](https://github.com/momentum-design/momentum-widgets/commit/e0a9054bf93b4f1d42ed703eec81ace0e4f05251))
+
+
+### Features
+
+* **xy:** supports dashed area style and label callback ([dcd1e21](https://github.com/momentum-design/momentum-widgets/commit/dcd1e21e43c8c5684bfbacd7b14e883a63a1c308))
+
 # [1.0.0-alpha.14](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.13...v1.0.0-alpha.14) (2023-12-12)
 
 
