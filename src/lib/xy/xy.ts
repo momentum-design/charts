@@ -415,7 +415,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     const seriesData = seriesNames.map((name) => {
       return {
         name: name,
-        data: data.data.map((item) => (item[name] as number) || null),
+        data: data.data.map((item) => (item[name] as number) ?? null),
       };
     });
 
