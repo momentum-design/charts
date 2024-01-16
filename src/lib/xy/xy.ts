@@ -134,6 +134,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
             labels.map((label) => {
               if (this.options.legend?.markerStyle) {
                 label.pointStyle = this.options.legend?.markerStyle;
+                label.lineWidth = 0;
                 return label;
               }
               let dataset = chart.data.datasets.find((dataset) => dataset.label === label.text);
@@ -274,9 +275,9 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
                   ? this.formatBigNumber(tickValue as number)
                   : tickValue;
               },
+              stepSize: valueAxis.ticksStepSize,
             },
           },
-          // TODO(yiwei): stepSize.  { tick: { stepSize: 1 } },
           { position: valueAxis.position },
         );
       });
@@ -415,7 +416,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     const seriesData = seriesNames.map((name) => {
       return {
         name: name,
-        data: data.data.map((item) => (item[name] as number) || null),
+        data: data.data.map((item) => (item[name] as number) ?? null),
       };
     });
 
