@@ -134,6 +134,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
             labels.map((label) => {
               if (this.options.legend?.markerStyle) {
                 label.pointStyle = this.options.legend?.markerStyle;
+                label.lineWidth = 0;
                 return label;
               }
               let dataset = chart.data.datasets.find((dataset) => dataset.label === label.text);
