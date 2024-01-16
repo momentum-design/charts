@@ -274,9 +274,9 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
                   ? this.formatBigNumber(tickValue as number)
                   : tickValue;
               },
+              stepSize: valueAxis.ticksStepSize,
             },
           },
-          // TODO(yiwei): stepSize.  { tick: { stepSize: 1 } },
           { position: valueAxis.position },
         );
       });

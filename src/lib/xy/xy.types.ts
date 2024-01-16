@@ -47,6 +47,10 @@ export interface AxisOptions {
    * User defined maximum value for the scale, overrides maximum value from data.
    */
   max?: number;
+  /**
+   * User defined fixed step size for the scale
+   */
+  ticksStepSize?: number;
 
   callback?: (
     tickValue: number | string,
