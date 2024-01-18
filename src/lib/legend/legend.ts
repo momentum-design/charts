@@ -19,9 +19,25 @@ import {
 import { Chart } from '../.internal';
 
 export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
-  selectedItems: LegendItem[] = [];
+  items: LegendItem[] = [];
+
+  get selectedItems(): LegendItem[] {
+    return this.items.filter((item) => item.selected);
+  }
 
   constructor(public chart: TChart) {}
+
+  changeSelectedItems(items: LegendItem[]): void {
+    const itemsChangedToSelect = items.filter((item) => !this.selectedItems.find((si) => si.text === item.text));
+    const itemsChangedToUnselect = this.selectedItems.filter((item) => !items.find((si) => si.text === item.text));
+
+    itemsChangedToSelect.forEach((si) => {
+      this.selectItem(si);
+    });
+    itemsChangedToUnselect.forEach((usi) => {
+      this.unselectItem(usi);
+    });
+  }
 
   setItemInactiveStyle(item: LegendItem): void {
     if (this.chart.options?.legend?.states?.setItemInactiveStyle) {
@@ -55,47 +71,43 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
             gl = opts?.generateLabels;
           }
           const labels = gl(chart);
-          if (!this.chart.options.legend?.selectable) {
-            labels.map((label) => {
-              const item = this.toLegendItem(label);
-
+          labels.forEach((label) => {
+            const legendItem = this.toLegendItem(label);
+            if (!this.items.find((item) => item.text === legendItem.text)) {
+              this.items.push(legendItem);
+            }
+            if (!this.chart.options.legend?.selectable) {
               if (label.hidden) {
-                this.setItemInactiveStyle(item);
+                this.setItemInactiveStyle(legendItem);
                 label.hidden = false;
                 label.fontColor = inactiveColor;
               } else {
-                this.setItemActiveStyle(item);
+                this.setItemActiveStyle(legendItem);
               }
-            });
-          }
+            }
+          });
+
           return opts?.overwriteLabels ? opts.overwriteLabels(labels, chart) : labels;
         },
       },
-      onClick: (cjEvent: CJChartEvent, cjLegendItem: CJLegendItem, cjLegend: CJLegendElement<CJChartType>) => {
+      onClick: (cjEvent: CJChartEvent, cjLegendItem: CJLegendItem, _cjLegend: CJLegendElement<CJChartType>) => {
         const canBeSelected = this.chart.options.legend?.selectable;
-        const legendItem: LegendItem = {
-          text: cjLegendItem.text,
-          color: cjLegendItem.fillStyle as string,
-          index: cjLegendItem.index,
-          hidden: cjLegendItem.hidden,
-          selected: canBeSelected
-            ? !this.selectedItems.find((item) => item.text === cjLegendItem.text)?.selected
-            : undefined,
-        };
+        let legendItem = this.items.find((item) => item.text === cjLegendItem.text);
+        if (!legendItem) {
+          legendItem = this.toLegendItem(cjLegendItem);
+          this.items.push(legendItem);
+        }
 
         if (canBeSelected) {
-          const index = this.selectedItems.findIndex((item) => item.text === legendItem.text);
-          if (index >= 0) {
-            this.selectedItems.splice(index, 1);
+          if (legendItem?.selected) {
+            this.unselectItem(legendItem);
+          } else {
+            this.selectItem(legendItem);
           }
-          if (legendItem.selected) {
-            this.selectedItems.push(legendItem);
-          }
-          this.setItemSelectedStyle(legendItem, cjLegend);
         }
 
         if (typeof opts?.onItemClick === 'function') {
-          opts.onItemClick(this.chart, cjLegendItem);
+          opts.onItemClick(this.chart, cjLegendItem); // TODO(bing): check if it should be cjLegendItem
         }
 
         const eventContext: EventContext<LegendItem> = {
@@ -120,14 +132,17 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
       color: cjLegendItem.fillStyle as string,
       index: cjLegendItem.index,
       hidden: cjLegendItem.hidden,
-      selected: canBeSelected
-        ? !this.selectedItems.find((item) => item.text === cjLegendItem.text)?.selected
-        : undefined,
+      selected: canBeSelected ? this.items.find((item) => item.text === cjLegendItem.text)?.selected : undefined,
     };
     return legendItem;
   }
 
-  private setItemSelectedStyle(legendItem: LegendItem, cjLegend: CJLegendElement<CJChartType>): void {
+  private setItemSelectedStyle(legendItem: LegendItem): void {
+    const cjLegend = this.chart.api?.legend;
+    if (!cjLegend) {
+      return;
+    }
+
     const index = cjLegend.legendItems?.findIndex((item) => item.text === legendItem.text);
     let focusBox = cjLegend.chart.canvas.parentElement?.querySelector('#legend-index-' + index);
     if (!cjLegend.chart.canvas.parentElement) {
@@ -164,12 +179,43 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
 
   public resetSelectedLegendItems(): void {
     this.selectedItems.forEach((legendItem) => {
-      const cjLegend = this.chart.api?.legend;
-      if (cjLegend) {
-        const index = this.chart.api?.legend?.legendItems?.findIndex((item) => item.text === legendItem.text);
-        cjLegend.chart.canvas.parentElement?.querySelector('#legend-index-' + index)?.remove();
-        this.setItemSelectedStyle(legendItem, cjLegend);
-      }
+      this.resetStylesForSelectedItem(legendItem);
     });
+  }
+
+  public selectItem(item: LegendItem): void {
+    item.selected = true;
+    this.setItemSelectedStyle(item);
+  }
+
+  public unselectItem(item: LegendItem): void {
+    item.selected = false;
+    const legendItem = this.items.find((it) => it.text === item.text);
+    if (legendItem) {
+      legendItem.selected = false;
+    }
+    this.removeBackgroundForSelectedItem(item);
+  }
+
+  private resetStylesForSelectedItem(legendItem: LegendItem): void {
+    const cjLegend = this.chart.api?.legend;
+    if (cjLegend) {
+      this.removeBackgroundForSelectedItem(legendItem);
+      this.setItemSelectedStyle(legendItem);
+    }
+  }
+
+  private removeBackgroundForSelectedItem(legendItem: LegendItem): boolean {
+    const cjLegend = this.chart.api?.legend;
+    if (cjLegend) {
+      const index = this.chart.api?.legend?.legendItems?.findIndex((item) => item.text === legendItem.text);
+      const elemBackground = cjLegend.chart.canvas.parentElement?.querySelector('#legend-index-' + index);
+      if (elemBackground) {
+        elemBackground.remove();
+        return true;
+      }
+    }
+
+    return false;
   }
 }

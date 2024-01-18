@@ -5,7 +5,7 @@ import { COMPONENT_PREFIX } from '../../core';
 import { wrapSelector } from '../../helpers';
 import { createChart } from '../../lib';
 import { Chart } from '../../lib/.internal';
-import { ChartData, ChartOptions, ChartType } from '../../types';
+import { ChartData, ChartEvent, ChartEventType, ChartOptions, ChartType, LegendItem } from '../../types';
 
 const tag = `${COMPONENT_PREFIX}-chart`;
 
@@ -72,9 +72,23 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
   @property({ type: Object, hasChanged: () => true })
   options?: TOptions;
 
+  @property({ type: Object, hasChanged: () => true })
+  states?: { selectedLegendItems?: LegendItem[] };
+
   private boundResizeHandler: () => void;
   private canvasResizeObserver: ResizeObserver | undefined;
   private chartResizeObserver: ResizeObserver | undefined;
+
+  private onLegendItemSelect = (event: ChartEvent<LegendItem>) => {
+    if (event.context?.data) {
+      this.chart?.legend?.selectItem(event.context?.data);
+    }
+  };
+  private onLegendItemUnselect = (event: ChartEvent<LegendItem>) => {
+    if (event.context?.data) {
+      this.chart?.legend?.unselectItem(event.context?.data);
+    }
+  };
 
   constructor() {
     super();
@@ -88,11 +102,15 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
   connectedCallback(): void {
     super.connectedCallback();
     window.addEventListener('resize', this.boundResizeHandler); //TODO(yiwei): Check whether windows resize still needs to be retained
+    this.renderRoot.addEventListener(ChartEventType.LegendItemSelect, this.onLegendItemSelect as EventListener);
+    this.renderRoot.addEventListener(ChartEventType.LegendItemUnselect, this.onLegendItemUnselect as EventListener);
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
     window.removeEventListener('resize', this.boundResizeHandler);
+    this.renderRoot.removeEventListener(ChartEventType.LegendItemSelect, this.onLegendItemSelect as EventListener);
+    this.renderRoot.removeEventListener(ChartEventType.LegendItemUnselect, this.onLegendItemUnselect as EventListener);
     this.destroy();
   }
 
@@ -105,8 +123,15 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
 
   updated(changedProperties: Map<PropertyKey, unknown>): void {
     super.updated(changedProperties);
+
     if (changedProperties.has('type') || changedProperties.has('data') || changedProperties.has('options')) {
       this.initChart();
+    }
+
+    if (changedProperties.has('states')) {
+      if (typeof this.states?.selectedLegendItems !== 'undefined') {
+        this.chart?.legend?.changeSelectedItems(this.states.selectedLegendItems);
+      }
     }
   }
 

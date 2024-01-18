@@ -2,16 +2,19 @@ import React from 'react';
 
 const listenOn = (elem, eventName, callback) => {
   const eventCallback = (e) => {
-    console.log(`Event: ${eventName}`, e);
-    const printObj = (callback && callback(e)) || e.context.data;
-    print(printObj);
+    const printObj = callback && callback(e);
+    if (printObj) {
+      print(printObj);
+    }
   };
+
 
   setTimeout(() => {
     if (elem) {
+      elem.removeEventListener(eventName, eventCallback);
       elem.addEventListener(eventName, eventCallback);
     }
-  }, 500);
+  }, 100);
 
   return () => {
     elem.removeEventListener(eventName, eventCallback);
@@ -80,14 +83,11 @@ const buttonsRelatedToColor = (setOptions) => (
 const Button = (props) => (
   <button
     {...props}
+    className='rounded shadow border-0 cursor-pointer hover:!bg-gray-200/30 hover:shadow-md'
     style={{
       color: 'var(--ifm-font-color-base)',
       backgroundColor: 'var(--ifm-color-emphasis-200)',
-      border: 'none',
-      boxShadow: 'rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px',
-      borderRadius: 4,
       padding: '0.6rem 1rem',
-      cursor: 'pointer',
       ...props.style,
     }}
   />
@@ -97,7 +97,6 @@ const WithActions = (props) => {
   return (<div>
     {props.children}
     <footer style={{
-      paddingTop: 12,
       marginTop: '1rem',
       display: 'flex',
       gap: '1rem',

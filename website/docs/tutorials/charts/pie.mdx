@@ -31,32 +31,9 @@ function showComponent() {
 }
 ```
 
-## Nested Pie Chart
+## Selectable Legend
 
-```jsx live
-function showComponent() {
-  const data = [
-    ['year', 'Good', 'Poor'],
-    ['2023', '3432', '200'],
-    ['2022', '2565', '500'],
-  ];
-  const options = {
-    dataKey: 'year',
-    colors: ['#00cf64', '#d4371c'],
-  };
-
-  return (
-    <mdw-chart
-      type="pie"
-      style={{ width: '300px' }}
-      data={JSON.stringify(data)}
-      options={JSON.stringify(options)}
-    ></mdw-chart>
-  );
-}
-```
-
-## Events for Legend
+In this way, you can implement some interactions with other widgets. 
 
 ```jsx live noInline
 const data = {
@@ -74,17 +51,42 @@ const options = {
 };
 
 const Example = () => {
-  const myRef = createRefWithListener('legendItemClick', (e) => e.context.chart.legend.selectedItems);
-  return (<WithActions>
-    <mdw-chart
-      ref={myRef}
-      type="pie"
-      style={{ width: '300px' }}
-      data={JSON.stringify(data)}
-      options={JSON.stringify(options)}
-    ></mdw-chart>
-  </WithActions>);
-}
+  const [selectedLegendItems, setSelectedLegendItems] = useState([]);
+  const [chartStates, setChartStates] = useState({});
+  const myRef = createRefWithListener('legendItemClick', (e) => {
+    const selectedLegendItems = e.context.chart.legend.selectedItems;
+    setSelectedLegendItems([...e.context.chart.legend.selectedItems]);
+  });
+  const removeItem = (item) => {
+    const items = selectedLegendItems.filter(si => si.text !== item.text);
+    setSelectedLegendItems(items);
+    setChartStates({ selectedLegendItems: items });
+  };
+  return (
+    <WithActions>
+      <mdw-chart
+        ref={myRef}
+        type="pie"
+        style={{ width: '300px' }}
+        data={JSON.stringify(data)}
+        options={JSON.stringify(options)}
+        states={JSON.stringify(chartStates)}
+      ></mdw-chart>
+      <div className="flex">
+        {selectedLegendItems.map((item) => (
+          <div
+            key={item.text}
+            className="text-white text-xs rounded mr-2 flex items-stretch"
+            style={{ backgroundColor: item.color }}
+          >
+            <span className="py-1 pl-2 pr-1">{item.text}</span>
+            <span className="cursor-pointer rounded inline-block py-1 px-2 hover:bg-gray-700/50" onClick={() => removeItem(item)}>&times;</span>
+          </div>
+        ))}
+      </div>
+    </WithActions>
+  );
+};
 
 render(<Example />);
 ```

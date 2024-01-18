@@ -4,6 +4,8 @@ import { ChartData, ChartOptions } from '../types';
 
 export enum ChartEventType {
   LegendItemClick = 'legendItemClick',
+  LegendItemSelect = 'legendItemSelect',
+  LegendItemUnselect = 'legendItemUnselect',
   WorkClick = 'wordClick',
 }
 
