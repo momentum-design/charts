@@ -1,4 +1,5 @@
 import {
+  Chart as CJ,
   ChartConfiguration,
   ChartDataset,
   ChartOptions,
@@ -11,7 +12,7 @@ import {
 import 'chartjs-adapter-moment';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { merge } from 'lodash-es';
-import { chartA11y, chartSeriesClick } from '../../core/plugins';
+import { CategoryAxisClickable, chartA11y, chartSeriesClick } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
 import { toChartJSType } from '../../helpers/utils';
 import {
@@ -36,6 +37,8 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       gridDisplay: true,
       display: true,
       stacked: false,
+      ticksPadding: 3,
+      maxTicksLimit: 11,
     },
     legend: {
       position: 'bottom',
@@ -46,6 +49,8 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     gridDisplay: true,
     display: true,
     stacked: false,
+    ticksPadding: 20,
+    maxTicksLimit: 11,
   };
 
   static readonly defaultScaleOptions = {
@@ -79,6 +84,9 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     const plugins: CJPlugin[] = [chartA11y];
     if (this.options.scrollable) {
       plugins.push(zoomPlugin);
+    }
+    if (this.options.categoryAxis?.clickable) {
+      plugins.push(new CategoryAxisClickable(this)?.getPlugin());
     }
     return {
       type: toChartJSType(this.getType()),
@@ -125,6 +133,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
         return this.setItemActiveStyle(legendItem);
       },
     };
+
     this.enableLegend();
     const options: ChartOptions = {
       onClick: chartSeriesClick,
@@ -205,8 +214,9 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
               ? this.options.categoryAxis.maxLabels - 1
               : undefined,
           ticks: {
-            autoSkipPadding: this.options.categoryAxis.ticksPadding || 3,
-            maxTicksLimit: this.options.categoryAxis.maxTicksLimit || 11,
+            autoSkipPadding: this.options.categoryAxis.ticksPadding,
+            maxTicksLimit: this.options.categoryAxis.maxTicksLimit,
+            color: this.options.categoryAxis.ticksColor,
           },
           display: this.options.categoryAxis.display,
         };
@@ -247,49 +257,55 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       }
     }
 
-    if (this.options.valueAxes) {
-      this.options.valueAxes.forEach((valueAxis, index) => {
-        valueAxis = merge({}, XYChart.defaultValueAxisOptions, valueAxis);
-        if (!valueAxis.position) {
-          valueAxis.position = this.isHorizontal() === 'x' ? 'left' : 'bottom';
-        }
-        const valueAxisKey = 'valueAxis' + (index > 0 ? '_' + index : '');
-        options.scales = options.scales || {};
-        options.scales[valueAxisKey] = merge(
-          {},
-          XYChart.defaultScaleOptions,
-          {
-            stacked: valueAxis.stacked,
-            title: {
-              display: !!valueAxis.title,
-              text: valueAxis.title,
-            },
-            grid: {
-              display: valueAxis.gridDisplay,
-            },
-            display: valueAxis.display,
+    if (!this.options.valueAxes) {
+      this.options.valueAxes = [{}];
+    }
+    this.options.valueAxes.forEach((valueAxis, index) => {
+      valueAxis = merge({}, XYChart.defaultValueAxisOptions, valueAxis);
+      if (!valueAxis.position) {
+        valueAxis.position = this.isHorizontal() === 'x' ? 'left' : 'bottom';
+      }
+      const valueAxisKey = 'valueAxis' + (index > 0 ? '_' + index : '');
+      options.scales = options.scales || {};
+      options.scales[valueAxisKey] = merge(
+        {},
+        XYChart.defaultScaleOptions,
+        {
+          stacked: valueAxis.stacked,
+          title: {
+            display: !!valueAxis.title,
+            text: valueAxis.title,
           },
-          {
-            max: valueAxis.max,
-            min: valueAxis.min,
-            suggestedMax: valueAxis.suggestedMax,
-            suggestedMin: valueAxis.suggestedMin,
-            ticks: {
-              autoSkipPadding: valueAxis.ticksPadding || 3,
-              maxTicksLimit: valueAxis.maxTicksLimit || 11,
-              callback: (tickValue: number | string, index: number) => {
-                return typeof valueAxis.callback === 'function'
-                  ? valueAxis.callback(tickValue, index)
-                  : Number(tickValue)
-                  ? this.formatBigNumber(tickValue as number)
-                  : tickValue;
-              },
-              stepSize: valueAxis.ticksStepSize,
-            },
+          grid: {
+            display: valueAxis.gridDisplay,
           },
-          { position: valueAxis.position },
-        );
-      });
+          display: valueAxis.display,
+        },
+        {
+          max: valueAxis.max,
+          min: valueAxis.min,
+          suggestedMax: valueAxis.suggestedMax,
+          suggestedMin: valueAxis.suggestedMin,
+          ticks: {
+            autoSkipPadding: valueAxis.ticksPadding,
+            maxTicksLimit: valueAxis.maxTicksLimit,
+            color: valueAxis.ticksColor,
+            callback: (tickValue: number | string, index: number) => {
+              return typeof valueAxis.callback === 'function'
+                ? valueAxis.callback(tickValue, index)
+                : Number(tickValue)
+                ? this.formatBigNumber(tickValue as number)
+                : tickValue;
+            },
+            stepSize: valueAxis.ticksStepSize,
+          },
+        },
+        { position: valueAxis.position },
+      );
+    });
+
+    if (this.options.categoryAxis?.clickable) {
+      options;
     }
     return options;
   }

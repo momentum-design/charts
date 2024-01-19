@@ -43,6 +43,10 @@ export interface AxisOptions {
    * User defined fixed step size for the scale
    */
   ticksStepSize?: number;
+  /**
+   * Color of tick
+   */
+  ticksColor?: string;
 
   callback?: (
     tickValue: number | string,
@@ -77,6 +81,9 @@ export interface CategoryAxisOptions extends AxisOptions {
   tooltipFormat?: string;
 
   maxLabels?: number;
+
+  clickable?: boolean;
+  onItemClick?(label: string): void;
 }
 export interface ValueAxisOptions extends AxisOptions {
   /**
