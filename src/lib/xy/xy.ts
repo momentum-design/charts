@@ -4,10 +4,12 @@ import {
   ChartOptions,
   ChartType as CJType,
   Color,
+  Plugin as CJPlugin,
   ScriptableLineSegmentContext,
   Tick,
 } from 'chart.js/auto';
 import 'chartjs-adapter-moment';
+import zoomPlugin from 'chartjs-plugin-zoom';
 import { merge } from 'lodash-es';
 import { chartA11y, chartSeriesClick } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
@@ -38,6 +40,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     legend: {
       position: 'bottom',
     },
+    scrollDirection: 'y',
   };
   static readonly defaultValueAxisOptions = {
     gridDisplay: true,
@@ -73,6 +76,10 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     if (this.chartData) {
       chartDatasets = this.getDatasets();
     }
+    const plugins: CJPlugin[] = [chartA11y];
+    if (this.options.scrollable) {
+      plugins.push(zoomPlugin);
+    }
     return {
       type: toChartJSType(this.getType()),
       data: {
@@ -80,7 +87,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
         datasets: chartDatasets,
       },
       options: this.getChartOptions(),
-      plugins: [chartA11y],
+      plugins: plugins,
     };
   }
 
@@ -193,8 +200,10 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
           grid: {
             display: this.options.categoryAxis.gridDisplay,
           },
-          max: this.options.categoryAxis.max,
-          min: this.options.categoryAxis.min,
+          max:
+            typeof this.options.categoryAxis.maxLabels === 'number'
+              ? this.options.categoryAxis.maxLabels - 1
+              : undefined,
           ticks: {
             autoSkipPadding: this.options.categoryAxis.ticksPadding || 3,
             maxTicksLimit: this.options.categoryAxis.maxTicksLimit || 11,

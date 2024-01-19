@@ -90,6 +90,15 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     }
   };
 
+  private onWheel = (event: WheelEvent) => {
+    if (this.options?.scrollable && event.deltaY !== 0) {
+      this.chart?.api?.pan({
+        y: -event.deltaY,
+      });
+      event.preventDefault();
+    }
+  };
+
   constructor() {
     super();
     this.boundResizeHandler = this.handleResize.bind(this);
@@ -104,6 +113,7 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     window.addEventListener('resize', this.boundResizeHandler); //TODO(yiwei): Check whether windows resize still needs to be retained
     this.renderRoot.addEventListener(ChartEventType.LegendItemSelect, this.onLegendItemSelect as EventListener);
     this.renderRoot.addEventListener(ChartEventType.LegendItemUnselect, this.onLegendItemUnselect as EventListener);
+    this.renderRoot.addEventListener(ChartEventType.Wheel, this.onWheel as EventListener);
   }
 
   disconnectedCallback(): void {
@@ -111,6 +121,7 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     window.removeEventListener('resize', this.boundResizeHandler);
     this.renderRoot.removeEventListener(ChartEventType.LegendItemSelect, this.onLegendItemSelect as EventListener);
     this.renderRoot.removeEventListener(ChartEventType.LegendItemUnselect, this.onLegendItemUnselect as EventListener);
+    this.renderRoot.removeEventListener(ChartEventType.Wheel, this.onWheel as EventListener);
     this.destroy();
   }
 
