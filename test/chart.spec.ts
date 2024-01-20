@@ -14,6 +14,10 @@ class TestChart extends Chart<any, TestChartOptions> {
     throw new Error('Method not implemented.');
   }
 
+  onWheel(): void {
+    throw new Error('Method not implemented.');
+  }
+
   getFormattedValue(value: number): string {
     return this.formatValueWithUnit(value);
   }

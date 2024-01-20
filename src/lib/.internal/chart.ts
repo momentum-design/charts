@@ -172,6 +172,7 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   }
 
   abstract getTableData(): TableData;
+  abstract onWheel(event: WheelEvent): void;
 
   protected abstract getConfiguration(): any;
   protected abstract getDefaultOptions(): TOptions;

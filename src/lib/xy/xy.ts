@@ -500,4 +500,13 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     });
     return Array.from(mergedKeys);
   }
+
+  onWheel(event: WheelEvent): void {
+    if (this.options?.scrollable && event && event.deltaY !== 0) {
+      this.api?.pan({
+        y: -event.deltaY,
+      });
+      event.preventDefault();
+    }
+  }
 }

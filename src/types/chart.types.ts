@@ -32,8 +32,6 @@ export interface ChartOptions {
   };
   colors?: string[];
   colorMode?: ColorMode;
-  scrollable?: boolean;
-  scrollDirection?: 'x' | 'y' | 'xy';
 }
 
 export interface TooltipOptions {

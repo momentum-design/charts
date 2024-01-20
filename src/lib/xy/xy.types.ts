@@ -125,6 +125,9 @@ export interface XYChartOptions extends ChartOptions {
    * Options for configuring the value axis.
    */
   valueAxes?: ValueAxisOptions[];
+
+  scrollable?: boolean;
+  scrollDirection?: 'x' | 'y' | 'xy';
 }
 /**
  * The "DataTableLike" type can be a two-dimensional array (unknown[][]) or an array of objects (Record<string, string | number>[]).
