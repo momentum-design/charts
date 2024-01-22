@@ -22,6 +22,10 @@ export class DonutChart extends PieChart<DonutData, DonutChartOptions> {
     return ChartType.Donut;
   }
 
+  onWheel(): void {
+    throw new Error('Method not implemented.');
+  }
+
   protected getConfiguration(): CJChartConfiguration {
     const donutConfig = super.getConfiguration();
     donutConfig?.plugins?.push(this.centerLabelsPlugin());

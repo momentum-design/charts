@@ -111,6 +111,7 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     window.removeEventListener('resize', this.boundResizeHandler);
     this.renderRoot.removeEventListener(ChartEventType.LegendItemSelect, this.onLegendItemSelect as EventListener);
     this.renderRoot.removeEventListener(ChartEventType.LegendItemUnselect, this.onLegendItemUnselect as EventListener);
+
     this.destroy();
   }
 
@@ -137,7 +138,11 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
 
   destroy(): void {
     this.unobserveResize();
-    this.chart?.destroy();
+
+    if (this.chart) {
+      this.renderRoot.removeEventListener(ChartEventType.Wheel, this.chart.onWheel as unknown as EventListener);
+      this.chart.destroy();
+    }
   }
 
   /**
@@ -157,6 +162,8 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
       this.chart.render(this.renderRoot.querySelector('canvas') as HTMLCanvasElement);
       this.observeChartResize();
       this.observeCanvasResize();
+      const boundOnWheel = this.chart.onWheel.bind(this.chart);
+      this.renderRoot.addEventListener(ChartEventType.Wheel, boundOnWheel as unknown as EventListener);
     }
   }
 

@@ -7,6 +7,7 @@ export enum ChartEventType {
   LegendItemSelect = 'legendItemSelect',
   LegendItemUnselect = 'legendItemUnselect',
   WorkClick = 'wordClick',
+  Wheel = 'wheel',
 }
 
 export interface EventContext<TData> {

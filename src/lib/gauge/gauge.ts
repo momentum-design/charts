@@ -32,6 +32,10 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
     throw new Error('Method not implemented.');
   }
 
+  onWheel(): void {
+    throw new Error('Method not implemented.');
+  }
+
   protected getDefaultOptions(): GaugeOptions {
     return GaugeChart.defaults;
   }

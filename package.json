@@ -122,8 +122,8 @@
     "chart.js": "^4.3.0",
     "chartjs-adapter-moment": "^1.0.1",
     "chartjs-chart-wordcloud": "^4.3.2",
+    "chartjs-plugin-zoom": "^2.0.1",
     "chroma-js": "^2.4.2",
-    "html2canvas": "^1.4.1",
     "lit": "^2.7.5",
     "lodash-es": "^4.17.21",
     "moment": "^2.29.4"
