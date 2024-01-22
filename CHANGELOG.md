@@ -1,3 +1,16 @@
+# [1.0.0-alpha.16](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.15...v1.0.0-alpha.16) (2024-01-22)
+
+
+### Bug Fixes
+
+* **xy:**  inconsistent icon size in legend after setting markerStyle ([#44](https://github.com/momentum-design/momentum-widgets/issues/44)) ([0cf4351](https://github.com/momentum-design/momentum-widgets/commit/0cf43516a6da29bbcc8d401ed665049423fc4609))
+
+
+### Features
+
+* **bar:** bar chart supports mouse scrolling ([#45](https://github.com/momentum-design/momentum-widgets/issues/45)) ([10d1e73](https://github.com/momentum-design/momentum-widgets/commit/10d1e73efcfe63b85c90379cd7e752ffab65956f))
+* **legend:** support cancelling selection from outside events ([40367f9](https://github.com/momentum-design/momentum-widgets/commit/40367f9a26b2d51c27606e68ca1f8c9b611b631b))
+
 # [1.0.0-alpha.15](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.14...v1.0.0-alpha.15) (2023-12-28)
 
 
