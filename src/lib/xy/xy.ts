@@ -1,5 +1,4 @@
 import {
-  Chart as CJ,
   ChartConfiguration,
   ChartDataset,
   ChartOptions,
@@ -28,6 +27,8 @@ import { Chart } from '../.internal';
 import { SeriesStyleOptions, XYChartOptions, XYData } from './xy.types';
 
 export abstract class XYChart extends Chart<XYData, XYChartOptions> {
+  categoryAxisClickable: CategoryAxisClickable<Chart<XYData, XYChartOptions>> | undefined;
+
   getTableData(): TableData {
     throw new Error('Method not implemented.');
   }
@@ -54,7 +55,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
   };
 
   static readonly defaultScaleOptions = {
-    ticks: { padding: 10, maxRotation: 0 },
+    ticks: { padding: 10, maxRotation: 0, autoSkip: true },
     grid: {
       drawTicks: false,
     },
@@ -74,6 +75,9 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
 
   private hiddenDatasets: { label?: string; borderColor?: Color; backgroundColor?: Color }[] = [];
   private borderDash = [3, 3];
+  private clickedTickColor = 'black'; //TODO(yiwei): Need to support multiple themes in the future.
+  private unclickedTickColor = '#7D7F7F';
+  private defaultTickColor = '#484949';
 
   protected getConfiguration(): ChartConfiguration {
     let chartDatasets: ChartDataset<CJType, number[]>[] = [];
@@ -86,7 +90,18 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       plugins.push(zoomPlugin);
     }
     if (this.options.categoryAxis?.clickable) {
-      plugins.push(new CategoryAxisClickable(this)?.getPlugin());
+      this.categoryAxisClickable = new CategoryAxisClickable(this);
+      plugins.push(
+        this.categoryAxisClickable.getPlugin({
+          onItemClick: (label, selectedLabels) => {
+            if (this.options.categoryAxis?.clickable) {
+              if (typeof this.options.categoryAxis?.onItemClick === 'function') {
+                this.options.categoryAxis.onItemClick(label, selectedLabels);
+              }
+            }
+          },
+        }),
+      );
     }
     return {
       type: toChartJSType(this.getType()),
@@ -214,6 +229,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
               ? this.options.categoryAxis.maxLabels - 1
               : undefined,
           ticks: {
+            autoSkip: this.options.categoryAxis.autoSkip,
             autoSkipPadding: this.options.categoryAxis.ticksPadding,
             maxTicksLimit: this.options.categoryAxis.maxTicksLimit,
             color: this.options.categoryAxis.ticksColor,
@@ -240,19 +256,44 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
           }
         }
 
-        if (
-          this.options.categoryAxis.callback &&
-          (!this.options.categoryAxis.type || this.options.categoryAxis.type === 'category')
-        ) {
-          const categoryCallback = this.options.categoryAxis.callback;
-          options.scales.categoryAxis.ticks = {
-            ...options.scales.categoryAxis.ticks,
-            callback: function (val: number | string, index: number, ticks: Tick[]) {
-              return typeof categoryCallback === 'function'
-                ? categoryCallback(this.getLabelForValue(val as number), index, ticks)
-                : this.getLabelForValue(val as number);
-            },
-          };
+        if (!this.options.categoryAxis.type || this.options.categoryAxis.type === 'category') {
+          if (this.options.categoryAxis.callback) {
+            const categoryCallback = this.options.categoryAxis.callback;
+            options.scales.categoryAxis.ticks = {
+              ...options.scales.categoryAxis.ticks,
+              callback: function (val: number | string, index: number, ticks: Tick[]) {
+                return typeof categoryCallback === 'function'
+                  ? categoryCallback(this.getLabelForValue(val as number), index, ticks)
+                  : this.getLabelForValue(val as number);
+              },
+            };
+          }
+          if (this.options.categoryAxis?.clickable && this.categoryAxisClickable?.selectedLabels) {
+            const selectedLabels = this.categoryAxisClickable.selectedLabels;
+            options.scales.categoryAxis.ticks = {
+              ...options.scales.categoryAxis.ticks,
+              color: (ctx) => {
+                if (this.options.categoryAxis?.ticksColor) {
+                  return this.options.categoryAxis.ticksColor;
+                }
+                let firstTickIndex = 0;
+                let lastTickIndex = 0;
+                ctx.chart.scales.categoryAxis.ticks?.map((tick, index) => {
+                  index === 0 ? (firstTickIndex = tick.value) : (lastTickIndex = tick.value);
+                });
+                if (selectedLabels.length > 0) {
+                  const allColors = ctx.chart.data.labels?.map((label) => {
+                    return selectedLabels.indexOf(label as string) >= 0
+                      ? this.clickedTickColor
+                      : this.unclickedTickColor;
+                  });
+                  return allColors?.slice(firstTickIndex, lastTickIndex + 1) as unknown as Color;
+                } else {
+                  return this.defaultTickColor;
+                }
+              },
+            };
+          }
         }
       }
     }
@@ -287,6 +328,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
           suggestedMax: valueAxis.suggestedMax,
           suggestedMin: valueAxis.suggestedMin,
           ticks: {
+            autoSkip: valueAxis.autoSkip,
             autoSkipPadding: valueAxis.ticksPadding,
             maxTicksLimit: valueAxis.maxTicksLimit,
             color: valueAxis.ticksColor,
@@ -304,9 +346,6 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       );
     });
 
-    if (this.options.categoryAxis?.clickable) {
-      options;
-    }
     return options;
   }
 
