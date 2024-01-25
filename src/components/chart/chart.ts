@@ -73,7 +73,7 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
   options?: TOptions;
 
   @property({ type: Object, hasChanged: () => true })
-  states?: { selectedLegendItems?: LegendItem[] };
+  states?: { selectedLegendItems?: LegendItem[]; selectedCategoryItems?: string[] };
 
   private boundResizeHandler: () => void;
   private canvasResizeObserver: ResizeObserver | undefined;
@@ -132,6 +132,9 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     if (changedProperties.has('states')) {
       if (typeof this.states?.selectedLegendItems !== 'undefined') {
         this.chart?.legend?.changeSelectedItems(this.states.selectedLegendItems);
+      }
+      if (typeof this.states?.selectedCategoryItems !== 'undefined') {
+        this.chart?.categoryAxisClickablePlugin?.changeSelectedItems(this.states.selectedCategoryItems);
       }
     }
   }

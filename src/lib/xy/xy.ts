@@ -11,7 +11,7 @@ import {
 import 'chartjs-adapter-moment';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { merge } from 'lodash-es';
-import { CategoryAxisClickable, chartA11y, chartSeriesClick } from '../../core/plugins';
+import { chartA11y, chartSeriesClick } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
 import { toChartJSType } from '../../helpers/utils';
 import {
@@ -27,7 +27,7 @@ import { Chart } from '../.internal';
 import { SeriesStyleOptions, XYChartOptions, XYData } from './xy.types';
 
 export abstract class XYChart extends Chart<XYData, XYChartOptions> {
-  categoryAxisClickable: CategoryAxisClickable<Chart<XYData, XYChartOptions>> | undefined;
+  // categoryAxisClickable: CategoryAxisClickable<Chart<XYData, XYChartOptions>> | undefined;
 
   getTableData(): TableData {
     throw new Error('Method not implemented.');
@@ -90,18 +90,20 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       plugins.push(zoomPlugin);
     }
     if (this.options.categoryAxis?.clickable) {
-      this.categoryAxisClickable = new CategoryAxisClickable(this);
-      plugins.push(
-        this.categoryAxisClickable.getPlugin({
-          onItemClick: (label, selectedLabels) => {
-            if (this.options.categoryAxis?.clickable) {
-              if (typeof this.options.categoryAxis?.onItemClick === 'function') {
-                this.options.categoryAxis.onItemClick(label, selectedLabels);
+      this.enableCategoryAxisClickablePlugin();
+      if (this.categoryAxisClickablePlugin) {
+        plugins.push(
+          this.categoryAxisClickablePlugin.getPlugin({
+            onItemClick: (label, selectedItems) => {
+              if (this.options.categoryAxis?.clickable) {
+                if (typeof this.options.categoryAxis?.onItemClick === 'function') {
+                  this.options.categoryAxis.onItemClick(label, selectedItems);
+                }
               }
-            }
-          },
-        }),
-      );
+            },
+          }),
+        );
+      }
     }
     return {
       type: toChartJSType(this.getType()),
@@ -268,22 +270,22 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
               },
             };
           }
-          if (this.options.categoryAxis?.clickable && this.categoryAxisClickable?.selectedLabels) {
-            const selectedLabels = this.categoryAxisClickable.selectedLabels;
+          if (this.options.categoryAxis?.clickable && this.categoryAxisClickablePlugin?.selectedItems) {
             options.scales.categoryAxis.ticks = {
               ...options.scales.categoryAxis.ticks,
               color: (ctx) => {
                 if (this.options.categoryAxis?.ticksColor) {
                   return this.options.categoryAxis.ticksColor;
                 }
+                const selectedCategoryItems = this.categoryAxisClickablePlugin?.selectedItems ?? [];
                 let firstTickIndex = 0;
                 let lastTickIndex = 0;
                 ctx.chart.scales.categoryAxis.ticks?.map((tick, index) => {
                   index === 0 ? (firstTickIndex = tick.value) : (lastTickIndex = tick.value);
                 });
-                if (selectedLabels.length > 0) {
+                if (selectedCategoryItems.length > 0) {
                   const allColors = ctx.chart.data.labels?.map((label) => {
-                    return selectedLabels.indexOf(label as string) >= 0
+                    return selectedCategoryItems.indexOf(label as string) >= 0
                       ? this.clickedTickColor
                       : this.unclickedTickColor;
                   });
