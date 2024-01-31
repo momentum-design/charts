@@ -10,14 +10,16 @@ export class CategoryLabelSelectable<TChart extends Chart<ChartData, ChartOption
   } = {};
 
   public selectedLabels: string[] = [];
+
   public changeSelectedLabels(labels: string[]): void {
     this.selectedLabels = labels;
     if (this.chart.api) {
       this.setSelectedLabels(this.chart.api as CJ<ChartType.Bar | ChartType.Line>);
     }
   }
+
   getPlugin(opts?: {
-    selectable?: boolean;
+    labelSelectable?: boolean;
     onLabelClick?: (label: string | undefined, selectedLabels?: string[]) => void;
   }): Plugin {
     return {
@@ -60,7 +62,7 @@ export class CategoryLabelSelectable<TChart extends Chart<ChartData, ChartOption
               } else {
                 this.selectedLabels.splice(index, 1);
               }
-              if (opts?.selectable) {
+              if (opts?.labelSelectable) {
                 this.setSelectedLabels(chart, opts, activeLabel);
               } else if (typeof opts?.onLabelClick === 'function') {
                 opts.onLabelClick(activeLabel);

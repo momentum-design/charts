@@ -28,8 +28,6 @@ import { CategoryLabelSelectable } from './xy.category-label-selectable';
 import { SeriesStyleOptions, XYChartOptions, XYData } from './xy.types';
 
 export abstract class XYChart extends Chart<XYData, XYChartOptions> {
-  // categoryAxisClickable: CategoryAxisClickable<Chart<XYData, XYChartOptions>> | undefined;
-
   getTableData(): TableData {
     throw new Error('Method not implemented.');
   }
@@ -96,10 +94,10 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       if (this.categoryLabelSelectable) {
         plugins.push(
           this.categoryLabelSelectable.getPlugin({
-            selectable: this.options.categoryAxis?.selectable ?? false,
+            labelSelectable: this.options.categoryAxis?.labelSelectable ?? false,
             onLabelClick: (label: string | undefined, selectedItems: string[] | undefined) => {
               if (typeof this.options.categoryAxis?.onLabelClick === 'function') {
-                if (this.options.categoryAxis?.selectable) {
+                if (this.options.categoryAxis?.labelSelectable) {
                   this.options.categoryAxis.onLabelClick(label, selectedItems);
                 } else {
                   this.options.categoryAxis.onLabelClick(label);
@@ -275,7 +273,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
               },
             };
           }
-          if (this.options.categoryAxis?.selectable && this.categoryLabelSelectable?.selectedLabels) {
+          if (this.options.categoryAxis?.labelSelectable && this.categoryLabelSelectable?.selectedLabels) {
             options.scales.categoryAxis.ticks = {
               ...options.scales.categoryAxis.ticks,
               color: (ctx) => {
@@ -565,7 +563,8 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
 
   private isCategoryLabelSelectable(): boolean {
     return (
-      (typeof this.options.categoryAxis?.onLabelClick === 'function' || this.options.categoryAxis?.selectable) ?? false
+      (typeof this.options.categoryAxis?.onLabelClick === 'function' || this.options.categoryAxis?.labelSelectable) ??
+      false
     );
   }
 

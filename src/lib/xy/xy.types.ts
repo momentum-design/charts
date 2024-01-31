@@ -89,7 +89,7 @@ export interface CategoryAxisOptions extends AxisOptions {
   /**
    * The supported type is category, but time is not supported.
    */
-  selectable?: boolean;
+  labelSelectable?: boolean;
   onLabelClick?(label: string | undefined, selectedLabels?: string[]): void;
 }
 export interface ValueAxisOptions extends AxisOptions {
