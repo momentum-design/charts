@@ -36,6 +36,11 @@ export interface AxisOptions {
    */
   maxTicksLimit?: number;
   /**
+   *   If true, automatically calculates how many labels can be shown and hides labels accordingly. Labels will be rotated up to maxRotation before skipping any. Turn autoSkip off to show all labels no matter what.
+   * @default true
+   */
+  autoSkip?: boolean;
+  /**
    * Padding between the ticks on the horizontal axis when autoSkip is enabled.
    */
   ticksPadding?: number;
@@ -43,6 +48,10 @@ export interface AxisOptions {
    * User defined fixed step size for the scale
    */
   ticksStepSize?: number;
+  /**
+   * Color of tick
+   */
+  ticksColor?: string;
 
   callback?: (
     tickValue: number | string,
@@ -77,6 +86,11 @@ export interface CategoryAxisOptions extends AxisOptions {
   tooltipFormat?: string;
 
   maxLabels?: number;
+  /**
+   * The supported type is category, but time is not supported.
+   */
+  labelSelectable?: boolean;
+  onLabelClick?(label: string | undefined, selectedLabels?: string[]): void;
 }
 export interface ValueAxisOptions extends AxisOptions {
   /**

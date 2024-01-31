@@ -52,10 +52,6 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
     throw new Error('Method not implemented.');
   }
 
-  onWheel(): void {
-    throw new Error('Method not implemented.');
-  }
-
   getConfiguration(): ChartConfiguration<'wordCloud'> | null {
     if (Array.isArray(this.data)) {
       this.finalData = this.data.map((item) => {

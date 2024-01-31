@@ -14,24 +14,18 @@ It is a circular chart, similar to a pie chart, but unlike a pie chart, a donut 
 function showComponent() {
   const data = {
     'Brunei Darussalam': 739,
-    'Jordan': 763,
+    Jordan: 763,
     'Burkina Faso': 604,
     'Cook Islands': 509,
-    'Monaco': 205,
-    'Switzerland': 108,
+    Monaco: 205,
+    Switzerland: 108,
   };
   const options = {
     valueUnit: 'mins',
     centerLabels: [{}, { text: 'Total' }],
   };
 
-  return (
-    <mdw-chart
-      type="donut"
-      data={JSON.stringify(data)}
-      options={JSON.stringify(options)}
-    ></mdw-chart>
-  );
+  return <mdw-chart type="donut" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-chart>;
 }
 ```
 
@@ -109,12 +103,12 @@ function showComponent() {
   }, []);
 
   return (
-    <mdw-pie
+    <mdw-chart
       ref={pieRef}
       style={{ width: '80%' }}
       data={JSON.stringify(data)}
       options={JSON.stringify(options)}
-    ></mdw-pie>
+    ></mdw-chart>
   );
 }
 ```

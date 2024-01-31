@@ -4,6 +4,7 @@ import { formatBigNumber as fbn, settings, ThemeKey } from '../../core';
 import { darkenColor, formatNumber, getRandomColor, lightenColor } from '../../helpers';
 import { ChartContainer, ChartData, ChartOptions, ColorMode, Font, TableData } from '../../types';
 import { Legend } from '../legend';
+import { CategoryLabelSelectable } from '../xy/xy.category-label-selectable';
 
 export abstract class Chart<TData extends ChartData, TOptions extends ChartOptions> {
   static defaults: ChartOptions = {
@@ -172,10 +173,11 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   }
 
   abstract getTableData(): TableData;
-  abstract onWheel(event: WheelEvent): void;
-
   protected abstract getConfiguration(): any;
   protected abstract getDefaultOptions(): TOptions;
+
+  onWheel?(event: WheelEvent): void;
+  getCategoryLabelSelectable?(): CategoryLabelSelectable<typeof this>;
 }
 
 export type TypedChart = typeof Chart<ChartData, ChartOptions>;

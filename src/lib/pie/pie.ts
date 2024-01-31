@@ -11,10 +11,6 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
     throw new Error('Method not implemented.');
   }
 
-  onWheel(): void {
-    throw new Error('Method not implemented.');
-  }
-
   static readonly defaultOptions: PieChartOptions = {
     legend: {
       position: 'right',

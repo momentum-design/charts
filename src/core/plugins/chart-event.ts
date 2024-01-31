@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Chart, { ActiveElement, ChartEvent } from 'chart.js/auto';
 import { LegendClickData } from './plugin.types';
-
+// TODO: refactor this function
 const chartSeriesClick = (event: ChartEvent | any, elements: ActiveElement[] | any, chart: Chart | any): void => {
   const points = chart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true);
 
