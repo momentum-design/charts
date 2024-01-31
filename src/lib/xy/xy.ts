@@ -24,6 +24,7 @@ import {
   TableData,
 } from '../../types';
 import { Chart } from '../.internal';
+import { CategoryLabelSelectable } from './xy.category-label-selectable';
 import { SeriesStyleOptions, XYChartOptions, XYData } from './xy.types';
 
 export abstract class XYChart extends Chart<XYData, XYChartOptions> {
@@ -78,6 +79,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
   private clickedTickColor = 'black'; //TODO(yiwei): Need to support multiple themes in the future.
   private unclickedTickColor = '#7D7F7F';
   private defaultTickColor = '#484949';
+  private categoryLabelSelectable?: CategoryLabelSelectable<typeof this>;
 
   protected getConfiguration(): ChartConfiguration {
     let chartDatasets: ChartDataset<CJType, number[]>[] = [];
@@ -89,15 +91,18 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     if (this.options.scrollable) {
       plugins.push(zoomPlugin);
     }
-    if (this.options.categoryAxis?.clickable) {
-      this.enableCategoryAxisClickablePlugin();
-      if (this.categoryAxisClickablePlugin) {
+    if (this.isCategoryLabelSelectable()) {
+      this.getCategoryLabelSelectable();
+      if (this.categoryLabelSelectable) {
         plugins.push(
-          this.categoryAxisClickablePlugin.getPlugin({
-            onItemClick: (label, selectedItems) => {
-              if (this.options.categoryAxis?.clickable) {
-                if (typeof this.options.categoryAxis?.onItemClick === 'function') {
-                  this.options.categoryAxis.onItemClick(label, selectedItems);
+          this.categoryLabelSelectable.getPlugin({
+            selectable: this.options.categoryAxis?.selectable ?? false,
+            onLabelClick: (label: string | undefined, selectedItems: string[] | undefined) => {
+              if (typeof this.options.categoryAxis?.onLabelClick === 'function') {
+                if (this.options.categoryAxis?.selectable) {
+                  this.options.categoryAxis.onLabelClick(label, selectedItems);
+                } else {
+                  this.options.categoryAxis.onLabelClick(label);
                 }
               }
             },
@@ -270,22 +275,22 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
               },
             };
           }
-          if (this.options.categoryAxis?.clickable && this.categoryAxisClickablePlugin?.selectedItems) {
+          if (this.options.categoryAxis?.selectable && this.categoryLabelSelectable?.selectedLabels) {
             options.scales.categoryAxis.ticks = {
               ...options.scales.categoryAxis.ticks,
               color: (ctx) => {
                 if (this.options.categoryAxis?.ticksColor) {
                   return this.options.categoryAxis.ticksColor;
                 }
-                const selectedCategoryItems = this.categoryAxisClickablePlugin?.selectedItems ?? [];
+                const selectedLabels = this.categoryLabelSelectable?.selectedLabels ?? [];
                 let firstTickIndex = 0;
                 let lastTickIndex = 0;
                 ctx.chart.scales.categoryAxis.ticks?.map((tick, index) => {
                   index === 0 ? (firstTickIndex = tick.value) : (lastTickIndex = tick.value);
                 });
-                if (selectedCategoryItems.length > 0) {
+                if (selectedLabels.length > 0) {
                   const allColors = ctx.chart.data.labels?.map((label) => {
-                    return selectedCategoryItems.indexOf(label as string) >= 0
+                    return selectedLabels.indexOf(label as string) >= 0
                       ? this.clickedTickColor
                       : this.unclickedTickColor;
                   });
@@ -558,6 +563,12 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     return Array.from(mergedKeys);
   }
 
+  private isCategoryLabelSelectable(): boolean {
+    return (
+      (typeof this.options.categoryAxis?.onLabelClick === 'function' || this.options.categoryAxis?.selectable) ?? false
+    );
+  }
+
   onWheel(event: WheelEvent): void {
     if (this.options?.scrollable && event && event.deltaY !== 0) {
       this.api?.pan({
@@ -565,5 +576,10 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       });
       event.preventDefault();
     }
+  }
+
+  getCategoryLabelSelectable(): CategoryLabelSelectable<typeof this> {
+    this.categoryLabelSelectable = this.categoryLabelSelectable ?? new CategoryLabelSelectable(this);
+    return this.categoryLabelSelectable;
   }
 }

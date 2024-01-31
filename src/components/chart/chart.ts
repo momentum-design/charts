@@ -73,7 +73,7 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
   options?: TOptions;
 
   @property({ type: Object, hasChanged: () => true })
-  states?: { selectedLegendItems?: LegendItem[]; selectedCategoryItems?: string[] };
+  states?: { selectedLegendItems?: LegendItem[]; selectedCategoryLabels?: string[] };
 
   private boundResizeHandler: () => void;
   private canvasResizeObserver: ResizeObserver | undefined;
@@ -133,8 +133,8 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
       if (typeof this.states?.selectedLegendItems !== 'undefined') {
         this.chart?.legend?.changeSelectedItems(this.states.selectedLegendItems);
       }
-      if (typeof this.states?.selectedCategoryItems !== 'undefined') {
-        this.chart?.categoryAxisClickablePlugin?.changeSelectedItems(this.states.selectedCategoryItems);
+      if (typeof this.states?.selectedCategoryLabels !== 'undefined' && this.chart?.getCategoryLabelSelectable) {
+        this.chart.getCategoryLabelSelectable().changeSelectedLabels(this.states.selectedCategoryLabels);
       }
     }
   }
@@ -143,7 +143,7 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     this.unobserveResize();
 
     if (this.chart) {
-      this.renderRoot.removeEventListener(ChartEventType.Wheel, this.chart.onWheel as unknown as EventListener);
+      this.renderRoot.removeEventListener(ChartEventType.Wheel, this.chart.onWheel as EventListener);
       this.chart.destroy();
     }
   }
@@ -165,8 +165,9 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
       this.chart.render(this.renderRoot.querySelector('canvas') as HTMLCanvasElement);
       this.observeChartResize();
       this.observeCanvasResize();
-      const boundOnWheel = this.chart.onWheel.bind(this.chart);
-      this.renderRoot.addEventListener(ChartEventType.Wheel, boundOnWheel as unknown as EventListener);
+      if (this.chart.onWheel) {
+        this.renderRoot.addEventListener(ChartEventType.Wheel, this.chart.onWheel.bind(this.chart) as EventListener);
+      }
     }
   }
 

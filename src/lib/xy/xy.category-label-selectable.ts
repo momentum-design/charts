@@ -1,24 +1,27 @@
 import { Chart as CJ, ChartEvent, Plugin } from 'chart.js/auto';
-import { Chart } from '../../lib/.internal';
 import { ChartData, ChartOptions, ChartType } from '../../types';
+import { Chart } from '../.internal';
 
-export class CategoryAxisClickable<TChart extends Chart<ChartData, ChartOptions>> {
+export class CategoryLabelSelectable<TChart extends Chart<ChartData, ChartOptions>> {
   constructor(public chart: TChart) {}
 
   private datasetColors: {
     [key: string]: string[];
   } = {};
 
-  public selectedItems: string[] = [];
-  public changeSelectedItems(items: string[]): void {
-    this.selectedItems = items;
+  public selectedLabels: string[] = [];
+  public changeSelectedLabels(labels: string[]): void {
+    this.selectedLabels = labels;
     if (this.chart.api) {
-      this.setSelectedItems(this.chart.api as CJ<ChartType.Bar | ChartType.Line>);
+      this.setSelectedLabels(this.chart.api as CJ<ChartType.Bar | ChartType.Line>);
     }
   }
-  getPlugin(opts?: { onItemClick?: (label: string | undefined, selectedItems: string[]) => void }): Plugin {
+  getPlugin(opts?: {
+    selectable?: boolean;
+    onLabelClick?: (label: string | undefined, selectedLabels?: string[]) => void;
+  }): Plugin {
     return {
-      id: 'categoryClickable',
+      id: 'categoryLabelSelectable',
       start: () => {},
       beforeInit: () => {},
       afterEvent: (
@@ -50,14 +53,18 @@ export class CategoryAxisClickable<TChart extends Chart<ChartData, ChartOptions>
             const labelIndex = isHorizontal ? yScale.getValueForPixel(y) : xScale.getValueForPixel(x);
             const baseValue = isHorizontal ? yScale.getBaseValue() : xScale.getBaseValue();
             if (labelIndex != undefined && labelIndex >= 0 && labelIndex >= baseValue) {
-              const activeItem = labels[labelIndex] as string;
-              const index = this.selectedItems.findIndex((item) => item === activeItem);
+              const activeLabel = labels[labelIndex] as string;
+              const index = this.selectedLabels.findIndex((item) => item === activeLabel);
               if (index === -1) {
-                this.selectedItems.push(activeItem as string);
+                this.selectedLabels.push(activeLabel as string);
               } else {
-                this.selectedItems.splice(index, 1);
+                this.selectedLabels.splice(index, 1);
               }
-              this.setSelectedItems(chart, opts, activeItem);
+              if (opts?.selectable) {
+                this.setSelectedLabels(chart, opts, activeLabel);
+              } else if (typeof opts?.onLabelClick === 'function') {
+                opts.onLabelClick(activeLabel);
+              }
             }
           }
         }
@@ -65,13 +72,13 @@ export class CategoryAxisClickable<TChart extends Chart<ChartData, ChartOptions>
     };
   }
 
-  setSelectedItems(
+  setSelectedLabels(
     chart: CJ<'bar' | 'line'>,
-    opts?: { onItemClick?: (label: string | undefined, selectedItems: string[]) => void },
-    activeItem?: string,
+    opts?: { onLabelClick?: (label: string | undefined, selectedLabels?: string[]) => void },
+    activeLabel?: string,
   ) {
     const changedColorStatus = chart.data.labels?.map((label) => {
-      return this.selectedItems.indexOf(label as string) >= 0;
+      return this.selectedLabels.indexOf(label as string) >= 0;
     });
     if (changedColorStatus && changedColorStatus.length > 0) {
       chart.data.datasets.forEach((dataset) => {
@@ -87,7 +94,7 @@ export class CategoryAxisClickable<TChart extends Chart<ChartData, ChartOptions>
           }
           this.datasetColors[dataset.label] = [...backgroundColors];
         }
-        if (this.selectedItems.length > 0) {
+        if (this.selectedLabels.length > 0) {
           backgroundColors = changedColorStatus.map((value, index) =>
             value ? backgroundColors[index] : backgroundColors[index] + '4D',
           );
@@ -95,8 +102,8 @@ export class CategoryAxisClickable<TChart extends Chart<ChartData, ChartOptions>
         dataset.backgroundColor = backgroundColors;
       });
     }
-    if (typeof opts?.onItemClick === 'function') {
-      opts.onItemClick(activeItem, this.selectedItems);
+    if (typeof opts?.onLabelClick === 'function') {
+      opts.onLabelClick(activeLabel, this.selectedLabels);
     }
     chart.update();
   }

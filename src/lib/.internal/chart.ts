@@ -1,10 +1,10 @@
 import { Chart as CJ, FontSpec } from 'chart.js/auto';
 import { merge } from 'lodash-es';
 import { formatBigNumber as fbn, settings, ThemeKey } from '../../core';
-import { CategoryAxisClickable } from '../../core/plugins';
 import { darkenColor, formatNumber, getRandomColor, lightenColor } from '../../helpers';
 import { ChartContainer, ChartData, ChartOptions, ColorMode, Font, TableData } from '../../types';
 import { Legend } from '../legend';
+import { CategoryLabelSelectable } from '../xy/xy.category-label-selectable';
 
 export abstract class Chart<TData extends ChartData, TOptions extends ChartOptions> {
   static defaults: ChartOptions = {
@@ -24,7 +24,6 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   canvasElement?: HTMLCanvasElement;
   rootElement?: HTMLElement;
   legend?: Legend<typeof this>;
-  categoryAxisClickablePlugin?: CategoryAxisClickable<typeof this>;
 
   private colors?: string[];
   private lastColor?: string;
@@ -69,10 +68,6 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
 
   protected enableLegend(): void {
     this.legend = new Legend(this);
-  }
-
-  protected enableCategoryAxisClickablePlugin(): void {
-    this.categoryAxisClickablePlugin = new CategoryAxisClickable(this);
   }
 
   protected getColorsForKeys(keys: string[]): string[] {
@@ -178,10 +173,11 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   }
 
   abstract getTableData(): TableData;
-  abstract onWheel(event: WheelEvent): void;
-
   protected abstract getConfiguration(): any;
   protected abstract getDefaultOptions(): TOptions;
+
+  onWheel?(event: WheelEvent): void;
+  getCategoryLabelSelectable?(): CategoryLabelSelectable<typeof this>;
 }
 
 export type TypedChart = typeof Chart<ChartData, ChartOptions>;

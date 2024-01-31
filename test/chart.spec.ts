@@ -1,4 +1,5 @@
 import { Chart } from '../src/lib/.internal';
+import { CategoryLabelSelectable } from '../src/lib/xy/xy.category-label-selectable';
 import { ChartOptions, ColorMode, TableData } from '../src/types';
 
 interface TestChartOptions extends ChartOptions {
@@ -14,7 +15,7 @@ class TestChart extends Chart<any, TestChartOptions> {
     throw new Error('Method not implemented.');
   }
 
-  onWheel(): void {
+  getCategoryLabelSelectable(): CategoryLabelSelectable<this> {
     throw new Error('Method not implemented.');
   }
 
