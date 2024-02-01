@@ -237,7 +237,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
             autoSkip: this.options.categoryAxis.autoSkip,
             autoSkipPadding: this.options.categoryAxis.ticksPadding,
             maxTicksLimit: this.options.categoryAxis.maxTicksLimit,
-            color: this.options.categoryAxis.ticksColor,
+            color: this.options.categoryAxis.labelColor,
           },
           display: this.options.categoryAxis.display,
         };
@@ -277,8 +277,8 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
             options.scales.categoryAxis.ticks = {
               ...options.scales.categoryAxis.ticks,
               color: (ctx) => {
-                if (this.options.categoryAxis?.ticksColor) {
-                  return this.options.categoryAxis.ticksColor;
+                if (this.options.categoryAxis?.labelColor) {
+                  return this.options.categoryAxis.labelColor as Color;
                 }
                 const selectedLabels = this.categoryLabelSelectable?.selectedLabels ?? [];
                 let firstTickIndex = 0;
@@ -292,7 +292,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
                       ? this.clickedTickColor
                       : this.unclickedTickColor;
                   });
-                  return allColors?.slice(firstTickIndex, lastTickIndex + 1) as unknown as Color;
+                  return (allColors?.slice(firstTickIndex, lastTickIndex + 1) ?? []) as unknown as Color;
                 } else {
                   return this.defaultTickColor;
                 }
@@ -336,15 +336,16 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
             autoSkip: valueAxis.autoSkip,
             autoSkipPadding: valueAxis.ticksPadding,
             maxTicksLimit: valueAxis.maxTicksLimit,
-            color: valueAxis.ticksColor,
+            color: valueAxis.labelColor,
             callback: (tickValue: number | string, index: number) => {
               return typeof valueAxis.callback === 'function'
                 ? valueAxis.callback(tickValue, index)
-                : Number(tickValue)
-                ? this.formatBigNumber(tickValue as number)
+                : typeof tickValue === 'number'
+                ? this.formatBigNumber(tickValue)
                 : tickValue;
             },
             stepSize: valueAxis.ticksStepSize,
+            precision: this.options.valuePrecision,
           },
         },
         { position: valueAxis.position },

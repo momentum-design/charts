@@ -51,7 +51,7 @@ export interface AxisOptions {
   /**
    * Color of tick
    */
-  ticksColor?: string;
+  labelColor?: string | string[];
 
   callback?: (
     tickValue: number | string,
