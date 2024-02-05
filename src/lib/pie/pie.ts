@@ -2,7 +2,15 @@ import { Chart as CJ, ChartConfiguration, ChartDataset, ChartOptions, ChartType 
 import { merge } from 'lodash-es';
 import { chartA11y, chartLegendA11y } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
-import { ChartDataView, ChartType, GenericDataModel, inactiveColor, LegendItem, TableData } from '../../types';
+import {
+  ChartDataView,
+  ChartType,
+  GenericDataModel,
+  inactiveColor,
+  LegendItem,
+  Position,
+  TableData,
+} from '../../types';
 import { Chart } from '../.internal';
 import { PieChartOptions, PieData } from './pie.types';
 
@@ -13,7 +21,7 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
 
   static readonly defaultOptions: PieChartOptions = {
     legend: {
-      position: 'right',
+      position: Position.Right,
     },
   };
 

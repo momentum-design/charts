@@ -1,6 +1,5 @@
 import { Font, LegendOptions, Padding } from '.';
 
-export type Position = 'left' | 'top' | 'right' | 'bottom';
 export type MarkerStyle = 'circle' | 'rect' | 'rectRounded' | 'rectRot' | 'triangle' | false;
 export type SeriesType = 'bar' | 'line' | 'area' | 'dashed';
 
@@ -88,4 +87,12 @@ export enum ColorMode {
   Random = 'random',
   Lighten = 'lighten',
   Darken = 'darken',
+}
+
+export enum Position {
+  Left = 'left',
+  Top = 'top',
+  Right = 'right',
+  Bottom = 'bottom',
+  Center = 'center',
 }

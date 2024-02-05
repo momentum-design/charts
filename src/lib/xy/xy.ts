@@ -1,7 +1,7 @@
 import {
   ChartConfiguration,
   ChartDataset,
-  ChartOptions,
+  ChartOptions as CJOptions,
   ChartType as CJType,
   Color,
   Plugin as CJPlugin,
@@ -21,6 +21,7 @@ import {
   inactiveColor,
   LegendItem,
   MarkerStyle,
+  Position,
   TableData,
 } from '../../types';
 import { Chart } from '../.internal';
@@ -37,11 +38,9 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       gridDisplay: true,
       display: true,
       stacked: false,
-      ticksPadding: 3,
-      maxTicksLimit: 11,
     },
     legend: {
-      position: 'bottom',
+      position: Position.Bottom,
     },
     scrollDirection: 'y',
   };
@@ -49,8 +48,6 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     gridDisplay: true,
     display: true,
     stacked: false,
-    ticksPadding: 20,
-    maxTicksLimit: 11,
   };
 
   static readonly defaultScaleOptions = {
@@ -74,9 +71,13 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
 
   private hiddenDatasets: { label?: string; borderColor?: Color; backgroundColor?: Color }[] = [];
   private borderDash = [3, 3];
-  private clickedTickColor = 'black'; //TODO(yiwei): Need to support multiple themes in the future.
-  private unclickedTickColor = '#7D7F7F';
-  private defaultTickColor = '#484949';
+  private clickedLabelColor = 'black'; //TODO(yiwei): Need to support multiple themes in the future.
+  private unclickedLabelColor = '#7D7F7F';
+  private defaultLabelColor = '#484949';
+  private defaultMinTicksLimit = 2;
+  private defaultPaddingForX = 100;
+  private defaultPaddingCategoryAxisForY = 20;
+  private defaultPaddingValueAxisForY = 50;
   private categoryLabelSelectable?: CategoryLabelSelectable<typeof this>;
 
   protected getConfiguration(): ChartConfiguration {
@@ -140,7 +141,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     }
   }
 
-  private getChartOptions(): ChartOptions {
+  private getChartOptions(): CJOptions {
     this.options.legend = this.options.legend || {};
     if (!this.options.legend.display) {
       this.options.legend.display = !(this.options.categoryAxis?.enableColor && this.chartData?.series.length <= 1);
@@ -155,11 +156,11 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     };
 
     this.enableLegend();
-    const options: ChartOptions = {
+    const options: CJOptions = {
       onClick: chartSeriesClick,
       maintainAspectRatio: false,
       responsive: true,
-      indexAxis: this.isHorizontal(),
+      indexAxis: this.getIndexAxis(),
       plugins: {
         title: {
           display: !!this.options.title,
@@ -235,7 +236,6 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
               : undefined,
           ticks: {
             autoSkip: this.options.categoryAxis.autoSkip,
-            autoSkipPadding: this.options.categoryAxis.ticksPadding,
             maxTicksLimit: this.options.categoryAxis.maxTicksLimit,
             color: this.options.categoryAxis.labelColor,
           },
@@ -245,7 +245,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
         if (this.options.categoryAxis.position) {
           options.scales.categoryAxis.position = this.options.categoryAxis.position;
         } else {
-          options.scales.categoryAxis.position = this.isHorizontal() === 'x' ? 'bottom' : 'left';
+          options.scales.categoryAxis.position = this.isHorizontal() ? Position.Left : Position.Bottom;
         }
         options.scales.categoryAxis.ticks = options.scales.categoryAxis.ticks || {};
         if (this.options.categoryAxis.type) {
@@ -289,12 +289,12 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
                 if (selectedLabels.length > 0) {
                   const allColors = ctx.chart.data.labels?.map((label) => {
                     return selectedLabels.indexOf(label as string) >= 0
-                      ? this.clickedTickColor
-                      : this.unclickedTickColor;
+                      ? this.clickedLabelColor
+                      : this.unclickedLabelColor;
                   });
                   return (allColors?.slice(firstTickIndex, lastTickIndex + 1) ?? []) as unknown as Color;
                 } else {
-                  return this.defaultTickColor;
+                  return this.defaultLabelColor;
                 }
               },
             };
@@ -309,9 +309,9 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     this.options.valueAxes.forEach((valueAxis, index) => {
       valueAxis = merge({}, XYChart.defaultValueAxisOptions, valueAxis);
       if (!valueAxis.position) {
-        valueAxis.position = this.isHorizontal() === 'x' ? 'left' : 'bottom';
+        valueAxis.position = this.isHorizontal() ? Position.Bottom : Position.Left;
       }
-      const valueAxisKey = 'valueAxis' + (index > 0 ? '_' + index : '');
+      const valueAxisKey = this.getValueAxisAlias(index);
       options.scales = options.scales || {};
       options.scales[valueAxisKey] = merge(
         {},
@@ -334,7 +334,6 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
           suggestedMin: valueAxis.suggestedMin,
           ticks: {
             autoSkip: valueAxis.autoSkip,
-            autoSkipPadding: valueAxis.ticksPadding,
             maxTicksLimit: valueAxis.maxTicksLimit,
             color: valueAxis.labelColor,
             callback: (tickValue: number | string, index: number) => {
@@ -448,8 +447,8 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
   private setAxisIDs(dataset: ChartDataset<CJType, number[]>, valueAxisIndex?: number): ChartDataset<CJType, number[]> {
     dataset = dataset as ChartDataset<'bar', number[]> | ChartDataset<'line', number[]>;
     const valueAxisKey = 'valueAxis' + (valueAxisIndex && valueAxisIndex > 0 ? '_' + valueAxisIndex : '');
-    dataset.yAxisID = this.isHorizontal() === 'x' ? valueAxisKey : 'categoryAxis';
-    dataset.xAxisID = this.isHorizontal() === 'x' ? 'categoryAxis' : valueAxisKey;
+    dataset.yAxisID = this.isHorizontal() ? 'categoryAxis' : valueAxisKey;
+    dataset.xAxisID = this.isHorizontal() ? valueAxisKey : 'categoryAxis';
     return dataset;
   }
 
@@ -494,20 +493,24 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     return result;
   }
 
-  private isHorizontal(): 'x' | 'y' {
+  private getIndexAxis(): 'x' | 'y' {
+    return this.isHorizontal() ? 'y' : 'x';
+  }
+
+  private isHorizontal(): boolean {
     const firstValueAxis = this.options.valueAxes?.[0];
     if (!this.options.categoryAxis?.position && !firstValueAxis?.position) {
       if (!this.options.categoryAxis) {
         this.options.categoryAxis = {};
       }
-      this.options.categoryAxis.position = this.getType() === ChartType.Bar ? 'left' : 'bottom';
+      this.options.categoryAxis.position = this.getType() === ChartType.Bar ? Position.Left : Position.Bottom;
     }
     const isHorizontal =
-      this.options.categoryAxis?.position === 'left' ||
-      this.options.categoryAxis?.position === 'right' ||
-      firstValueAxis?.position === 'top' ||
-      firstValueAxis?.position === 'bottom';
-    return isHorizontal ? 'y' : 'x';
+      this.options.categoryAxis?.position === Position.Left ||
+      this.options.categoryAxis?.position === Position.Right ||
+      firstValueAxis?.position === Position.Top ||
+      firstValueAxis?.position === Position.Bottom;
+    return isHorizontal;
   }
 
   protected abstract getType(): ChartType;
@@ -567,6 +570,71 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       (typeof this.options.categoryAxis?.onLabelClick === 'function' || this.options.categoryAxis?.labelSelectable) ??
       false
     );
+  }
+
+  calculateMaxLimitTicks(options: CJOptions): void {
+    const scales = options.scales;
+    if (scales) {
+      const categoryScale = scales.categoryAxis;
+      if (categoryScale?.ticks && categoryScale.ticks.maxTicksLimit === undefined && this.options.categoryAxis) {
+        categoryScale.ticks.maxTicksLimit = this.getMaxLimitTicks(
+          'categoryAxis',
+          this.options.categoryAxis.ticksPadding,
+        );
+      }
+      this.options.valueAxes?.forEach((valueAxis, index) => {
+        const valueAxisKey = this.getValueAxisAlias(index);
+        const valueScale = scales[valueAxisKey];
+        if (valueScale?.ticks && valueScale.ticks.maxTicksLimit === undefined) {
+          valueScale.ticks.maxTicksLimit = this.getMaxLimitTicks('valueAxis', valueAxis.ticksPadding);
+        }
+      });
+    }
+  }
+
+  private getMaxLimitTicks(type: 'categoryAxis' | 'valueAxis', ticksPadding?: number): number {
+    ticksPadding = ticksPadding ?? this.getDefaultTicksPadding(type);
+    let limitTicks = 0;
+    let paddingTop = 0;
+    let paddingBottom = 0;
+    let paddingLeft = 0;
+    let paddingRight = 0;
+    if (this.options.padding) {
+      if (typeof this.options.padding === 'number') {
+        paddingTop = paddingBottom = paddingLeft = paddingRight = this.options.padding;
+      } else {
+        paddingTop = this.options.padding.top ?? 0;
+        paddingBottom = this.options.padding.bottom ?? 0;
+        paddingLeft = this.options.padding.left ?? 0;
+        paddingRight = this.options.padding.right ?? 0;
+      }
+    }
+    let xLimitTicks = 0;
+    if (this.rootElement?.offsetWidth) {
+      xLimitTicks = Math.ceil((this.rootElement.offsetWidth - (paddingLeft + paddingRight)) / ticksPadding);
+    }
+    let yLimitTicks = 0;
+    if (this.rootElement?.offsetHeight) {
+      yLimitTicks = Math.ceil((this.rootElement.offsetHeight - (paddingTop + paddingBottom)) / ticksPadding);
+    }
+    if (type === 'categoryAxis') {
+      limitTicks = this.isHorizontal() ? yLimitTicks : xLimitTicks;
+    } else {
+      limitTicks = this.isHorizontal() ? xLimitTicks : yLimitTicks;
+    }
+    return Math.max(limitTicks, this.defaultMinTicksLimit);
+  }
+
+  private getDefaultTicksPadding(type: string): number {
+    if (type === 'categoryAxis') {
+      return this.isHorizontal() ? this.defaultPaddingCategoryAxisForY : this.defaultPaddingForX;
+    } else {
+      return this.isHorizontal() ? this.defaultPaddingForX : this.defaultPaddingValueAxisForY;
+    }
+  }
+
+  private getValueAxisAlias(index: number): string {
+    return 'valueAxis' + (index > 0 ? '_' + index : '');
   }
 
   onWheel(event: WheelEvent): void {
