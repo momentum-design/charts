@@ -2,7 +2,7 @@
  * The default options for xy chart.
  */
 import { Tick, TimeUnit } from 'chart.js';
-import { ChartOptions, JsonData, MarkerStyle, TableData } from '../../types';
+import { ChartOptions, JsonData, MarkerStyle, Position, TableData } from '../../types';
 /**
  * Interface `AxisOptions` provides a set of configurations for the axis in a chart.
  */
@@ -18,7 +18,7 @@ export interface AxisOptions {
   /**
    * The location of the axis on the chart.
    */
-  position?: 'left' | 'right' | 'top' | 'bottom' | 'center';
+  position?: Position;
   /**
    * Should the data be stacked.
    */

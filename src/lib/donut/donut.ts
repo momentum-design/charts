@@ -5,7 +5,7 @@ import {
 } from 'chart.js/auto';
 import { cloneDeep } from 'lodash-es';
 import { getFontStyleAbbreviation } from '../../core';
-import { ChartType } from '../../types';
+import { ChartType, Position } from '../../types';
 import { PieChart } from '../pie';
 import { CenterLabel, DonutChartOptions, DonutData } from './donut.type';
 
@@ -13,7 +13,7 @@ export class DonutChart extends PieChart<DonutData, DonutChartOptions> {
   static readonly defaults: DonutChartOptions = {
     innerRadius: '80%',
     legend: {
-      position: 'right',
+      position: Position.Right,
     },
     centerLabels: [{}, {}],
   };

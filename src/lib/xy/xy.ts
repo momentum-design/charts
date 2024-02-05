@@ -21,6 +21,7 @@ import {
   inactiveColor,
   LegendItem,
   MarkerStyle,
+  Position,
   TableData,
 } from '../../types';
 import { Chart } from '../.internal';
@@ -39,7 +40,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       stacked: false,
     },
     legend: {
-      position: 'bottom',
+      position: Position.Bottom,
     },
     scrollDirection: 'y',
   };
@@ -235,7 +236,6 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
               : undefined,
           ticks: {
             autoSkip: this.options.categoryAxis.autoSkip,
-            // autoSkipPadding: this.options.categoryAxis.ticksPadding,
             maxTicksLimit: this.options.categoryAxis.maxTicksLimit,
             color: this.options.categoryAxis.labelColor,
           },
@@ -245,7 +245,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
         if (this.options.categoryAxis.position) {
           options.scales.categoryAxis.position = this.options.categoryAxis.position;
         } else {
-          options.scales.categoryAxis.position = this.isHorizontal() ? 'left' : 'bottom';
+          options.scales.categoryAxis.position = this.isHorizontal() ? Position.Left : Position.Bottom;
         }
         options.scales.categoryAxis.ticks = options.scales.categoryAxis.ticks || {};
         if (this.options.categoryAxis.type) {
@@ -309,7 +309,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     this.options.valueAxes.forEach((valueAxis, index) => {
       valueAxis = merge({}, XYChart.defaultValueAxisOptions, valueAxis);
       if (!valueAxis.position) {
-        valueAxis.position = this.isHorizontal() ? 'bottom' : 'left';
+        valueAxis.position = this.isHorizontal() ? Position.Bottom : Position.Left;
       }
       const valueAxisKey = this.getValueAxisAlias(index);
       options.scales = options.scales || {};
@@ -334,7 +334,6 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
           suggestedMin: valueAxis.suggestedMin,
           ticks: {
             autoSkip: valueAxis.autoSkip,
-            // autoSkipPadding: valueAxis.ticksPadding,
             maxTicksLimit: valueAxis.maxTicksLimit,
             color: valueAxis.labelColor,
             callback: (tickValue: number | string, index: number) => {
@@ -504,13 +503,13 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       if (!this.options.categoryAxis) {
         this.options.categoryAxis = {};
       }
-      this.options.categoryAxis.position = this.getType() === ChartType.Bar ? 'left' : 'bottom';
+      this.options.categoryAxis.position = this.getType() === ChartType.Bar ? Position.Left : Position.Bottom;
     }
     const isHorizontal =
-      this.options.categoryAxis?.position === 'left' ||
-      this.options.categoryAxis?.position === 'right' ||
-      firstValueAxis?.position === 'top' ||
-      firstValueAxis?.position === 'bottom';
+      this.options.categoryAxis?.position === Position.Left ||
+      this.options.categoryAxis?.position === Position.Right ||
+      firstValueAxis?.position === Position.Top ||
+      firstValueAxis?.position === Position.Bottom;
     return isHorizontal;
   }
 
