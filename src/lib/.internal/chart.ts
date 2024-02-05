@@ -1,4 +1,4 @@
-import { Chart as CJ, FontSpec } from 'chart.js/auto';
+import { Chart as CJ, ChartConfiguration, ChartOptions as CJOptions, FontSpec } from 'chart.js/auto';
 import { merge } from 'lodash-es';
 import { formatBigNumber as fbn, settings, ThemeKey } from '../../core';
 import { darkenColor, formatNumber, getRandomColor, lightenColor } from '../../helpers';
@@ -47,10 +47,19 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   }
 
   render(container: ChartContainer): void {
-    const config = this.getConfiguration();
-    this.api = new CJ(container, config);
+    let config = this.getConfiguration();
+    this.api = new CJ(container, {
+      type: config.type,
+      plugins: config.plugins,
+    } as ChartConfiguration);
     this.canvasElement = this.api.canvas;
     this.rootElement = this.canvasElement.parentElement || this.api.canvas;
+    if (this.calculateMaxLimitTicks) {
+      this.calculateMaxLimitTicks(config.options);
+    }
+    this.api.data = config.data;
+    this.api.options = config.options;
+    this.api.update();
   }
 
   resize(): void {
@@ -178,6 +187,7 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
 
   onWheel?(event: WheelEvent): void;
   getCategoryLabelSelectable?(): CategoryLabelSelectable<typeof this>;
+  calculateMaxLimitTicks?(options: CJOptions): void;
 }
 
 export type TypedChart = typeof Chart<ChartData, ChartOptions>;

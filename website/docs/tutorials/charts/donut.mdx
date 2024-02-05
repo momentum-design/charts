@@ -25,7 +25,14 @@ function showComponent() {
     centerLabels: [{}, { text: 'Total' }],
   };
 
-  return <mdw-chart type="donut" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-chart>;
+  return (
+    <mdw-chart
+      type="donut"
+      style={{ width: '40%' }}
+      data={JSON.stringify(data)}
+      options={JSON.stringify(options)}
+    ></mdw-chart>
+  );
 }
 ```
 
@@ -72,19 +79,18 @@ function showComponent() {
 function showComponent() {
   const data = [
     {
-      A: '13',
-      B: '17',
-      C: '8',
-      D: '10',
-      E: '40',
-      F: '51',
-      G: '31',
+      'Brunei Darussalam': 739,
+      Jordan: 763,
+      'Burkina Faso': 604,
+      'Cook Islands': 509,
+      Monaco: 205,
+      Switzerland: 108,
     },
   ];
   const options = {
     innerRadius: '80%',
     legend: {
-      isLegendClick: true,
+      selectable: true,
     },
   };
 
@@ -95,17 +101,18 @@ function showComponent() {
   const pieRef = useRef(null);
   useEffect(() => {
     const pieElement = pieRef.current;
-    pieElement.addEventListener('onLegendClick', handleLegendClick);
+    pieElement.addEventListener('onItemClick', handleLegendClick);
 
     return () => {
-      pieElement.removeEventListener('onLegendClick', handleLegendClick);
+      pieElement.removeEventListener('onItemClick', handleLegendClick);
     };
   }, []);
 
   return (
     <mdw-chart
+      type="donut"
       ref={pieRef}
-      style={{ width: '80%' }}
+      style={{ width: '40%' }}
       data={JSON.stringify(data)}
       options={JSON.stringify(options)}
     ></mdw-chart>
