@@ -6,174 +6,170 @@ sidebar_position: 105
 
 Column chart provides a way of showing data values represented as vertical bars. It is sometimes used to show trend data, and the comparison of multiple data sets side by side.
 
-```jsx live
-function showComponent() {
-  const data = [
+```jsx live noInline
+const data = [
+  {
+    date: 'January',
+    'New Mexico': 8757,
+    Florida: 5588,
+    Nevada: 7370,
+    Wyoming: 8478,
+    Arkansas: 2174,
+  },
+  {
+    date: 'February',
+    'New Mexico': 2602,
+    Florida: 8134,
+    Nevada: 198,
+    Wyoming: 1204,
+    Arkansas: 894,
+  },
+  {
+    date: 'March',
+    'New Mexico': 4191,
+    Florida: 3375,
+    Nevada: 3473,
+    Wyoming: 6359,
+    Arkansas: 7669,
+  },
+  {
+    date: 'April',
+    'New Mexico': 7684,
+    Florida: 8590,
+    Nevada: 3483,
+    Wyoming: 792,
+    Arkansas: 9651,
+  },
+  {
+    date: 'May',
+    'New Mexico': 5332,
+    Florida: 5670,
+    Nevada: 3803,
+    Wyoming: 8538,
+    Arkansas: 7468,
+  },
+  {
+    date: 'June',
+    'New Mexico': 8579,
+    Florida: 627,
+    Nevada: 1531,
+    Wyoming: 6598,
+    Arkansas: 3762,
+  },
+  {
+    date: 'July',
+    'New Mexico': 3409,
+    Florida: 2120,
+    Nevada: 7987,
+    Wyoming: 6407,
+    Arkansas: 6416,
+  },
+  {
+    date: 'August',
+    'New Mexico': 5513,
+    Florida: 6070,
+    Nevada: 3558,
+    Wyoming: 351,
+    Arkansas: 8387,
+  },
+  {
+    date: 'September',
+    'New Mexico': 1015,
+    Florida: 4560,
+    Nevada: 6241,
+    Wyoming: 6344,
+    Arkansas: 7394,
+  },
+  {
+    date: 'October',
+    'New Mexico': 3060,
+    Florida: 5139,
+    Nevada: 7757,
+    Wyoming: 3808,
+    Arkansas: 5121,
+  },
+  {
+    date: 'November',
+    'New Mexico': 4060,
+    Florida: 7139,
+    Nevada: 8757,
+    Wyoming: 5808,
+    Arkansas: 3121,
+  },
+  {
+    date: 'December',
+    'New Mexico': 5060,
+    Florida: 7139,
+    Nevada: 10757,
+    Wyoming: 6808,
+    Arkansas: 2121,
+  },
+];
+const initialOptions = {
+  categoryAxis: {
+    stacked: false,
+    enableColor: false,
+    dataKey: 'date',
+    autoSkip: false,
+  },
+  valueAxes: [
     {
-      date: 'January',
-      'New Mexico': 8757,
-      Florida: 5588,
-      Nevada: 7370,
-      Wyoming: 8478,
-      Arkansas: 2174,
-    },
-    {
-      date: 'February',
-      'New Mexico': 2602,
-      Florida: 8134,
-      Nevada: 198,
-      Wyoming: 1204,
-      Arkansas: 894,
-    },
-    {
-      date: 'March',
-      'New Mexico': 4191,
-      Florida: 3375,
-      Nevada: 3473,
-      Wyoming: 6359,
-      Arkansas: 7669,
-    },
-    {
-      date: 'April',
-      'New Mexico': 7684,
-      Florida: 8590,
-      Nevada: 3483,
-      Wyoming: 792,
-      Arkansas: 9651,
-    },
-    {
-      date: 'May',
-      'New Mexico': 5332,
-      Florida: 5670,
-      Nevada: 3803,
-      Wyoming: 8538,
-      Arkansas: 7468,
-    },
-    {
-      date: 'June',
-      'New Mexico': 8579,
-      Florida: 627,
-      Nevada: 1531,
-      Wyoming: 6598,
-      Arkansas: 3762,
-    },
-    {
-      date: 'July',
-      'New Mexico': 3409,
-      Florida: 2120,
-      Nevada: 7987,
-      Wyoming: 6407,
-      Arkansas: 6416,
-    },
-    {
-      date: 'August',
-      'New Mexico': 5513,
-      Florida: 6070,
-      Nevada: 3558,
-      Wyoming: 351,
-      Arkansas: 8387,
-    },
-    {
-      date: 'September',
-      'New Mexico': 1015,
-      Florida: 4560,
-      Nevada: 6241,
-      Wyoming: 6344,
-      Arkansas: 7394,
-    },
-    {
-      date: 'October',
-      'New Mexico': 3060,
-      Florida: 5139,
-      Nevada: 7757,
-      Wyoming: 3808,
-      Arkansas: 5121,
-    },
-    {
-      date: 'November',
-      'New Mexico': 4060,
-      Florida: 7139,
-      Nevada: 8757,
-      Wyoming: 5808,
-      Arkansas: 3121,
-    },
-    {
-      date: 'December',
-      'New Mexico': 5060,
-      Florida: 7139,
-      Nevada: 10757,
-      Wyoming: 6808,
-      Arkansas: 2121,
-    },
-  ];
-  const initialOptions = {
-    categoryAxis: {
       stacked: false,
-      enableColor: false,
-      dataKey: 'date',
-      ticksPadding: 80,
     },
-    valueAxes: [
-      {
-        stacked: false,
-      },
-    ],
-  };
+  ],
+};
+const Example = () =>
+  getExample(initialOptions, data, ({ key, data, options, setOptions }) => {
+    const Buttons = () => (
+      <>
+        <Button onClick={() => setOptions(initialOptions)}>No Stacked</Button>
+        <Button
+          onClick={() =>
+            setOptions(
+              {
+                categoryAxis: { stacked: true },
+                valueAxes: [{ stacked: false }],
+              },
+              false,
+            )
+          }
+        >
+          Category Stacked
+        </Button>
+        <Button
+          onClick={() =>
+            setOptions(
+              {
+                categoryAxis: { stacked: false },
+                valueAxes: [{ stacked: true }],
+              },
+              false,
+            )
+          }
+        >
+          Value Stacked
+        </Button>
+        <Button onClick={() => setOptions({ categoryAxis: { stacked: true }, valueAxes: [{ stacked: true }] })}>
+          All Stacked
+        </Button>
+        {buttonsRelatedToColor(setOptions)}
+      </>
+    );
 
-  const [options, setOptions] = useState(initialOptions);
-  const [key, setKey] = useState(new Date().getTime());
-  const handleButtonClick = (type) => {
-    setKey((preKey) => {
-      return new Date().getTime();
-    });
-    setOptions(() => {
-      const prevOptions = { ...initialOptions };
-      if (type === 'category') {
-        prevOptions.categoryAxis.stacked = !prevOptions.categoryAxis.stacked;
-      } else if (type === 'value') {
-        prevOptions.valueAxes[0].stacked = !prevOptions.valueAxes[0].stacked;
-      } else if (type === 'all') {
-        prevOptions.categoryAxis.stacked = !prevOptions.categoryAxis.stacked;
-        prevOptions.valueAxes[0].stacked = !prevOptions.valueAxes[0].stacked;
-      }
-      return {
-        ...prevOptions,
-      };
-    });
-  };
-  const actionStyle = {
-    padding: '8px 16px',
-    margin: '0 8px 8px 0',
-    borderRadius: '6px',
-    color: '#3080d0',
-    cursor: 'pointer',
-    background: 'rgba(48,128,208,.15)',
-    borderColor: 'rgba(48,128,208,.2)',
-  };
-  return (
-    <div>
-      <mdw-chart
-        key={key}
-        style={{ height: '300px' }}
-        type="column"
-        data={JSON.stringify(data)}
-        options={JSON.stringify(options)}
-      ></mdw-chart>
-      <button style={actionStyle} onClick={handleButtonClick}>
-        Default
-      </button>
-      <button style={actionStyle} onClick={() => handleButtonClick('category')}>
-        Category Stacked
-      </button>
-      <button style={actionStyle} onClick={() => handleButtonClick('value')}>
-        Value Stacked
-      </button>
-      <button style={actionStyle} onClick={() => handleButtonClick('all')}>
-        All Stacked
-      </button>
-    </div>
-  );
-}
+    return (
+      <WithActions buttons={<Buttons />}>
+        <mdw-chart
+          key={key}
+          style={{ height: '300px' }}
+          type="column"
+          data={JSON.stringify(data)}
+          options={JSON.stringify(options)}
+        ></mdw-chart>
+      </WithActions>
+    );
+  });
+
+render(<Example />);
 ```
 
 ## Type
@@ -182,62 +178,8 @@ type = 'column'
 
 ## Data
 
-The data supports the following multiple data formats:
-
-| Mode                  | Type                               | Example                                                                                                                  |
-| --------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Two-dimensional array | unknown[][]                        | [['Year','Things'],['2004',1000],['2005',1170],['2006',660],['2007',1030]]                                               |
-| Array                 | Record<string, string \| number>[] | [{"Year":"2004","Things":1000},{"Year":"2005","Things":1170},{"Year":"2006","Things":660},{"Year":"2007","Things":1030}] |
+See [Bar Chart](./bar#data)
 
 ## Options
 
-| Name          | Type                                        | Description                                           |
-| ------------- | ------------------------------------------- | ----------------------------------------------------- |
-| seriesOptions | [SeriesOptions](#seriesoptions)             | Series related configuration, including styleMapping. |
-| categoryAxis  | [CategoryAxisOptions](#categoryaxisoptions) | Used to create a category-based axis for the chart.   |
-| valueAxis     | [ValueAxisOptions](#valueaxisoptions)       | Used to create a value axis for the chart.            |
-
-### AxisOptions
-
-These are only the common options supported by all axes. Please see specific axis documentation for all the available options for that axis.
-
-| Name        | Type                                               | Default | Description                                                                                                                                        |
-| ----------- | -------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| title       | `string`                                           |         | Title of value axis.                                                                                                                               |
-| type        | `category` \| `time`                               |         | Type of scale being employed. Custom scales can be created and registered with a string key. This allows changing the type of an axis for a chart. |
-| position    | `left` \| `right` \| `top` \| `bottom` \| `center` |         | The location of the axis on the chart. Setting the position can determine whether the chart is a horizontal chart or a vertical chart.             |
-| display     | `boolean`                                          | `true`  | Controls the axis global visibility (visible when true, hidden when false).                                                                        |
-| gridDisplay | `boolean`                                          | `true`  | Controls the grid of axis global visibility (visible when true, hidden when false).                                                                |
-| stacked     | `boolean`                                          | `false` | Should the data be stacked.                                                                                                                        |
-
-### SeriesOptions
-
-The options for the series.
-
-| Name         | Type                          | Default | Description                                                       |
-| ------------ | ----------------------------- | ------- | ----------------------------------------------------------------- |
-| styleMapping | [styleMapping](#stylemapping) |         | The style mapping is an object where keys are string identifiers. |
-
-#### styleMapping
-
-| Name      | Type                      | Default | Description                                                                       |
-| --------- | ------------------------- | ------- | --------------------------------------------------------------------------------- |
-| key       | `string`                  |         | Series name.                                                                      |
-| type      | `bar` \| `line` \| `area` |         | The chart type of the series, if not set, it will be the same as the global type. |
-| lineStyle | `solid` \| `dashed`       | `solid` | The line style of the series                                                      |
-
-### CategoryAxisOptions
-
-CategoryAxisOptions extends [AxisOptions](#axisoptions)
-
-| Name          | Type                                                                                                 | Default | Description                                                                                                                                                  |
-| ------------- | ---------------------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| enableColor   | `boolean`                                                                                            | `false` |                                                                                                                                                              |
-| dataKey       | `string`                                                                                             |         | Specifies the category field on the category axis. If not specified, the first field name of the first piece of data in data will be automatically obtained. |
-| timeUnit      | `millisecond` \| `second` \| `minute` \| `hour` \| `day` \| `week` \| `month` \| `quarter` \| `year` |         | Specifies the time unit on the category axis.                                                                                                                |
-| labelFormat   | `string`                                                                                             |         | Specifies the date format of labels on the category axis. See chartjs-adapter-moment                                                                         |
-| tooltipFormat | `string`                                                                                             |         | Specifies the format of the tooltip displayed for data points on the category axis.                                                                          |
-
-### ValueAxisOptions
-
-ValueAxisOptions extends [AxisOptions](#axisoptions)
+See [Bar Chart](./bar#options)
