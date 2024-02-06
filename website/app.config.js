@@ -98,6 +98,13 @@ module.exports = {
     return [`${this.baseUrl}dist-lib/widgets.css`];
   },
   get externalScripts() {
-    return [`${this.baseUrl}dist-lib/widgets.umd.js`, `${this.baseUrl}data.js`, `https://cdn.tailwindcss.com`, `${this.baseUrl}tw.config.js`];
+    return [
+      `https://cdn.tailwindcss.com`,
+      `https://www.googletagmanager.com/gtag/js?id=G-ZCWJTWP3ZS`,
+      `${this.baseUrl}tw.config.js`,
+      `${this.baseUrl}dist-lib/widgets.umd.js`,
+      `${this.baseUrl}data.js`,
+      `${this.baseUrl}ga.js`,
+    ];
   }
 };
