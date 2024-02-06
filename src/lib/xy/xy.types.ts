@@ -41,18 +41,20 @@ export interface AxisOptions {
    */
   autoSkip?: boolean;
   /**
-   * Padding between the ticks on the horizontal axis when autoSkip is enabled.
+   * Padding between ticks on the horizontal or vertical axis.                                                                                                                                                               .
    */
   ticksPadding?: number;
   /**
-   * User defined fixed step size for the scale
+   * User defined fixed step size for the axis.
    */
   ticksStepSize?: number;
   /**
-   * Color of tick
+   * Label color of tick.
    */
   labelColor?: string | string[];
-
+  /**
+   * Returns the string representation of the tick values that should be displayed on the chart.
+   */
   callback?: (
     tickValue: number | string,
     index?: number,
@@ -84,12 +86,19 @@ export interface CategoryAxisOptions extends AxisOptions {
    * Specifies the format of the tooltip displayed for data points on the category axis.
    */
   tooltipFormat?: string;
-
+  /**
+   * The maximum number of ticks displayed.
+   */
   maxLabels?: number;
   /**
    * The supported type is category, but time is not supported.
    */
   labelSelectable?: boolean;
+  /**
+   * Returns the currently selected label and all selected labels.
+   * @param label The currently selected label
+   * @param selectedLabels All selected labels
+   */
   onLabelClick?(label: string | undefined, selectedLabels?: string[]): void;
 }
 export interface ValueAxisOptions extends AxisOptions {
@@ -112,11 +121,29 @@ export interface ValueAxisOptions extends AxisOptions {
 }
 
 export interface SeriesStyleOptions {
+  /**
+   * The chart type of the series, if not set, it will be the same as the global type.
+   */
   type?: 'bar' | 'line' | 'area' | 'dashed' | 'dashedArea';
+  /**
+   * The index of the value axis.
+   */
   valueAxisIndex?: number;
+  /**
+   * Bezier curve tension (0 means no bezier curve).
+   */
   tension?: number;
+  /**
+   * The drawing order of dataset. Also affects order for stacking, tooltip and legend.
+   */
   order?: number;
+  /**
+   * Style of the point.
+   */
   markerStyle?: MarkerStyle;
+  /**
+   * If true, lines will be drawn between points with no or null data. If false, points with NaN data will create a break in the line. Can also be a number specifying the maximum gap length to span. The unit of the value depends on the scale used.
+   */
   fillGaps?: boolean;
 }
 export interface XYChartOptions extends ChartOptions {
