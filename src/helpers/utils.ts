@@ -1,4 +1,5 @@
-import { ChartType as CJType } from 'chart.js';
+import { ChartType as CJType } from 'chart.js/auto';
+import merge from 'lodash-es/merge';
 import { ChartType } from '../types';
 
 export function toChartJSType(type?: string): CJType {
@@ -27,4 +28,30 @@ export function toChartJSType(type?: string): CJType {
       break;
   }
   return chartType;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function mergeObjects(...objs: any[]): any {
+  return merge({}, ...objs);
+}
+
+/**
+ * Checks if the value is undefined or null
+ * @param value the value to be checked
+ * @returns true if the value equals undefined or null, otherwise false
+ */
+export function isNullOrUndefined(param: unknown): boolean {
+  return param === null || typeof param === 'undefined';
+}
+
+/**
+ * Checks if the object value has no any keys. e.g. {}
+ * @param value The object
+ * @returns true if `{}`, otherwise false.
+ */
+export function isEmptyObject(value: Record<string, unknown>): boolean {
+  if (value && typeof value === 'object' && Object.keys(value).length === 0) {
+    return true;
+  }
+  return false;
 }

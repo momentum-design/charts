@@ -1,10 +1,21 @@
-import { Chart as CJ, ChartConfiguration, ChartDataset, ChartOptions, ChartType as CJType, Color } from 'chart.js/auto';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  Chart as CJ,
+  ChartConfiguration,
+  ChartDataset,
+  ChartOptions,
+  ChartType as CJType,
+  Color,
+  TooltipModel as CJTooltipModel,
+} from 'chart.js/auto';
 import { merge } from 'lodash-es';
 import { chartA11y, chartLegendA11y } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
+import { isNullOrUndefined, mergeObjects } from '../../helpers/utils';
 import {
   ChartDataView,
   ChartType,
+  CJUnknownChartType,
   GenericDataModel,
   inactiveColor,
   LegendItem,
@@ -12,6 +23,7 @@ import {
   TableData,
 } from '../../types';
 import { Chart } from '../.internal';
+import { Tooltip, TooltipItem } from '../tooltip';
 import { PieChartOptions, PieData } from './pie.types';
 
 export class PieChart<TData extends PieData, TOptions extends PieChartOptions> extends Chart<TData, TOptions> {
@@ -19,9 +31,13 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
     throw new Error('Method not implemented.');
   }
 
-  static readonly defaultOptions: PieChartOptions = {
+  static readonly defaults: PieChartOptions = {
     legend: {
       position: Position.Right,
+    },
+    tooltip: {
+      useNative: false,
+      showPercentage: false,
     },
   };
 
@@ -133,6 +149,7 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
             }
           },
         }),
+        tooltip: this.getTooltip().toCJ(),
       },
     };
     if (this.getType() !== ChartType.Pie) {
@@ -210,7 +227,7 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
   }
 
   protected getDefaultOptions(): TOptions {
-    return PieChart.defaultOptions as TOptions;
+    return PieChart.defaults as TOptions;
   }
 
   protected afterOptionsCreated(options: ChartOptions): ChartOptions {
@@ -252,5 +269,53 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
       });
       this.hiddenDatasets = this.hiddenDatasets.filter((dataset) => dataset.label !== legend.text);
     }
+  }
+
+  private getTooltip(): Tooltip<typeof this> {
+    return new Tooltip(
+      this,
+      mergeObjects(
+        {
+          title: (tooltip: CJTooltipModel<CJUnknownChartType>) => {
+            return this.options.tooltip?.combineItems ? [''] : tooltip.title;
+          },
+          items: this.getTooltipItems.bind(this),
+        },
+        this.options.tooltip || {},
+      ),
+    );
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private getTooltipItems(tooltip: CJTooltipModel<CJUnknownChartType>): TooltipItem[] {
+    const currentLabel = tooltip.title[0];
+    const chart = tooltip.chart;
+    const chartData = chart.config.data;
+    const tooltipItems: TooltipItem[] = [];
+    let sum = 0;
+    chartData.datasets.forEach((dataset: any) => {
+      dataset.data.forEach((dataItem: number, dataIndex: number) => {
+        const label = chartData.labels![dataIndex] as string;
+        const color = (dataset.backgroundColor as string[])[dataIndex] as string;
+        const value = dataItem;
+        sum += value;
+        tooltipItems.push({
+          label,
+          value,
+          colors: {
+            backgroundColor: color,
+            borderColor: color,
+          },
+          active: currentLabel === label,
+        });
+      });
+    });
+    tooltipItems.forEach((tooltipItem) => {
+      if (!isNullOrUndefined(tooltipItem.value)) {
+        tooltipItem.percent = (tooltipItem.value! * 100) / sum;
+      }
+    });
+
+    return this.options.tooltip?.combineItems ? tooltipItems : tooltipItems.filter((item) => item.active);
   }
 }

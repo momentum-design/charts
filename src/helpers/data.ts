@@ -61,15 +61,3 @@ export function formatNumber(value: number, precision: number, formats?: { numbe
 
   return result;
 }
-
-/**
- * Checks if the object value has no any keys. e.g. {}
- * @param value The object
- * @returns true if `{}`, otherwise false.
- */
-export function isEmptyObject(value: Record<string, unknown>): boolean {
-  if (value && typeof value === 'object' && Object.keys(value).length === 0) {
-    return true;
-  }
-  return false;
-}

@@ -60,8 +60,7 @@ button.aa-DetachedSearchButton {
 
   &:focus {
     border-color: var(--ifm-color-primary) !important;
-    box-shadow: rgba(var(--ifm-color-primary), 0.2) 0 0 0 3px,
-      inset rgba(var(--ifm-color-primary), 0.5) 0 0 0 2px !important;
+    box-shadow: rgba(var(--ifm-color-primary), 0.2) 0 0 0 3px, inset rgba(var(--ifm-color-primary), 0.5) 0 0 0 2px !important;
   }
 
   .aa-DetachedSearchButtonIcon {
@@ -99,11 +98,31 @@ table {
   width: 100%;
 }
 
+code {
+  font-size: 0.85rem;
+}
+
 iframe#webpack-dev-server-client-overlay {
   height: 250px !important;
   top: auto !important;
 }
 
+/* widget library */
 mdw-chart {
   margin: 0 auto;
+  height: 360px;
+}
+
+mdw-chart[type='pie'],
+mdw-chart[type='donut'] {
+  width: 320px;
+  height: 320px;
+}
+
+mdw-chart[type='gauge'] {
+  width: 50%;
+}
+
+#mdw-tooltip .mdw-tooltip-item.active {
+  font-weight: bold;
 }

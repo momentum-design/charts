@@ -1,4 +1,5 @@
 import React from 'react';
+import { merge } from 'lodash';
 
 const listenOn = (elem, eventName, callback) => {
   const eventCallback = (e) => {
@@ -45,17 +46,29 @@ const getExample = (opts, d, fn) => {
     options: null,
   });
   const [key, setKey] = React.useState(new Date().getTime());
+  console.log('setKey', setKey);
   const [options, setOptions] = React.useState(opts);
+  const [others, setOthers] = React.useState({});
   const [data, setData] = React.useState(d);
   const params = {
     key,
     setKey,
     options,
-    setOptions: (opts, disableMerging) => {
+    setOptions: (opts, isNewOptions) => {
       setKey(new Date().getTime());
-      const result = disableMerging ? opts : { ...options, ...opts };
+      const result = isNewOptions ? opts : merge({}, options, opts);
       setOptions(() => result);
-      console.log('Options:', result);
+      console.log('setOptions:', result);
+    },
+    toggleOptions: (name, opts1, opts2) => {
+      setKey(new Date().getTime());
+      const othersValue = merge({}, others, {
+        [name]: !others[name]
+      });
+      setOthers(othersValue);
+      const result = merge({}, options, !others[name] ? opts1 : opts2);
+      setOptions(() => result);
+      console.log('toggleOptions:', result);
     },
     data,
     setData: (data) => {
@@ -63,6 +76,8 @@ const getExample = (opts, d, fn) => {
       setData(() => data);
       console.log('Data:', data);
     },
+    others,
+    setOthers,
   }
   return <ChartContext.Provider value={{ key, data, options }}>
     {fn(params)}
@@ -80,18 +95,45 @@ const buttonsRelatedToColor = (setOptions) => (
   </>
 )
 
+const classNamesForButton = 'hover:outline-gray-400/40 hover:outline-2 outline cursor-pointer py-2 px-4 border-none border-transparent rounded';
+
 const Button = (props) => (
   <button
     {...props}
-    className='rounded shadow border-0 cursor-pointer hover:!bg-gray-200/30 hover:shadow-md'
+    className={classNamesForButton}
     style={{
-      color: 'var(--ifm-font-color-base)',
-      backgroundColor: 'var(--ifm-color-emphasis-200)',
-      padding: '0.6rem 1rem',
+      color: 'var(--ifm-color-content-inverse)',
+      backgroundColor: 'var(--ifm-color-emphasis-600)',
       ...props.style,
     }}
   />
 );
+
+const ToggleButton = (props) => {
+  function onClick(evt) {
+    if (props.onChange) {
+      props.onChange();
+      evt.preventDefault();
+    }
+  }
+
+  return (
+    <label className="outline outline-0 outline-offset-2 rounded-full hover:outline-2 relative inline-flex items-center mb-5 cursor-pointer"
+      style={{
+        outlineColor: 'transparent',
+      }}
+      onClick={onClick.bind(this)}>
+      <input type="checkbox" value="" className="sr-only peer" checked={props.checked} onChange={() => { }} />
+      <div className="w-9 h-5 outline outline-transparent outline-offset-1 hover:outline-2 hover:outline-gray-400/50 rounded-full peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all"
+        style={{
+          backgroundColor: props.checked ? 'var(--ifm-color-emphasis-600)' : 'var(--ifm-color-emphasis-200)'
+        }}></div>
+      <span className="ml-2 mr-2 text-sm font-medium" style={{
+        color: 'var(--ifm-font-color-base)',
+      }}>{props.children}</span>
+    </label>
+  );
+};
 
 const WithActions = (props) => {
   return (<div>
@@ -135,11 +177,13 @@ const WithActions = (props) => {
   </div>);
 };
 
+
 // Add react-live imports you need here
 const ReactLiveScope = {
   React,
   ...React,
   Button,
+  ToggleButton,
   WithActions,
   listenOn,
   getExample,

@@ -48,6 +48,11 @@ const options = {
   legend: {
     selectable: true,
   },
+  tooltip: {
+    title: '2023-07',
+    combineItems: true,
+    maxWidth: '260px',
+  }
 };
 
 const Example = () => {
@@ -67,7 +72,6 @@ const Example = () => {
       <mdw-chart
         ref={myRef}
         type="pie"
-        style={{ width: '300px' }}
         data={JSON.stringify(data)}
         options={JSON.stringify(options)}
         states={JSON.stringify(chartStates)}

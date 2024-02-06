@@ -1,4 +1,5 @@
-import { MarkerStyle, Position, TooltipOptions } from '.';
+import { MarkerStyle, Position } from '.';
+import { TooltipOptions } from '../lib/tooltip';
 import { ChartEvent } from './chart.event.types';
 
 export const inactiveColor = '#c9c9c9';

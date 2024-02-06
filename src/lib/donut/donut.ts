@@ -5,6 +5,7 @@ import {
 } from 'chart.js/auto';
 import { cloneDeep } from 'lodash-es';
 import { getFontStyleAbbreviation } from '../../core';
+import { mergeObjects } from '../../helpers';
 import { ChartType, Position } from '../../types';
 import { PieChart } from '../pie';
 import { CenterLabel, DonutChartOptions, DonutData } from './donut.type';
@@ -29,7 +30,7 @@ export class DonutChart extends PieChart<DonutData, DonutChartOptions> {
   }
 
   protected getDefaultOptions(): DonutChartOptions {
-    return DonutChart.defaults;
+    return mergeObjects(PieChart.defaults, DonutChart.defaults);
   }
 
   protected afterOptionsCreated(options: CJChartOptions): CJChartOptions {

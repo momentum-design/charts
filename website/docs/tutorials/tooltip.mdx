@@ -1,7 +1,122 @@
 ---
-sidebar_position: 3
+sidebar_position: 1000
 ---
 
 # Tooltip
 
-Coming soon...
+We will use donut chart as an example to show what options are available for tooltip. The tooltip includes **title**, **items** and **footer**.
+
+```jsx live noInline
+const data = mdwd.pie;
+const initialOptions = {};
+
+const Example = () =>
+  getExample(initialOptions, data, ({ key, data, options, setOptions, toggleOptions, others }) => {
+    const Buttons = () => (
+      <>
+        <ToggleButton
+          checked={others.sp}
+          onChange={() =>
+            toggleOptions('sp', { tooltip: { showPercentage: true } }, { tooltip: { showPercentage: false } })
+          }
+        >
+          Show Percentage
+        </ToggleButton>
+        <ToggleButton
+          checked={others.su}
+          onChange={() =>
+            toggleOptions('su', { valueUnit: 'mins', tooltip: { showUnit: true } }, { tooltip: { showUnit: false } })
+          }
+        >
+          Show Unit
+        </ToggleButton>
+        <ToggleButton
+          checked={others.ct}
+          onChange={() => toggleOptions('ct', { tooltip: { title: '2024-1' } }, { tooltip: { title: null } })}
+        >
+          Custom Title
+        </ToggleButton>
+        <ToggleButton
+          checked={others.cf}
+          onChange={() =>
+            toggleOptions('cf', { tooltip: { footer: 'This is the footer' } }, { tooltip: { footer: null } })
+          }
+        >
+          Custom Footer
+        </ToggleButton>
+        <ToggleButton
+          checked={others.ci}
+          onChange={() =>
+            toggleOptions('ci', { tooltip: { combineItems: true } }, { tooltip: { combineItems: false } })
+          }
+        >
+          Combine Items
+        </ToggleButton>
+      </>
+    );
+
+    return (
+      <WithActions buttons={<Buttons />}>
+        <mdw-chart
+          key={key}
+          style={{ width: '300px' }}
+          type="donut"
+          data={JSON.stringify(data)}
+          options={JSON.stringify(options)}
+        ></mdw-chart>
+      </WithActions>
+    );
+  });
+
+render(<Example />);
+```
+
+## Options
+
+| Name            | <div style={{width: '240px'}}>Type</div>                                | Default            | Description                                                                                                                              |
+| :-------------- | :---------------------------------------------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| fontSize        | `string`                                                                | `'13px'`           | Global font size for tooltip.                                                                                                            |
+| textColor       | `string`                                                                | `'#efefef'`        | The text color of tooltip.                                                                                                               |
+| backgroundColor | `string`                                                                | `'#000000e6'`        | The background color of tooltip.                                                                                                         |
+| padding         | `string`                                                                | `'0.5rem 0.75rem'` | The padding style of tooltip.                                                                                                            |
+| borderRadius    | `string`                                                                | `'4px'`            | Border radius of tooltip.                                                                                                                |
+| maxWidth        | `string`                                                                |                    | The max width of tooltip.                                                                                                                |
+| showPercentage  | `boolean`                                                               |                    | Show the percentage in the tooltip. For **Pie/Donut** charts, the default value is `true`, otherwise false.                              |
+| showUnit        | `boolean`                                                               |                    | If you have given the value of chart options **valueUnit** and want to show it on the tooltip.                                           |
+| title           | `string`<br />`string[]`<br /><code>() => string &#124; string[]</code> |                    | Set the title of tooltip.                                                                                                                |
+| formatTitle     | <code>(title: string) => string</code>                                  |                    | Overwrite the existing title if you want to change current title.                                                                        |
+| footer          | `string`<br />`string[]`<br /><code>() => string &#124; string[]</code> |                    | Set the footer of tooltip.                                                                                                               |
+| combineItems    | `boolean`                                                               |                    | Only for pie/donut charts. `true` will show all items in tooltip. For XY-based charts, the default is to combine items into the tooltip. |
+
+## Styles
+
+The following example will show you the tooltip html code.
+
+```html
+<div id="mdw-tooltip">
+  <div class="mdw-tooltip-title">Title</div>
+  <div class="mdw-tooltip-item">
+    <span class="mdw-tooltip-icon" style="background-color: #ff0000"></span>
+    <span class="mdw-tooltip-label">Label1</span>
+    <span class="mdw-tooltip-values">
+      <span>2,452</span>
+    </span>
+  </div>
+  <div class="mdw-tooltip-item active">
+    <span class="mdw-tooltip-icon" style="background-color: #00ff00"></span>
+    <span class="mdw-tooltip-label">Label2</span>
+    <span class="mdw-tooltip-values">
+      <span>23,452</span>
+    </span>
+  </div>
+  <div class="mdw-tooltip-footer">Footer</div>
+</div>
+```
+
+You can define your styles in css file as below:
+
+```css
+#mdw-tooltip .mdw-tooltip-item.active {
+  font-weight: bold;
+}
+```

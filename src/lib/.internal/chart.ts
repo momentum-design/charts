@@ -1,7 +1,6 @@
-import { Chart as CJ, ChartConfiguration, ChartOptions as CJOptions, FontSpec } from 'chart.js/auto';
-import { merge } from 'lodash-es';
+import { Chart as CJ, ChartConfiguration as CJConfiguration, ChartOptions as CJOptions, FontSpec } from 'chart.js/auto';
 import { formatBigNumber as fbn, settings, ThemeKey } from '../../core';
-import { darkenColor, formatNumber, getRandomColor, lightenColor } from '../../helpers';
+import { darkenColor, formatNumber, getRandomColor, lightenColor, mergeObjects } from '../../helpers';
 import { ChartContainer, ChartData, ChartOptions, ColorMode, Font, TableData } from '../../types';
 import { Legend } from '../legend';
 import { CategoryLabelSelectable } from '../xy/xy.category-label-selectable';
@@ -35,7 +34,7 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   }
 
   constructor(protected data: TData, options?: TOptions) {
-    this._options = merge({}, Chart.defaults, this.getDefaultOptions(), options);
+    this._options = mergeObjects({}, Chart.defaults, this.getDefaultOptions(), options);
 
     this.init();
   }
@@ -51,7 +50,7 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
     this.api = new CJ(container, {
       type: config.type,
       plugins: config.plugins,
-    } as ChartConfiguration);
+    } as CJConfiguration);
     this.canvasElement = this.api.canvas;
     this.rootElement = this.canvasElement.parentElement || this.api.canvas;
     if (this.calculateMaxLimitTicks) {
@@ -88,7 +87,7 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
       fonts.push(Chart.defaults.font);
     }
     fonts.reverse();
-    return merge({}, ...fonts);
+    return mergeObjects({}, ...fonts);
   }
 
   protected formatBigNumber(value: number): string {

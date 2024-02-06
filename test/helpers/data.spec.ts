@@ -1,5 +1,5 @@
 import { settings } from '../../src/core/settings';
-import { formatNumber, isEmptyObject } from '../../src/helpers/data';
+import { formatNumber } from '../../src/helpers/data';
 
 describe('helpers', () => {
   describe('formatNumber', () => {
@@ -32,19 +32,6 @@ describe('helpers', () => {
     ])('%i: %i -> %s, %i -> %s', (v, p0, expected0, p1, expected1) => {
       expect(formatNumber(v, p0, settings.bigNumberSuffixes)).toBe(expected0);
       expect(formatNumber(v, p1, settings.bigNumberSuffixes)).toBe(expected1);
-    });
-  });
-
-  describe('isEmptyObject', () => {
-    test.each([
-      [{}, true],
-      [0, false],
-      [1, false],
-      [null, false],
-      [undefined, false],
-      [{ a: 12 }, false],
-    ])('`%o` should be %o', (p, r) => {
-      expect(isEmptyObject(p)).toBe(r);
     });
   });
 });

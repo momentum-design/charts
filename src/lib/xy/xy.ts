@@ -7,16 +7,18 @@ import {
   Plugin as CJPlugin,
   ScriptableLineSegmentContext,
   Tick,
+  TooltipModel as CJTooltipModel,
 } from 'chart.js/auto';
 import 'chartjs-adapter-moment';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { merge } from 'lodash-es';
 import { chartA11y, chartSeriesClick } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
-import { toChartJSType } from '../../helpers/utils';
+import { isNullOrUndefined, mergeObjects, toChartJSType } from '../../helpers/utils';
 import {
   ChartDataView,
   ChartType,
+  CJUnknownChartType,
   GenericDataModel,
   inactiveColor,
   LegendItem,
@@ -25,6 +27,7 @@ import {
   TableData,
 } from '../../types';
 import { Chart } from '../.internal';
+import { Tooltip, TooltipItem } from '../tooltip';
 import { CategoryLabelSelectable } from './xy.category-label-selectable';
 import { SeriesStyleOptions, XYChartOptions, XYData } from './xy.types';
 
@@ -111,6 +114,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     }
     return {
       type: toChartJSType(this.getType()),
+
       data: {
         labels: this.chartData.category.labels ?? [],
         datasets: chartDatasets,
@@ -156,11 +160,15 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     };
 
     this.enableLegend();
+    const tooltip = this.getTooltip();
     const options: CJOptions = {
       onClick: chartSeriesClick,
       maintainAspectRatio: false,
       responsive: true,
       indexAxis: this.getIndexAxis(),
+
+      interaction: tooltip.toCJInteraction(),
+
       plugins: {
         title: {
           display: !!this.options.title,
@@ -204,9 +212,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
             }
           },
         }),
-        tooltip: {
-          position: 'nearest',
-        },
+        tooltip: tooltip.toCJ(),
       },
       scales: {
         categoryAxis: XYChart.defaultScaleOptions,
@@ -257,6 +263,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
               options.scales.categoryAxis.time.displayFormats = {
                 [this.options.categoryAxis.timeUnit as string]: this.options.categoryAxis.labelFormat,
               };
+              options.scales.categoryAxis.time.tooltipFormat = this.options.categoryAxis.labelFormat;
             }
           }
         }
@@ -649,5 +656,55 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
   getCategoryLabelSelectable(): CategoryLabelSelectable<typeof this> {
     this.categoryLabelSelectable = this.categoryLabelSelectable ?? new CategoryLabelSelectable(this);
     return this.categoryLabelSelectable;
+  }
+
+  private getTooltip(): Tooltip<typeof this> {
+    return new Tooltip(
+      this,
+      mergeObjects(
+        {
+          useNative: false,
+          showPercentage: true,
+          combineItems: false,
+          title: (tooltip: CJTooltipModel<CJUnknownChartType>) => tooltip.title || [],
+          items: this.getTooltipItems.bind(this),
+        },
+        this.options.tooltip || {},
+      ),
+    );
+  }
+
+  private getTooltipItems(tooltip: CJTooltipModel<CJUnknownChartType>): TooltipItem[] {
+    let sum = 0;
+    const tooltipItems: TooltipItem[] = tooltip.body
+      .map((body: { lines: string[] }) => body.lines)
+      .map((lines: string[], i: number) => {
+        const colors = tooltip.labelColors[i];
+        const label = lines[0].split(':')[0];
+        let value;
+        if (lines[0].split(':').length > 1) {
+          value = parseFloat(lines[0].split(':')[1].replace(/,/g, ''));
+        }
+        const result: TooltipItem = {
+          colors: {
+            backgroundColor: colors.backgroundColor as string,
+            borderColor: colors.borderColor as string,
+          },
+          label,
+          value,
+        };
+        sum += result.value || 0;
+        return result;
+      });
+
+    if (this.options.tooltip?.showPercentage && sum !== 0) {
+      tooltipItems.forEach((tooltipItem) => {
+        if (!isNullOrUndefined(tooltipItem.value)) {
+          tooltipItem.percent = (tooltipItem.value! * 100) / sum;
+        }
+      });
+    }
+
+    return tooltipItems;
   }
 }

@@ -1,4 +1,6 @@
+import { ChartType as CJChartType } from 'chart.js/auto';
 import { Font, LegendOptions, Padding } from '.';
+import { TooltipOptions } from '../lib/tooltip';
 
 export type MarkerStyle = 'circle' | 'rect' | 'rectRounded' | 'rectRot' | 'triangle' | false;
 export type SeriesType = 'bar' | 'line' | 'area' | 'dashed';
@@ -33,19 +35,6 @@ export interface ChartOptions {
   colorMode?: ColorMode;
 }
 
-export interface TooltipOptions {
-  isMultipleSeries?: boolean; //TODO remove it
-  seriesTooltipHead?: string; // TODO refine to series
-  seriesTooltipBody?: string;
-  seriesTooltipFooter?: string;
-  seriesTooltipFloor?: number;
-  isMultipleLegend?: boolean;
-  legendTooltipHead?: string; //TODO refine to legend
-  legendTooltipBody?: string;
-  legendTooltipFooter?: string;
-  legendTooltipFloor?: number;
-}
-
 /**
  * Common data model
  */
@@ -69,6 +58,8 @@ export type ChartDataView = {
     data?: (number | null)[];
   }[];
 };
+
+export type CJUnknownChartType = CJChartType;
 
 export enum ChartType {
   Area = 'area',
