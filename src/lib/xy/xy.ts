@@ -438,7 +438,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     dataset.label = series.name;
     dataset.borderColor = this.options.categoryAxis?.enableColor ? colors : colors[index];
     dataset.backgroundColor = this.options.categoryAxis?.enableColor ? colors : colors[index];
-    dataset.type = toChartJSType(styleMapping?.type || this.getType());
+    dataset.type = toChartJSType(styleMapping?.type ?? this.options.seriesOptions?.type ?? this.getType());
     dataset = this.setAxisIDs(dataset, styleMapping.valueAxisIndex);
     if (styleMapping.order) {
       dataset.order = styleMapping.order;
@@ -449,7 +449,11 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     if (dataset.type === 'bar') {
       dataset = this.createBarDataset(dataset);
     }
-    return this.afterDatasetCreated(dataset, { styleOptions: styleMapping, color: colors[index], index });
+    return this.afterDatasetCreated(dataset, {
+      styleOptions: styleMapping,
+      color: colors[index],
+      index,
+    });
   }
 
   private createLineDataset(
@@ -467,12 +471,15 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       };
     }
     dataset.pointStyle = this.setPointStyle(dataset, styleMapping);
-    if (styleMapping.type === 'dashed' || styleMapping.type === 'dashedArea') {
+    if (
+      styleMapping.type === 'dashed' ||
+      styleMapping.type === 'dashedArea' ||
+      (!styleMapping.type &&
+        (this.options.seriesOptions?.type === 'dashed' || this.options.seriesOptions?.type === 'dashedArea'))
+    ) {
       dataset.borderDash = this.borderDash;
     }
-    if (styleMapping.tension) {
-      dataset.tension = styleMapping.tension;
-    }
+    dataset.tension = styleMapping.tension ?? this.options.seriesOptions?.tension;
     return dataset;
   }
 

@@ -2,7 +2,7 @@
  * The default options for xy chart.
  */
 import { Tick, TimeUnit } from 'chart.js';
-import { ChartOptions, JsonData, MarkerStyle, Position, TableData } from '../../types';
+import { ChartOptions, JsonData, MarkerStyle, Position, SeriesType, TableData } from '../../types';
 /**
  * Interface `AxisOptions` provides a set of configurations for the axis in a chart.
  */
@@ -124,7 +124,7 @@ export interface SeriesStyleOptions {
   /**
    * The chart type of the series, if not set, it will be the same as the global type.
    */
-  type?: 'bar' | 'line' | 'area' | 'dashed' | 'dashedArea';
+  type?: SeriesType;
   /**
    * The index of the value axis.
    */
@@ -151,6 +151,14 @@ export interface XYChartOptions extends ChartOptions {
    * The options for the series.
    */
   seriesOptions?: {
+    /**
+     * The chart type of the series, if not set, it will be the same as the global type.
+     */
+    type?: SeriesType;
+    /**
+     * Bezier curve tension (0 means no bezier curve).
+     */
+    tension?: number;
     /**
      * The style mapping is an object where keys are string identifiers.
      */
