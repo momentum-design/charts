@@ -55,3 +55,10 @@ export function isEmptyObject(value: Record<string, unknown>): boolean {
   }
   return false;
 }
+
+export function getColorsByLength(sourceColor: string | string[], length: number): string[] {
+  if (typeof sourceColor === 'string') {
+    return Array.from({ length }, () => sourceColor);
+  }
+  return Array.from({ length }, (_, index) => sourceColor[index % sourceColor.length]);
+}
