@@ -74,13 +74,14 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
 
   private hiddenDatasets: { label?: string; borderColor?: Color; backgroundColor?: Color }[] = [];
   private borderDash = [3, 3];
-  private clickedLabelColor = 'black'; //TODO(yiwei): Need to support multiple themes in the future.
-  private unclickedLabelColor = '#7D7F7F';
-  private defaultLabelColor = '#484949';
+  private visibleLabelColor = this.getThemeSchema()?.activeColor;
+  private invisibleLabelColor = this.getThemeSchema()?.inactiveColor;
+  private defaultLabelColor = this.getThemeSchema()?.textColorPrimary;
   private defaultMinTicksLimit = 2;
   private defaultPaddingForX = 100;
   private defaultPaddingCategoryAxisForY = 20;
   private defaultPaddingValueAxisForY = 50;
+
   private categoryLabelSelectable?: CategoryLabelSelectable<typeof this>;
 
   protected getConfiguration(): ChartConfiguration {
@@ -296,8 +297,8 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
                 if (selectedLabels.length > 0) {
                   const allColors = ctx.chart.data.labels?.map((label) => {
                     return selectedLabels.indexOf(label as string) >= 0
-                      ? this.clickedLabelColor
-                      : this.unclickedLabelColor;
+                      ? this.visibleLabelColor
+                      : this.invisibleLabelColor;
                   });
                   return (allColors?.slice(firstTickIndex, lastTickIndex + 1) ?? []) as unknown as Color;
                 } else {

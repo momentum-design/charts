@@ -1,5 +1,12 @@
-import { Chart as CJ, ChartConfiguration as CJConfiguration, ChartOptions as CJOptions, FontSpec } from 'chart.js/auto';
+import {
+  Chart as CJ,
+  ChartConfiguration as CJConfiguration,
+  ChartOptions as CJOptions,
+  Color,
+  FontSpec,
+} from 'chart.js/auto';
 import { formatBigNumber as fbn, settings, ThemeKey } from '../../core';
+import { ThemeSchema } from '../../core/theme-schema';
 import { darkenColor, formatNumber, getRandomColor, lightenColor, mergeObjects } from '../../helpers';
 import { ChartContainer, ChartData, ChartOptions, ColorMode, Font, TableData } from '../../types';
 import { Legend } from '../legend';
@@ -11,12 +18,33 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
       size: 13,
       family: 'CiscoSansTT Regular,Helvetica Neue,Helvetica,Arial,sans-serif',
       style: 'normal',
-      color: '#121212',
       weight: undefined,
       lineHeight: 1.2,
     },
-    mutedColor: '#535759',
     valuePrecision: 2,
+    isDark: false,
+    defaultThemeSchema: {
+      textColorPrimary: '#535759',
+      textColorSecondary: '#7D7F7F',
+      tooltipTextColor: '#efefef',
+      activeColor: 'black',
+      inactiveColor: '#7D7F7F',
+      gridColor: '#E5E6E6',
+      pointerFill: '#000',
+      tooltipBackgroundColor: '#000000e6',
+      activeBackgroundColor: '#2b2b2b1a',
+    },
+    darkThemeSchema: {
+      textColorPrimary: '#C5CBCD',
+      textColorSecondary: '#7D7F7F',
+      tooltipTextColor: '#000000e6',
+      activeColor: '#FFFFFF',
+      inactiveColor: '#7D7F7F',
+      gridColor: '#535759',
+      pointerFill: '#EDEDED',
+      tooltipBackgroundColor: '#efefef',
+      activeBackgroundColor: '#F1EFEF1a',
+    },
   };
 
   api?: CJ;
@@ -43,6 +71,7 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
     CJ.defaults.font = this.getCJFont();
 
     this.initColors();
+    this.initThemeSchema();
   }
 
   render(container: ChartContainer): void {
@@ -105,6 +134,15 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
       formatted += ' ' + this.options.valueUnit;
     }
     return formatted;
+  }
+
+  public getThemeSchema(): ThemeSchema | undefined {
+    return this._options.isDark ? this._options.darkThemeSchema : this._options.defaultThemeSchema;
+  }
+
+  private initThemeSchema(): void {
+    CJ.defaults.color = this.getThemeSchema()?.textColorPrimary as Color;
+    CJ.defaults.scale.grid.color = this.getThemeSchema()?.gridColor;
   }
 
   private getColorForKey(key: string, total: number): string {

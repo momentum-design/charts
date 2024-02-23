@@ -109,7 +109,7 @@ export class WordCloudChart extends Chart<WordCloudData, WordCloudOptions> {
               },
               chart: this,
             };
-            const evt = new ChartEvent<WordClickData>(ChartEventType.WorkClick, clickContext);
+            const evt = new ChartEvent<WordClickData>(ChartEventType.WordClick, clickContext);
             if (this.options.onWordClick) {
               this.options.onWordClick(evt);
             }

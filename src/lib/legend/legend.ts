@@ -164,9 +164,10 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
       const newTop = `${top - 4 + topOffset}px`;
       const newWidth = `${width + 14}px`;
       const newHeight = `${height + 8}px`;
+      const backgroundColor = this.chart.getThemeSchema()?.activeBackgroundColor;
       focusBox.setAttribute(
         'style',
-        `left:${newLeft};top:${newTop};width:${newWidth};height:${newHeight};background-color:#2b2b2b1a;pointer-events:none;position:absolute;border-radius:10px;`,
+        `left:${newLeft};top:${newTop};width:${newWidth};height:${newHeight};background-color:${backgroundColor};pointer-events:none;position:absolute;border-radius:10px;`,
       );
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore

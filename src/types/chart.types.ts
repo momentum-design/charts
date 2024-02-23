@@ -1,5 +1,6 @@
 import { ChartType as CJChartType } from 'chart.js/auto';
 import { Font, LegendOptions, Padding } from '.';
+import { ThemeSchema } from '../core/theme-schema';
 import { TooltipOptions } from '../lib/tooltip';
 
 export type MarkerStyle = 'circle' | 'rect' | 'rectRounded' | 'rectRot' | 'triangle' | false;
@@ -33,6 +34,9 @@ export interface ChartOptions {
   };
   colors?: string[];
   colorMode?: ColorMode;
+  isDark?: boolean;
+  defaultThemeSchema?: ThemeSchema;
+  darkThemeSchema?: ThemeSchema;
 }
 
 /**

@@ -16,12 +16,10 @@ export enum TooltipInteractionAxis {
 export interface TooltipOptions {
   useNative?: boolean;
   fontSize?: string;
-  textColor?: string;
   content?: string;
   borderRadius?: string;
   maxWidth?: string;
   padding?: string;
-  backgroundColor?: string;
   title?: string | string[] | ((tooltip: CJTooltipModel<CJUnknownChartType>) => string | string[]);
   formatTitle?: (title: string) => string;
   formatValue?: (value: number) => string;

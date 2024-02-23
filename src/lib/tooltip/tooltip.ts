@@ -13,8 +13,6 @@ const TOOLTIP_CLASS = TOOLTIP_ID;
 export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
   static defaults: TooltipOptions = {
     fontSize: '13px',
-    textColor: '#efefef',
-    backgroundColor: '#000000e6',
     borderRadius: '4px',
     padding: '0.5rem 0.75rem',
   };
@@ -57,6 +55,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
   generateTooltipHtml(context: any) {
     // Tooltip Element
     const { chart, tooltip } = context;
+    this.chart.getThemeSchema()?.pointerFill;
     let tooltipEl = findDomElement(`#${TOOLTIP_ID}`);
 
     // Create element on first render
@@ -77,6 +76,8 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
         tooltipEl.setStyle('max-width', this.options.maxWidth);
       }
     }
+
+    this.chart.getThemeSchema();
 
     // Hide if no tooltip
     if (tooltip.opacity === 0) {
@@ -192,8 +193,8 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
 
     // display, position, and set styles
     tooltipEl.setStyle('font-size', this.options.fontSize);
-    tooltipEl.setStyle('background-color', this.options.backgroundColor);
-    tooltipEl.setStyle('color', this.options.textColor);
+    tooltipEl.setStyle('background-color', this.chart.getThemeSchema()?.tooltipBackgroundColor);
+    tooltipEl.setStyle('color', this.chart.getThemeSchema()?.tooltipTextColor);
     tooltipEl.setStyle('opacity', '1');
     tooltipEl.setStyle('left', left);
     tooltipEl.setStyle('top', top);
