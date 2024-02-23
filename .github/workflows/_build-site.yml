@@ -22,14 +22,14 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: false
           ref: ${{ github.ref }}
 
       - name: Use Node.js ${{ env.NODE_VERION }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERION }}
           registry-url: https://registry.npmjs.org
@@ -43,7 +43,7 @@ jobs:
 
       - name: Cache
         id: cache-site
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./website/build
           key: website-${{ needs.get-info.outputs.version }}-${{ github.run_id }}

@@ -39,20 +39,20 @@ jobs:
     if: ${{ needs.check-version.outputs.NEXT_RELEASE_VERSION != '' && needs.build.result == 'success' }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: false
           ref: ${{ github.ref }}
 
       - name: Download dist
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: ./dist
           key: dist-${{ needs.check-version.outputs.NEXT_RELEASE_VERSION }}
 
       - name: Use Node.js ${{ env.NODE_VERION }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERION }}
           registry-url: https://registry.npmjs.org
@@ -63,7 +63,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_CISCO_MD }}
 
       - name: Set up registry for GitHub
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           registry-url: https://npm.pkg.github.com/
 
@@ -73,7 +73,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Decode changelog
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         id: decode-changelog
         with:
           result-encoding: string
@@ -82,12 +82,12 @@ jobs:
             return encodedChangelog.replaceAll('%25', '%').replaceAll('%0D', '\r').replaceAll('%0A', '\n')
           
       - name: Send notification
-        uses: bndynet/github-action-webex@v1
+        uses: bndynet/github-action-webex@v2
         with:
           action: message
           token: ${{ secrets.WX_TOKEN }}
           server: ${{ secrets.WX_SERVER }}
-          room-id: ${{ secrets.WX_ROOMID }}
+          rooms: ${{ secrets.WX_ROOMID }}
           message: "# 🚀 [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }}) \n\n\n${{ steps.decode-changelog.outputs.result }}"
 
       - run: |

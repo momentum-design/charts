@@ -16,14 +16,14 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: false
           ref: ${{ github.ref }}
 
       - name: Use Node.js ${{ env.NODE_VERION }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERION }}
           registry-url: https://registry.npmjs.org
@@ -38,13 +38,13 @@ jobs:
         run: npm run build --if-present
 
       - name: Inject version
-        uses: bndynet/github-action-inject-copyright@v1
+        uses: bndynet/github-action-inject-copyright@v2
         with:
           dist: dist
 
       - name: Cache
         id: cache-dist
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./dist
           key: dist-${{ needs.get-info.outputs.version }}

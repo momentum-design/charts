@@ -27,10 +27,10 @@ jobs:
           echo "${{ env.MESSAGE }}"
 
       - name: Send notification
-        uses: bndynet/github-action-webex@v1
+        uses: bndynet/github-action-webex@v2
         with:
           action: message
           token: ${{ secrets.WX_TOKEN }}
           server: ${{ secrets.WX_SERVER }}
-          room-id: ${{ secrets.WX_ROOMID }}
+          rooms: ${{ secrets.WX_ROOMID }}
           message: ${{ env.MESSAGE }}
