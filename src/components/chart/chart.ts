@@ -89,6 +89,12 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     }
   };
 
+  private onThemeSchemaChange = (event: CustomEvent) => {
+    if (event.detail) {
+      this.chart?.themeSchemaChange(event.detail.themeSchemaKey);
+    }
+  };
+
   constructor() {
     super();
     this.boundResizeHandler = this.handleResize.bind(this);
@@ -103,6 +109,7 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     window.addEventListener('resize', this.boundResizeHandler); //TODO(yiwei): Check whether windows resize still needs to be retained
     this.renderRoot.addEventListener(ChartEventType.LegendItemSelect, this.onLegendItemSelect as EventListener);
     this.renderRoot.addEventListener(ChartEventType.LegendItemUnselect, this.onLegendItemUnselect as EventListener);
+    document.addEventListener(ChartEventType.ThemeSchemaChange, this.onThemeSchemaChange as EventListener);
   }
 
   disconnectedCallback(): void {
@@ -110,6 +117,7 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     window.removeEventListener('resize', this.boundResizeHandler);
     this.renderRoot.removeEventListener(ChartEventType.LegendItemSelect, this.onLegendItemSelect as EventListener);
     this.renderRoot.removeEventListener(ChartEventType.LegendItemUnselect, this.onLegendItemUnselect as EventListener);
+    document.removeEventListener(ChartEventType.ThemeSchemaChange, this.onThemeSchemaChange as EventListener);
 
     this.destroy();
   }

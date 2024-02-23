@@ -1,5 +1,6 @@
 import { merge } from 'lodash-es';
 import { defaultTheme, ThemeKey, themes } from './theme';
+import { defaultThemeSchema, ThemeSchema, ThemeSchemaKey, themeSchemas } from './theme-schema';
 
 /**
  * The global settings.
@@ -7,6 +8,8 @@ import { defaultTheme, ThemeKey, themes } from './theme';
 export interface Settings {
   theme: ThemeKey;
   themes: Map<ThemeKey | string, string[]>;
+  themeSchema: ThemeSchemaKey;
+  themeSchemas: Map<ThemeSchemaKey | string, ThemeSchema>;
 
   /**
    * Suffixed for big numbers. It's an array of objects of number/suffix pairs.
@@ -30,6 +33,15 @@ export interface Settings {
    * @returns the default settings
    */
   addTheme: (themeKey: string, colors: string[]) => Settings;
+
+  /**
+   * Creates a new theme schema and append to {@link Settings.themes | themes}.
+   *
+   * @param themeSchemaKey the theme schema key which is unique
+   * @param themeSchema an Object about theme settings of this theme schema
+   * @returns the default settings
+   */
+  addThemeSchema: (themeKey: string, themeSchema: ThemeSchema) => Settings;
 }
 
 /**
@@ -55,6 +67,8 @@ export const settings: Settings = {
   ],
   theme: defaultTheme,
   themes,
+  themeSchema: defaultThemeSchema,
+  themeSchemas: themeSchemas,
 
   set: function (partialSettings: Partial<Settings>): Settings {
     return merge(this, partialSettings);
@@ -63,6 +77,12 @@ export const settings: Settings = {
   addTheme: function (themeKey: string, colors: string[]): Settings {
     this.themes.set(themeKey, colors);
     this.set({ theme: themeKey as ThemeKey });
+    return this;
+  },
+
+  addThemeSchema: function (themeSchemaKey: string, themeSchema: ThemeSchema): Settings {
+    this.themeSchemas.set(themeSchemaKey, themeSchema);
+    this.set({ themeSchema: themeSchemaKey as ThemeSchemaKey });
     return this;
   },
 };
