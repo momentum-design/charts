@@ -1,4 +1,5 @@
 import { Chart as CJ, ChartEvent, Plugin } from 'chart.js/auto';
+import { getColorsByLength } from '../../helpers/utils';
 import { ChartData, ChartOptions, ChartType } from '../../types';
 import { Chart } from '../.internal';
 
@@ -79,26 +80,27 @@ export class CategoryLabelSelectable<TChart extends Chart<ChartData, ChartOption
     opts?: { onLabelClick?: (label: string | undefined, selectedLabels?: string[]) => void },
     activeLabel?: string,
   ) {
-    const changedColorStatus = chart.data.labels?.map((label) => {
+    const colorsStatus = chart.data.labels?.map((label) => {
       return this.selectedLabels.indexOf(label as string) >= 0;
     });
-    if (changedColorStatus && changedColorStatus.length > 0) {
+    if (colorsStatus && colorsStatus.length > 0) {
       chart.data.datasets.forEach((dataset) => {
         if (!dataset.label) {
           return;
         }
         let backgroundColors = this.datasetColors[dataset.label];
-        if (!backgroundColors) {
-          if (typeof dataset.backgroundColor === 'string') {
-            backgroundColors = Array(changedColorStatus.length).fill(dataset.backgroundColor);
-          } else {
-            backgroundColors = dataset.backgroundColor as string[];
-          }
+        if (!backgroundColors && dataset.backgroundColor) {
+          backgroundColors = getColorsByLength(
+            typeof dataset.backgroundColor === 'string'
+              ? (dataset.backgroundColor as string)
+              : (dataset.backgroundColor as string[]),
+            colorsStatus.length,
+          );
           this.datasetColors[dataset.label] = [...backgroundColors];
         }
         if (this.selectedLabels.length > 0) {
-          backgroundColors = changedColorStatus.map((value, index) =>
-            value ? backgroundColors[index] : backgroundColors[index] + '4D',
+          backgroundColors = colorsStatus.map((value, index) =>
+            value ? backgroundColors[index] : backgroundColors[index] + '8D',
           );
         }
         dataset.backgroundColor = backgroundColors;

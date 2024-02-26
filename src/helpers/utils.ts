@@ -55,3 +55,11 @@ export function isEmptyObject(value: Record<string, unknown>): boolean {
   }
   return false;
 }
+
+export function getColorsByLength(sourceColor: string | string[], length: number): string[] {
+  if (length < 0 || !sourceColor || (Array.isArray(sourceColor) && sourceColor.length === 0)) {
+    return [];
+  }
+  const colorArray = Array.isArray(sourceColor) ? sourceColor : [sourceColor];
+  return Array.from({ length }, (_, index) => colorArray[index % colorArray.length]);
+}

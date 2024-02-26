@@ -1,9 +1,12 @@
 import {
+  Chart as CJ,
   ChartConfiguration,
   ChartDataset,
   ChartOptions as CJOptions,
+  ChartType as CJChartType,
   ChartType as CJType,
   Color,
+  LegendItem as CJLegendItem,
   Plugin as CJPlugin,
   ScriptableLineSegmentContext,
   Tick,
@@ -14,7 +17,7 @@ import zoomPlugin from 'chartjs-plugin-zoom';
 import { merge } from 'lodash-es';
 import { chartA11y, chartSeriesClick } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
-import { isNullOrUndefined, mergeObjects, toChartJSType } from '../../helpers/utils';
+import { isNullOrUndefined, mergeObjects, getColorsByLength, toChartJSType } from '../../helpers/utils';
 import {
   ChartDataView,
   ChartType,
@@ -52,7 +55,6 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     display: true,
     stacked: false,
   };
-
   static readonly defaultScaleOptions = {
     ticks: { padding: 10, maxRotation: 0, autoSkip: true },
     grid: {
@@ -158,7 +160,6 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
         return this.setItemActiveStyle(legendItem);
       },
     };
-
     this.enableLegend();
     const tooltip = this.getTooltip();
     const options: CJOptions = {
@@ -175,56 +176,70 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
           text: this.options.title,
         },
         legend: this.legend?.getChartJSConfiguration({
-          overwriteLabels: (labels, chart) => {
-            labels.map((label) => {
-              if (this.options.legend?.markerStyle) {
-                label.pointStyle = this.options.legend?.markerStyle;
-                label.lineWidth = 0;
-                return label;
-              }
-              let dataset = chart.data.datasets.find((dataset) => dataset.label === label.text);
-              dataset = dataset as ChartDataset<'line' | 'bar', number[]>;
-              if (dataset.pointStyle) {
-                label.pointStyle = dataset.pointStyle as MarkerStyle;
-              } else if (dataset?.type === 'line') {
-                label.pointStyle = 'line';
-                if (dataset.borderDash) {
-                  label.lineDash = [2, 2];
-                }
-              } else {
-                label.pointStyle = 'rectRounded';
-              }
-              return label;
-            });
-            return labels;
-          },
-          onItemClick: (chart, legendItem) => {
-            if (this.options.legend?.selectable) {
-              chart.api?.update();
-            } else {
-              if (typeof legendItem.datasetIndex !== 'undefined') {
-                chart.api?.setDatasetVisibility(
-                  legendItem.datasetIndex,
-                  !chart.api.isDatasetVisible(legendItem.datasetIndex),
-                );
-                chart.api?.update();
-              }
-            }
-          },
+          overwriteLabels: (labels: CJLegendItem[], chart: CJ<CJChartType>) => this.overwriteLabels(labels, chart),
+          onItemClick: (chart: Chart<XYData, XYChartOptions>, legendItem: CJLegendItem) =>
+            this.onItemClick(chart, legendItem),
         }),
-        tooltip: tooltip.toCJ(),
+        tooltip: {
+          position: 'nearest',
+        },
       },
       scales: {
         categoryAxis: XYChart.defaultScaleOptions,
         valueAxis: XYChart.defaultScaleOptions,
       },
     };
+    this.assembleOptions(options);
+
+    return options;
+  }
+
+  private overwriteLabels(labels: CJLegendItem[], chart: CJ<CJChartType>): CJLegendItem[] {
+    return labels.map((label) => {
+      if (this.options.legend?.markerStyle) {
+        label.pointStyle = this.options.legend?.markerStyle;
+        label.lineWidth = 0;
+        return label;
+      }
+      let dataset = chart.data.datasets.find((dataset) => dataset.label === label.text);
+      dataset = dataset as ChartDataset<'line' | 'bar', number[]>;
+      if (dataset.pointStyle) {
+        label.pointStyle = dataset.pointStyle as MarkerStyle;
+      } else if (dataset?.type === 'line') {
+        label.pointStyle = 'line';
+        if (dataset.borderDash) {
+          label.lineDash = [2, 2];
+        }
+      } else {
+        label.pointStyle = 'rectRounded';
+      }
+      return label;
+    });
+  }
+
+  private onItemClick(chart: Chart<XYData, XYChartOptions>, legendItem: CJLegendItem): void {
+    if (this.options.legend?.selectable) {
+      chart.api?.update();
+    } else {
+      if (typeof legendItem.datasetIndex !== 'undefined') {
+        chart.api?.setDatasetVisibility(legendItem.datasetIndex, !chart.api.isDatasetVisible(legendItem.datasetIndex));
+        chart.api?.update();
+      }
+    }
+  }
+
+  private assembleOptions(options: CJOptions): void {
     if (options?.plugins?.legend?.labels) {
       options.plugins.legend.labels.padding = 16;
     }
     if (this.options.padding) {
       options.layout = merge({}, options.layout, { padding: this.options.padding });
     }
+    this.assembleCategoryAxis(options);
+    this.assembleValueAxes(options);
+  }
+
+  private assembleCategoryAxis(options: CJOptions): void {
     if (this.options.categoryAxis) {
       if (options.scales?.categoryAxis) {
         options.scales.categoryAxis = {
@@ -253,63 +268,89 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
         } else {
           options.scales.categoryAxis.position = this.isHorizontal() ? Position.Left : Position.Bottom;
         }
-        options.scales.categoryAxis.ticks = options.scales.categoryAxis.ticks || {};
-        if (this.options.categoryAxis.type) {
-          options.scales.categoryAxis.type = this.options.categoryAxis.type;
-          if (options.scales.categoryAxis.type === 'time' && this.options.categoryAxis) {
-            options.scales.categoryAxis.time = { unit: this.options.categoryAxis.timeUnit };
+        this.assembleCategoryAxisTicks(options);
+      }
+    }
+  }
 
-            if (this.options.categoryAxis.labelFormat) {
-              options.scales.categoryAxis.time.displayFormats = {
-                [this.options.categoryAxis.timeUnit as string]: this.options.categoryAxis.labelFormat,
-              };
-              options.scales.categoryAxis.time.tooltipFormat = this.options.categoryAxis.labelFormat;
-            }
-          }
-        }
+  private assembleCategoryAxisTicks(options: CJOptions): void {
+    if (!options?.scales?.categoryAxis || !this.options.categoryAxis) {
+      return;
+    }
+    options.scales.categoryAxis.ticks = options.scales.categoryAxis.ticks || {};
+    if (this.options.categoryAxis.type) {
+      options.scales.categoryAxis.type = this.options.categoryAxis.type;
+      if (options.scales.categoryAxis.type === 'time' && this.options.categoryAxis) {
+        options.scales.categoryAxis.time = { unit: this.options.categoryAxis.timeUnit };
 
-        if (!this.options.categoryAxis.type || this.options.categoryAxis.type === 'category') {
-          if (this.options.categoryAxis.callback) {
-            const categoryCallback = this.options.categoryAxis.callback;
-            options.scales.categoryAxis.ticks = {
-              ...options.scales.categoryAxis.ticks,
-              callback: function (val: number | string, index: number, ticks: Tick[]) {
-                return typeof categoryCallback === 'function'
-                  ? categoryCallback(this.getLabelForValue(val as number), index, ticks)
-                  : this.getLabelForValue(val as number);
-              },
-            };
-          }
-          if (this.options.categoryAxis?.labelSelectable && this.categoryLabelSelectable?.selectedLabels) {
-            options.scales.categoryAxis.ticks = {
-              ...options.scales.categoryAxis.ticks,
-              color: (ctx) => {
-                if (this.options.categoryAxis?.labelColor) {
-                  return this.options.categoryAxis.labelColor as Color;
-                }
-                const selectedLabels = this.categoryLabelSelectable?.selectedLabels ?? [];
-                let firstTickIndex = 0;
-                let lastTickIndex = 0;
-                ctx.chart.scales.categoryAxis.ticks?.map((tick, index) => {
-                  index === 0 ? (firstTickIndex = tick.value) : (lastTickIndex = tick.value);
-                });
-                if (selectedLabels.length > 0) {
-                  const allColors = ctx.chart.data.labels?.map((label) => {
-                    return selectedLabels.indexOf(label as string) >= 0
-                      ? this.clickedLabelColor
-                      : this.unclickedLabelColor;
-                  });
-                  return (allColors?.slice(firstTickIndex, lastTickIndex + 1) ?? []) as unknown as Color;
-                } else {
-                  return this.defaultLabelColor;
-                }
-              },
-            };
-          }
+        if (this.options.categoryAxis.labelFormat) {
+          options.scales.categoryAxis.time.displayFormats = {
+            [this.options.categoryAxis.timeUnit as string]: this.options.categoryAxis.labelFormat,
+          };
+          options.scales.categoryAxis.time.tooltipFormat = this.options.categoryAxis.labelFormat;
         }
       }
     }
 
+    if (!this.options.categoryAxis.type || this.options.categoryAxis.type === 'category') {
+      if (this.options.categoryAxis.callback) {
+        const categoryCallback = this.options.categoryAxis.callback;
+        options.scales.categoryAxis.ticks = {
+          ...options.scales.categoryAxis.ticks,
+          callback: function (val: number | string, index: number, ticks: Tick[]) {
+            return typeof categoryCallback === 'function'
+              ? categoryCallback(this.getLabelForValue(val as number), index, ticks)
+              : this.getLabelForValue(val as number);
+          },
+        };
+      }
+      this.assembleCategoryAxisLabelSelectable(options);
+    }
+  }
+
+  private assembleCategoryAxisLabelSelectable(options: CJOptions): void {
+    if (!options?.scales?.categoryAxis || !this.options.categoryAxis) {
+      return;
+    }
+    if (this.options.categoryAxis?.labelSelectable && this.categoryLabelSelectable?.selectedLabels) {
+      options.scales.categoryAxis.ticks = {
+        ...options.scales.categoryAxis.ticks,
+        color: (ctx) => {
+          const labelColor = this.options.categoryAxis?.labelColor;
+          let labelColors: string[];
+          if (labelColor && ctx.chart.data.labels) {
+            labelColors = getColorsByLength(
+              typeof labelColor === 'string' ? (labelColor as string) : (labelColor as string[]),
+              ctx.chart.data.labels.length,
+            );
+          }
+          const selectedLabels = this.categoryLabelSelectable?.selectedLabels ?? [];
+
+          let firstTickIndex = 0;
+          let lastTickIndex = 0;
+          ctx.chart.scales.categoryAxis.ticks?.map((tick, index) => {
+            index === 0 ? (firstTickIndex = tick.value) : (lastTickIndex = tick.value);
+          });
+          if (selectedLabels.length > 0) {
+            const allColors = ctx.chart.data.labels?.map((label, index) => {
+              return selectedLabels.indexOf(label as string) >= 0
+                ? labelColor
+                  ? labelColors[index]
+                  : this.clickedLabelColor
+                : labelColor
+                ? labelColors[index] + '8D'
+                : this.unclickedLabelColor;
+            });
+            return (allColors?.slice(firstTickIndex, lastTickIndex + 1) ?? []) as unknown as Color;
+          } else {
+            return labelColor ? (labelColor as Color) : this.defaultLabelColor;
+          }
+        },
+      };
+    }
+  }
+
+  private assembleValueAxes(options: CJOptions): void {
     if (!this.options.valueAxes) {
       this.options.valueAxes = [{}];
     }
@@ -357,8 +398,6 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
         { position: valueAxis.position },
       );
     });
-
-    return options;
   }
 
   private getDatasets(): ChartDataset<CJType, number[]>[] {
