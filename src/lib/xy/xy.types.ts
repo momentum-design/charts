@@ -49,9 +49,9 @@ export interface AxisOptions {
    */
   ticksStepSize?: number;
   /**
-   * Label color of tick.
+   * Text color of tick.
    */
-  labelColor?: string | string[];
+  textColor?: string | string[];
   /**
    * Returns the string representation of the tick values that should be displayed on the chart.
    */
