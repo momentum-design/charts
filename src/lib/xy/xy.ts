@@ -17,7 +17,7 @@ import zoomPlugin from 'chartjs-plugin-zoom';
 import { merge } from 'lodash-es';
 import { chartA11y, chartSeriesClick } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
-import { isNullOrUndefined, mergeObjects, getColorsByLength, toChartJSType } from '../../helpers/utils';
+import { getColorsByLength, isNullOrUndefined, mergeObjects, toChartJSType } from '../../helpers/utils';
 import {
   ChartDataView,
   ChartType,
@@ -258,7 +258,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
           ticks: {
             autoSkip: this.options.categoryAxis.autoSkip,
             maxTicksLimit: this.options.categoryAxis.maxTicksLimit,
-            color: this.options.categoryAxis.labelColor,
+            color: this.options.categoryAxis.textColor,
           },
           display: this.options.categoryAxis.display,
         };
@@ -316,11 +316,11 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       options.scales.categoryAxis.ticks = {
         ...options.scales.categoryAxis.ticks,
         color: (ctx) => {
-          const labelColor = this.options.categoryAxis?.labelColor;
-          let labelColors: string[];
-          if (labelColor && ctx.chart.data.labels) {
-            labelColors = getColorsByLength(
-              typeof labelColor === 'string' ? (labelColor as string) : (labelColor as string[]),
+          const textColor = this.options.categoryAxis?.textColor;
+          let textColors: string[];
+          if (textColor && ctx.chart.data.labels) {
+            textColors = getColorsByLength(
+              typeof textColor === 'string' ? (textColor as string) : (textColor as string[]),
               ctx.chart.data.labels.length,
             );
           }
@@ -334,16 +334,16 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
           if (selectedLabels.length > 0) {
             const allColors = ctx.chart.data.labels?.map((label, index) => {
               return selectedLabels.indexOf(label as string) >= 0
-                ? labelColor
-                  ? labelColors[index]
+                ? textColor
+                  ? textColors[index]
                   : this.clickedLabelColor
-                : labelColor
-                ? labelColors[index] + '8D'
+                : textColor
+                ? textColors[index] + '8D'
                 : this.unclickedLabelColor;
             });
             return (allColors?.slice(firstTickIndex, lastTickIndex + 1) ?? []) as unknown as Color;
           } else {
-            return labelColor ? (labelColor as Color) : this.defaultLabelColor;
+            return textColor ? (textColor as Color) : this.defaultLabelColor;
           }
         },
       };
@@ -383,7 +383,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
           ticks: {
             autoSkip: valueAxis.autoSkip,
             maxTicksLimit: valueAxis.maxTicksLimit,
-            color: valueAxis.labelColor,
+            color: valueAxis.textColor,
             callback: (tickValue: number | string, index: number) => {
               return typeof valueAxis.callback === 'function'
                 ? valueAxis.callback(tickValue, index)
@@ -438,7 +438,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     dataset.label = series.name;
     dataset.borderColor = this.options.categoryAxis?.enableColor ? colors : colors[index];
     dataset.backgroundColor = this.options.categoryAxis?.enableColor ? colors : colors[index];
-    dataset.type = toChartJSType(styleMapping?.type || this.getType());
+    dataset.type = toChartJSType(styleMapping?.type ?? this.options.seriesOptions?.type ?? this.getType());
     dataset = this.setAxisIDs(dataset, styleMapping.valueAxisIndex);
     if (styleMapping.order) {
       dataset.order = styleMapping.order;
@@ -449,7 +449,11 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     if (dataset.type === 'bar') {
       dataset = this.createBarDataset(dataset);
     }
-    return this.afterDatasetCreated(dataset, { styleOptions: styleMapping, color: colors[index], index });
+    return this.afterDatasetCreated(dataset, {
+      styleOptions: styleMapping,
+      color: colors[index],
+      index,
+    });
   }
 
   private createLineDataset(
@@ -467,12 +471,15 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       };
     }
     dataset.pointStyle = this.setPointStyle(dataset, styleMapping);
-    if (styleMapping.type === 'dashed' || styleMapping.type === 'dashedArea') {
+    if (
+      styleMapping.type === 'dashed' ||
+      styleMapping.type === 'dashedArea' ||
+      (!styleMapping.type &&
+        (this.options.seriesOptions?.type === 'dashed' || this.options.seriesOptions?.type === 'dashedArea'))
+    ) {
       dataset.borderDash = this.borderDash;
     }
-    if (styleMapping.tension) {
-      dataset.tension = styleMapping.tension;
-    }
+    dataset.tension = styleMapping.tension ?? this.options.seriesOptions?.tension;
     return dataset;
   }
 

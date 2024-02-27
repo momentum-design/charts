@@ -103,12 +103,7 @@ const Example = () =>
 
     return (
       <WithActions buttons={<Buttons />}>
-        <mdw-chart
-          key={key}
-          type="bar"
-          data={JSON.stringify(data)}
-          options={JSON.stringify(options)}
-        ></mdw-chart>
+        <mdw-chart key={key} type="bar" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-chart>
       </WithActions>
     );
   });
@@ -155,7 +150,7 @@ These are only the common options supported by all axes. Please see specific axi
 | autoSkip      | `boolean`               | `true`  | If true, automatically calculates how many labels can be shown and hides labels accordingly. Labels will be rotated up to maxRotation before skipping any. Turn autoSkip off to show all labels no matter what. |
 | ticksPadding  | `number`                |         | Padding between ticks on the horizontal or vertical axis.                                                                                                                                                       |
 | ticksStepSize | `number`                |         | User defined fixed step size for the axis.                                                                                                                                                                      |
-| labelColor    | ` string` \| `string[]` |         | Label color of tick.                                                                                                                                                                                            |
+| textColor     | ` string` \| `string[]` |         | Text color of tick.                                                                                                                                                                                             |
 | callback      | `function`              |         | Returns the string representation of the tick values that should be displayed on the chart.                                                                                                                     |
 
 ### SeriesOptions

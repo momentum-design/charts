@@ -3,7 +3,7 @@ import { Font, LegendOptions, Padding } from '.';
 import { TooltipOptions } from '../lib/tooltip';
 
 export type MarkerStyle = 'circle' | 'rect' | 'rectRounded' | 'rectRot' | 'triangle' | false;
-export type SeriesType = 'bar' | 'line' | 'area' | 'dashed';
+export type SeriesType = 'bar' | 'line' | 'area' | 'dashed' | 'dashedArea';
 
 export type ChartContainer =
   | string
