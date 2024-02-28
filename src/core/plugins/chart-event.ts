@@ -7,7 +7,7 @@ export function chartSeriesStatus(originChartColor: string | string[]) {
     beforeUpdate: (chart: Chart): void => {
       const data = chart.config.data;
       const metaData = chart.getDatasetMeta(0);
-      let originBG = originChartColor;
+      const originBG = originChartColor;
 
       const selectedArr = metaData?.data?.map((data) => data.active);
 
