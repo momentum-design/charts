@@ -30,12 +30,12 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
 
   constructor(public chart: TChart) {}
 
-  onSeriesClick(cjEvent: CJChartEvent, elements: ActiveElement[] | any, chart: any): void {
+  onSeriesClick(cjEvent: CJChartEvent, elements: ActiveElement[], chart: any): void {
     if (!elements || !elements.length || !this.chart.options.seriesSelectable) return;
     // TODO: element.index is Pie chart attribute.
     const clickedSeriesIndex: number[] = elements.map((element: ActiveElement) => element.index);
 
-    let cjLegendItem: CJLegendItem = {
+    const cjLegendItem: CJLegendItem = {
       text: (chart.data.labels && chart.data.labels[clickedSeriesIndex[0]]) as string,
       index: clickedSeriesIndex[0],
     };
