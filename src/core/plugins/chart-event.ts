@@ -1,26 +1,30 @@
-/* eslint-disable */
-import Chart, { ActiveElement, ChartEvent } from 'chart.js/auto';
-import { LegendClickData } from './plugin.types';
-// TODO: refactor this function
-const chartSeriesClick = (event: ChartEvent | any, elements: ActiveElement[] | any, chart: Chart | any): void => {
-  const points = chart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true);
+import type { Chart } from 'chart.js/auto';
+import { setColorToRgba } from '../utils';
 
-  if (points.length) {
-    const firstPoint = points[0];
-    const label = chart.data.labels[firstPoint.index];
-    const value = chart.data.datasets[firstPoint.datasetIndex].data[firstPoint.index];
+export function chartSeriesStatus(originChartColor: string | string[]) {
+  return {
+    id: 'chartSeriesStatus',
+    beforeUpdate: (chart: Chart): void => {
+      const data = chart.config.data;
+      const metaData = chart.getDatasetMeta(0);
+      let originBG = originChartColor;
 
-    if (chart.config.options?.isLegendClick) {
-      if (['pie', 'doughnut'].includes(chart.config.type)) {
-        const legendObj: LegendClickData = {
-          label: label,
-          value: value,
-        };
-        chart.config.options.onLegendClick(legendObj);
-        firstPoint.element.options.offset = 15;
+      const selectedArr = metaData?.data?.map((data) => data.active);
+
+      if (typeof originBG !== 'string' && originBG?.length > 0) {
+        const result = originBG.map((color: string, index: number) => {
+          if (selectedArr[index]) {
+            return color;
+          } else {
+            return setColorToRgba(color, 0.4);
+          }
+        });
+        data.datasets.length ? (data.datasets[0].backgroundColor = result) : null;
       }
-    }
-  }
-};
 
-export { chartSeriesClick };
+      if (selectedArr.every((selected) => selected === false)) {
+        data.datasets.length ? (data.datasets[0].backgroundColor = originBG) : null;
+      }
+    },
+  };
+}

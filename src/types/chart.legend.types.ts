@@ -5,7 +5,7 @@ import { ChartEvent } from './chart.event.types';
 export const inactiveColor = '#c9c9c9';
 export interface LegendItem {
   text: string;
-  color: string;
+  color?: string;
   selected?: boolean;
   hidden?: boolean;
   index?: number;

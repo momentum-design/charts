@@ -33,7 +33,7 @@ function showComponent() {
 
 ## Selectable Legend
 
-In this way, you can implement some interactions with other widgets. 
+In this way, you can implement some interactions with other widgets.
 
 ```jsx live noInline
 const data = {
@@ -48,11 +48,12 @@ const options = {
   legend: {
     selectable: true,
   },
+  seriesSelectable: true,
   tooltip: {
     title: '2023-07',
     combineItems: true,
     maxWidth: '260px',
-  }
+  },
 };
 
 const Example = () => {
@@ -63,7 +64,7 @@ const Example = () => {
     setSelectedLegendItems([...e.context.chart.legend.selectedItems]);
   });
   const removeItem = (item) => {
-    const items = selectedLegendItems.filter(si => si.text !== item.text);
+    const items = selectedLegendItems.filter((si) => si.text !== item.text);
     setSelectedLegendItems(items);
     setChartStates({ selectedLegendItems: items });
   };
@@ -84,7 +85,12 @@ const Example = () => {
             style={{ backgroundColor: item.color }}
           >
             <span className="py-1 pl-2 pr-1">{item.text}</span>
-            <span className="cursor-pointer rounded inline-block py-1 px-2 hover:bg-gray-700/50" onClick={() => removeItem(item)}>&times;</span>
+            <span
+              className="cursor-pointer rounded inline-block py-1 px-2 hover:bg-gray-700/50"
+              onClick={() => removeItem(item)}
+            >
+              &times;
+            </span>
           </div>
         ))}
       </div>

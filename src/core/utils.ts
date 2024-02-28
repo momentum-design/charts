@@ -82,3 +82,14 @@ export function getFontStyleAbbreviation(fontSpec: Partial<FontSpec>): string {
 export function formatBigNumber(value: number, precision = 0): string {
   return helper.formatNumber(value, precision, settings.bigNumberSuffixes);
 }
+
+export function setColorToRgba(color: string, alpha: number) {
+  const hexToRgb = (hex: string) => {
+    const bigint = parseInt(hex.substring(1), 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+  return hexToRgb(color);
+}

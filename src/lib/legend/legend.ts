@@ -1,4 +1,5 @@
 import {
+  ActiveElement,
   Chart as CJ,
   ChartEvent as CJChartEvent,
   ChartType as CJChartType,
@@ -21,11 +22,64 @@ import { Chart } from '../.internal';
 export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
   items: LegendItem[] = [];
 
+  selectedSeries: LegendItem[] = [];
+
   get selectedItems(): LegendItem[] {
     return this.items.filter((item) => item.selected);
   }
 
   constructor(public chart: TChart) {}
+
+  onSeriesClick(cjEvent: CJChartEvent, elements: ActiveElement[] | any, chart: any): void {
+    if (!elements || !elements.length || !this.chart.options.seriesSelectable) return;
+    // TODO: element.index is Pie chart attribute.
+    const clickedSeriesIndex: number[] = elements.map((element: ActiveElement) => element.index);
+
+    let cjLegendItem: CJLegendItem = {
+      text: (chart.data.labels && chart.data.labels[clickedSeriesIndex[0]]) as string,
+      index: clickedSeriesIndex[0],
+    };
+    chart.legend?.options?.onClick(cjEvent, cjLegendItem, 'onClick');
+
+    const eventContext: EventContext<LegendItem[]> = {
+      chart: this.chart,
+      data: this.selectedSeries,
+      event: cjEvent,
+    };
+    const evt = new ChartEvent(ChartEventType.SeriesItemClick, eventContext);
+    this.chart.rootElement?.dispatchEvent(evt);
+  }
+
+  setSelectedSeriesData(selectedIndex: number): void {
+    const isSelected = this.selectedSeries.find((selected) => selected.index === selectedIndex);
+    if (isSelected) {
+      this.selectedSeries = this.selectedSeries.filter((selected) => selected.index !== selectedIndex);
+    } else {
+      const selectItem = {
+        text: (this.chart.api?.data.labels && this.chart.api.data.labels[selectedIndex]) as string,
+        index: selectedIndex,
+      };
+      this.selectedSeries.push(selectItem);
+    }
+
+    this.setSelectSeriesStatus(this.selectedSeries);
+  }
+
+  setSelectSeriesStatus(selectedSeries: LegendItem[], manualTrigger = false): void {
+    const metaData = this.chart.api?.getDatasetMeta(0);
+    if (metaData) {
+      metaData.data.forEach((item, index: number) => {
+        item.active = Boolean(selectedSeries?.find((selected) => selected.index === index));
+      });
+    }
+
+    if (manualTrigger) {
+      this.selectedSeries = this.selectedSeries.filter((selectedItem) =>
+        this.selectedItems.find((item) => item.index === selectedItem.index),
+      );
+      this.chart.api?.update();
+    }
+  }
 
   changeSelectedItems(items: LegendItem[]): void {
     const itemsChangedToSelect = items.filter((item) => !this.selectedItems.find((si) => si.text === item.text));
@@ -37,6 +91,8 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
     itemsChangedToUnselect.forEach((usi) => {
       this.unselectItem(usi);
     });
+
+    this.setSelectSeriesStatus(items, true);
   }
 
   setItemInactiveStyle(item: LegendItem): void {
@@ -104,6 +160,10 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
           } else {
             this.selectItem(legendItem);
           }
+        }
+
+        if (chartOptions.seriesSelectable) {
+          this.setSelectedSeriesData(legendItem.index as number);
         }
 
         if (typeof opts?.onItemClick === 'function') {
