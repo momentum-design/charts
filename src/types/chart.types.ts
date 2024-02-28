@@ -37,6 +37,7 @@ export interface ChartOptions {
   };
   colors?: string[];
   colorMode?: ColorMode;
+  seriesSelectable?: boolean;
 }
 
 /**
