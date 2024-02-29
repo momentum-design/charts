@@ -120,12 +120,13 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
         return this.setItemActiveStyle(legendItem);
       },
     };
+    this.enableSegmentClick();
     this.enableLegend();
     let options: ChartOptions = {
       maintainAspectRatio: false,
       responsive: true,
       onClick: (event, elements, chart) => {
-        this.legend?.onSeriesClick(event, elements, chart);
+        this.segmentClick?.onSegmentClick(event, elements, chart);
       },
       plugins: {
         legend: this.legend?.getChartJSConfiguration({
