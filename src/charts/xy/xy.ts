@@ -15,7 +15,7 @@ import {
 import 'chartjs-adapter-moment';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { merge } from 'lodash-es';
-import { chartA11y } from '../../core/plugins';
+import { ChartA11y, chartLegendA11y } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
 import { getColorsByLength, isNullOrUndefined, mergeObjects, toChartJSType } from '../../helpers/utils';
 import {
@@ -88,7 +88,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     if (this.chartData) {
       chartDatasets = this.getDatasets();
     }
-    const plugins: CJPlugin[] = [chartA11y];
+    const plugins: CJPlugin[] = [new ChartA11y().toCJ(), chartLegendA11y];
     if (this.options.scrollable) {
       plugins.push(zoomPlugin);
     }

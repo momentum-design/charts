@@ -1,5 +1,5 @@
 import { ChartConfiguration, ChartDataset, ChartOptions, ChartType as CJType } from 'chart.js/auto';
-import { chartA11y, chartLegendA11y } from '../../core/plugins';
+import { ChartA11y } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
 import { toChartJSType } from '../../helpers/utils';
 import { ChartData, ChartType, TableData } from '../../types';
@@ -52,7 +52,7 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
         datasets: chartDatasets,
       },
       options: this.getChartOptions(),
-      plugins: [chartA11y, chartLegendA11y, this.createPointerNeedle()],
+      plugins: [new ChartA11y().toCJ(), this.createPointerNeedle()],
     };
   }
 

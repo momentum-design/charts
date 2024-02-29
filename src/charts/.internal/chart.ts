@@ -1,10 +1,4 @@
-import {
-  Chart as CJ,
-  ChartConfiguration as CJConfiguration,
-  ChartOptions as CJOptions,
-  Color,
-  FontSpec,
-} from 'chart.js/auto';
+import { Chart as CJ, ChartOptions as CJOptions, Color, FontSpec } from 'chart.js/auto';
 import { ColorSetName, formatBigNumber as fbn, getThemeByName, settings, Theme, ThemeName, themes } from '../../core';
 import { darkenColor, formatNumber, getRandomColor, lightenColor, mergeObjects } from '../../helpers';
 import { ChartContainer, ChartData, ChartOptions, ColorMode, Font, TableData } from '../../types';
@@ -51,10 +45,8 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
     this.init();
 
     const config = this.getConfiguration();
-    this.api = new CJ(this.container, {
-      type: config.type,
-      plugins: config.plugins,
-    } as CJConfiguration);
+    // TODO(zupan) config needs to be split, and be aware of accessibility
+    this.api = new CJ(this.container, config);
     this.canvasElement = this.api.canvas;
     this.rootElement = this.canvasElement.parentElement || this.api.canvas;
     if (this.calculateMaxLimitTicks) {
