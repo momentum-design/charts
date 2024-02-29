@@ -8,7 +8,8 @@ export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
   constructor(public chart: TChart) {}
 
   public onSegmentClick(cjEvent: CJChartEvent, elements: ActiveElement[], chart: any): void {
-    if (!elements || !elements.length || !this.chart.options.seriesSelectable) return;
+    // TODO: Pie Chart use legend.selectable attribute.
+    if (!elements || !elements.length || !this.chart.options.legend?.selectable) return;
     // TODO: element.index is Pie chart attribute.
     const clickedSeriesIndex: number[] = elements.map((element: ActiveElement) => element.index);
 

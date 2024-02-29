@@ -1,9 +1,9 @@
 import type { Chart } from 'chart.js/auto';
-import { setColorToRgba } from '../utils';
+import { alphaColor } from '../../helpers/color';
 
-export function chartSeriesStatus(originChartColor: string | string[]) {
+export function chartSegmentStatus(originChartColor: string | string[]) {
   return {
-    id: 'chartSeriesStatus',
+    id: 'chartSegmentStatus',
     beforeUpdate: (chart: Chart): void => {
       const data = chart.config.data;
       const metaData = chart.getDatasetMeta(0);
@@ -16,7 +16,7 @@ export function chartSeriesStatus(originChartColor: string | string[]) {
           if (selectedArr[index]) {
             return color;
           } else {
-            return setColorToRgba(color, 0.4);
+            return alphaColor(color, 0.4);
           }
         });
         data.datasets.length ? (data.datasets[0].backgroundColor = result) : null;

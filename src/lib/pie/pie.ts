@@ -9,7 +9,7 @@ import {
   TooltipModel as CJTooltipModel,
 } from 'chart.js/auto';
 import { merge } from 'lodash-es';
-import { chartA11y, chartLegendA11y, chartSeriesStatus } from '../../core/plugins';
+import { chartA11y, chartLegendA11y, chartSegmentStatus } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
 import { isNullOrUndefined, mergeObjects } from '../../helpers/utils';
 import {
@@ -69,7 +69,7 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
         datasets: chartDatasets,
       },
       options: this.currentChartOptions,
-      plugins: [chartA11y, chartLegendA11y, chartSeriesStatus(chartDatasets[0].backgroundColor as string | string[])],
+      plugins: [chartA11y, chartLegendA11y, chartSegmentStatus(chartDatasets[0].backgroundColor as string | string[])],
     };
   }
 
