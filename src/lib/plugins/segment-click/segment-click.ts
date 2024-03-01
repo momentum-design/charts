@@ -1,5 +1,13 @@
 import { ActiveElement, ChartEvent as CJChartEvent, LegendItem as CJLegendItem } from 'chart.js/auto';
-import { ChartData, ChartEvent, ChartEventType, ChartOptions, EventContext, LegendItem } from '../../../types';
+import {
+  ChartData,
+  ChartEvent,
+  ChartEventType,
+  ChartOptions,
+  CJElement,
+  EventContext,
+  LegendItem,
+} from '../../../types';
 import { Chart } from '../../.internal';
 
 export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
@@ -46,8 +54,8 @@ export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
   public setSegmentStatus(selectedSegment: LegendItem[], manualTrigger = false): void {
     const metaData = this.chart.api?.getDatasetMeta(0);
     if (metaData) {
-      metaData.data.forEach((item, index: number) => {
-        item.active = Boolean(selectedSegment?.find((selected) => selected.index === index));
+      metaData.data.forEach((item: CJElement, index: number) => {
+        item.selected = Boolean(selectedSegment?.find((selected) => selected.index === index));
       });
     }
 

@@ -1,4 +1,4 @@
-import { ChartType as CJChartType } from 'chart.js/auto';
+import { ChartType as CJChartType, Element } from 'chart.js/auto';
 import { Font, LegendOptions, Padding } from '.';
 import { TooltipOptions } from '../lib/tooltip';
 
@@ -16,6 +16,10 @@ export type TableData = Array<Array<string | number | boolean>>;
 export type JsonData = Record<string, string | number>[];
 // eslint-disable-next-line
 export type ChartData = any | TableData | JsonData;
+
+export interface CJElement extends Element {
+  selected?: boolean;
+}
 
 export interface ChartOptions {
   title?: string;
