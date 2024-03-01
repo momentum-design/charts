@@ -38,7 +38,7 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
       this.unselectItem(usi);
     });
 
-    this.chart.segmentClick?.setSegmentStatus(items, true);
+    this.chart.segmentClick?.setSegmentStatus(true);
   }
 
   setItemInactiveStyle(item: LegendItem): void {
@@ -106,7 +106,7 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
           } else {
             this.selectItem(legendItem);
           }
-          this.chart.segmentClick?.setSelectedSegmentData(legendItem.index as number);
+          this.chart.segmentClick?.setSegmentStatus();
         }
 
         if (typeof opts?.onItemClick === 'function') {

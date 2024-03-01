@@ -1,4 +1,5 @@
 import { ActiveElement, ChartEvent as CJChartEvent, LegendItem as CJLegendItem } from 'chart.js/auto';
+import { cloneDeep } from 'lodash-es';
 import {
   ChartData,
   ChartEvent,
@@ -32,37 +33,22 @@ export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
       data: this.selectedSegment,
       event: cjEvent,
     };
-    const evt = new ChartEvent(ChartEventType.SeriesItemClick, eventContext);
+    const evt = new ChartEvent(ChartEventType.SegmentItemClick, eventContext);
     this.chart.rootElement?.dispatchEvent(evt);
   }
 
-  public setSelectedSegmentData(selectedIndex: number): void {
-    const isSelected = this.selectedSegment.find((selected) => selected.index === selectedIndex);
-    if (isSelected) {
-      this.selectedSegment = this.selectedSegment.filter((selected) => selected.index !== selectedIndex);
-    } else {
-      const selectItem = {
-        text: (this.chart.api?.data.labels && this.chart.api.data.labels[selectedIndex]) as string,
-        index: selectedIndex,
-      };
-      this.selectedSegment.push(selectItem);
-    }
+  public setSegmentStatus(manualTrigger = false): void {
+    // TODO: Pie chart selectedSegment = this.chart.legend?.selectedItems
+    this.selectedSegment = cloneDeep(this.chart.legend?.selectedItems as LegendItem[]);
 
-    this.setSegmentStatus(this.selectedSegment);
-  }
-
-  public setSegmentStatus(selectedSegment: LegendItem[], manualTrigger = false): void {
     const metaData = this.chart.api?.getDatasetMeta(0);
     if (metaData) {
       metaData.data.forEach((item: CJElement, index: number) => {
-        item.selected = Boolean(selectedSegment?.find((selected) => selected.index === index));
+        item.selected = Boolean(this.selectedSegment?.find((selected) => selected.index === index));
       });
     }
 
     if (manualTrigger) {
-      this.selectedSegment = this.selectedSegment.filter((selectedItem) =>
-        this.chart.legend?.selectedItems.find((item) => item.index === selectedItem.index),
-      );
       this.chart.api?.update();
     }
   }
