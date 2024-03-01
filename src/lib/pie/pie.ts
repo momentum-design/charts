@@ -126,7 +126,6 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
       maintainAspectRatio: false,
       responsive: true,
       onClick: (event, elements, chart) => {
-        console.log('---onSegmentClick');
         this.segmentClick?.onSegmentClick(event, elements, chart);
       },
       plugins: {
