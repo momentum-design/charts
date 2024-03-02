@@ -7,4 +7,3 @@ export * from './gauge';
 export * from './line';
 export * from './pie';
 export * from './range';
-export * from './word-cloud';

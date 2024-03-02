@@ -55,7 +55,6 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
    * - `line`
    * - `area`
    * - `range`
-   * - `wordCloud`
    */
   @property({ type: String, reflect: true })
   type?: string;

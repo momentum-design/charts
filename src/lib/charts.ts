@@ -8,10 +8,8 @@ import { GaugeChart } from './gauge';
 import { LineChart } from './line';
 import { PieChart } from './pie';
 import { RangeChart } from './range';
-import { WordCloudChart } from './word-cloud';
 
 export const SUPPORTED_CHARTS = new Map<ChartType, typeof Chart<ChartData, ChartOptions>>([
-  [ChartType.WordCloud, WordCloudChart],
   [ChartType.Bar, BarChart],
   [ChartType.Column, ColumnChart],
   [ChartType.Line, LineChart],
