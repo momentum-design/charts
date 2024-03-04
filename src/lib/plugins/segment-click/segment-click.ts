@@ -1,4 +1,4 @@
-import { ActiveElement, ChartEvent as CJChartEvent, LegendItem as CJLegendItem } from 'chart.js/auto';
+import { ActiveElement, Chart as CJ, ChartEvent as CJChartEvent, LegendItem as CJLegendItem } from 'chart.js/auto';
 import { cloneDeep } from 'lodash-es';
 import {
   ChartData,
@@ -16,7 +16,7 @@ export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
 
   constructor(public chart: TChart) {}
 
-  public onSegmentClick(cjEvent: CJChartEvent, elements: ActiveElement[], chart: any): void {
+  public onSegmentClick(cjEvent: CJChartEvent, elements: ActiveElement[], chart: CJ): void {
     // TODO: Pie Chart use legend.selectable attribute.
     if (!elements || !elements.length || !this.chart.options.legend?.selectable) return;
     // TODO: element.index is Pie chart attribute.
@@ -26,7 +26,10 @@ export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
       text: (chart.data.labels && chart.data.labels[clickedSeriesIndex[0]]) as string,
       index: clickedSeriesIndex[0],
     };
-    chart.legend?.options?.onClick(cjEvent, cjLegendItem, 'onClick');
+
+    if (chart.legend?.options.onClick) {
+      chart.legend.options.onClick.call(chart.legend, cjEvent, cjLegendItem, chart.legend);
+    }
 
     const eventContext: EventContext<LegendItem[]> = {
       chart: this.chart,
