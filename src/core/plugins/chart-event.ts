@@ -1,6 +1,5 @@
 import type { Chart as CJ, Element as CJElement } from 'chart.js/auto';
 import { alphaColor } from '../../helpers/color';
-import { CJElement } from '../../types';
 
 export function chartSegmentStatus(originChartColor: string | string[]) {
   return {
