@@ -1,11 +1,10 @@
-import type { Chart } from 'chart.js/auto';
+import type { Chart as CJ, Element as CJElement } from 'chart.js/auto';
 import { alphaColor } from '../../helpers/color';
-import { CJElement } from '../../types';
 
 export function chartSegmentStatus(originChartColor: string | string[]) {
   return {
     id: 'chartSegmentStatus',
-    beforeUpdate: (chart: Chart): void => {
+    beforeUpdate: (chart: CJ): void => {
       const data = chart.config.data;
       if (!data?.datasets?.length) {
         return;
@@ -13,7 +12,7 @@ export function chartSegmentStatus(originChartColor: string | string[]) {
       const metaData = chart.getDatasetMeta(0);
       const originBG = originChartColor;
 
-      const selectedArr = metaData?.data?.map((data: CJElement) => data?.selected ?? false);
+      const selectedArr = metaData?.data?.map((data: CJElement & { selected?: boolean }) => data?.selected ?? false);
 
       if (typeof originBG !== 'string' && originBG?.length > 0) {
         const result = originBG.map((color: string, index: number) => {

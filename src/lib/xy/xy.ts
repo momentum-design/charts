@@ -179,9 +179,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
           onItemClick: (chart: Chart<XYData, XYChartOptions>, legendItem: CJLegendItem) =>
             this.onItemClick(chart, legendItem),
         }),
-        tooltip: {
-          position: 'nearest',
-        },
+        tooltip: tooltip.toCJ(),
       },
       scales: {
         categoryAxis: XYChart.defaultScaleOptions,

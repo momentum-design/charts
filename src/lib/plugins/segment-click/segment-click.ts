@@ -1,14 +1,12 @@
-import { ActiveElement, Chart as CJ, ChartEvent as CJChartEvent, LegendItem as CJLegendItem } from 'chart.js/auto';
-import { cloneDeep } from 'lodash-es';
 import {
-  ChartData,
-  ChartEvent,
-  ChartEventType,
-  ChartOptions,
-  CJElement,
-  EventContext,
-  LegendItem,
-} from '../../../types';
+  ActiveElement,
+  Chart as CJ,
+  ChartEvent as CJChartEvent,
+  Element,
+  LegendItem as CJLegendItem,
+} from 'chart.js/auto';
+import { deepClone } from '../../../core';
+import { ChartData, ChartEvent, ChartEventType, ChartOptions, EventContext, LegendItem } from '../../../types';
 import { Chart } from '../../.internal';
 
 export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
@@ -42,11 +40,11 @@ export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
 
   public setSegmentStatus(manualTrigger = false): void {
     // TODO: Pie chart selectedSegment = this.chart.legend?.selectedItems
-    this.selectedSegment = cloneDeep(this.chart.legend?.selectedItems as LegendItem[]);
+    this.selectedSegment = deepClone(this.chart.legend?.selectedItems as LegendItem[]);
 
     const metaData = this.chart.api?.getDatasetMeta(0);
     if (metaData) {
-      metaData.data.forEach((item: CJElement, index: number) => {
+      metaData.data.forEach((item: Element & { selected?: boolean }, index: number): void => {
         item.selected = Boolean(this.selectedSegment?.find((selected) => selected.index === index));
       });
     }
