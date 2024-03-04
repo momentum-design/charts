@@ -121,7 +121,6 @@
     "@babel/runtime": "^7.22.3",
     "chart.js": "^4.3.0",
     "chartjs-adapter-moment": "^1.0.1",
-    "chartjs-chart-wordcloud": "^4.3.2",
     "chartjs-plugin-zoom": "^2.0.1",
     "chroma-js": "^2.4.2",
     "lit": "^2.7.5",
