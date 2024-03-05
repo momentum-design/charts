@@ -82,3 +82,12 @@ export function getFontStyleAbbreviation(fontSpec: Partial<FontSpec>): string {
 export function formatBigNumber(value: number, precision = 0): string {
   return helper.formatNumber(value, precision, settings.bigNumberSuffixes);
 }
+
+/**
+ * That it clones value.
+ * @param obj The value to recursively clone.
+ * @returns  Returns the deep cloned value.
+ */
+export function deepClone<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj)) as T;
+}

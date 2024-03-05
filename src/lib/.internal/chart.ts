@@ -3,6 +3,7 @@ import { formatBigNumber as fbn, settings, ThemeKey } from '../../core';
 import { darkenColor, formatNumber, getRandomColor, lightenColor, mergeObjects } from '../../helpers';
 import { ChartContainer, ChartData, ChartOptions, ColorMode, Font, TableData } from '../../types';
 import { Legend } from '../legend';
+import { SegmentClickable } from '../plugins/segment-click';
 import { CategoryLabelSelectable } from '../xy/xy.category-label-selectable';
 
 export abstract class Chart<TData extends ChartData, TOptions extends ChartOptions> {
@@ -23,6 +24,7 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   canvasElement?: HTMLCanvasElement;
   rootElement?: HTMLElement;
   legend?: Legend<typeof this>;
+  segmentClick?: SegmentClickable<typeof this>;
 
   private colors?: string[];
   private lastColor?: string;
@@ -76,6 +78,10 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
 
   protected enableLegend(): void {
     this.legend = new Legend(this);
+  }
+
+  protected enableSegmentClick(): void {
+    this.segmentClick = new SegmentClickable(this);
   }
 
   protected getColorsForKeys(keys: string[]): string[] {

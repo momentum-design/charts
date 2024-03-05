@@ -15,7 +15,7 @@ import {
 import 'chartjs-adapter-moment';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { merge } from 'lodash-es';
-import { chartA11y, chartSeriesClick } from '../../core/plugins';
+import { chartA11y } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
 import { getColorsByLength, isNullOrUndefined, mergeObjects, toChartJSType } from '../../helpers/utils';
 import {
@@ -163,7 +163,6 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     this.enableLegend();
     const tooltip = this.getTooltip();
     const options: CJOptions = {
-      onClick: chartSeriesClick,
       maintainAspectRatio: false,
       responsive: true,
       indexAxis: this.getIndexAxis(),
@@ -180,9 +179,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
           onItemClick: (chart: Chart<XYData, XYChartOptions>, legendItem: CJLegendItem) =>
             this.onItemClick(chart, legendItem),
         }),
-        tooltip: {
-          position: 'nearest',
-        },
+        tooltip: tooltip.toCJ(),
       },
       scales: {
         categoryAxis: XYChart.defaultScaleOptions,

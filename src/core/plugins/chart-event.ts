@@ -1,26 +1,33 @@
-/* eslint-disable */
-import Chart, { ActiveElement, ChartEvent } from 'chart.js/auto';
-import { LegendClickData } from './plugin.types';
-// TODO: refactor this function
-const chartSeriesClick = (event: ChartEvent | any, elements: ActiveElement[] | any, chart: Chart | any): void => {
-  const points = chart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true);
+import type { Chart as CJ, Element as CJElement } from 'chart.js/auto';
+import { alphaColor } from '../../helpers/color';
 
-  if (points.length) {
-    const firstPoint = points[0];
-    const label = chart.data.labels[firstPoint.index];
-    const value = chart.data.datasets[firstPoint.datasetIndex].data[firstPoint.index];
-
-    if (chart.config.options?.isLegendClick) {
-      if (['pie', 'doughnut'].includes(chart.config.type)) {
-        const legendObj: LegendClickData = {
-          label: label,
-          value: value,
-        };
-        chart.config.options.onLegendClick(legendObj);
-        firstPoint.element.options.offset = 15;
+export function chartSegmentStatus(originChartColor: string | string[]) {
+  return {
+    id: 'chartSegmentStatus',
+    beforeUpdate: (chart: CJ): void => {
+      const data = chart.config.data;
+      if (!data?.datasets?.length) {
+        return;
       }
-    }
-  }
-};
+      const metaData = chart.getDatasetMeta(0);
+      const originBG = originChartColor;
 
-export { chartSeriesClick };
+      const selectedArr = metaData?.data?.map((data: CJElement & { selected?: boolean }) => data?.selected ?? false);
+
+      if (typeof originBG !== 'string' && originBG?.length > 0) {
+        const result = originBG.map((color: string, index: number) => {
+          if (selectedArr[index]) {
+            return color;
+          } else {
+            return alphaColor(color, 0.4);
+          }
+        });
+        data.datasets[0].backgroundColor = result;
+      }
+
+      if (selectedArr.every((selected) => selected === false)) {
+        data.datasets[0].backgroundColor = originBG;
+      }
+    },
+  };
+}
