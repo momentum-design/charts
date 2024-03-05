@@ -109,10 +109,6 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
           this.chart.segmentClick?.setSegmentStatus();
         }
 
-        if (chartOptions.seriesSelectable) {
-          this.setSelectedSeriesData(legendItem.index as number);
-        }
-
         if (typeof opts?.onItemClick === 'function') {
           opts.onItemClick(this.chart, cjLegendItem); // TODO(bing): check if it should be cjLegendItem
         }
