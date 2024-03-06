@@ -218,8 +218,11 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
       .setStyle('border-width', '1px');
   }
 
+  // label
   private generateHtmlForLabel(tooltipItem: TooltipItem): DomElement {
-    return new DomElement('span').addClass(`${TOOLTIP_CLASS}-label`).setHtml(tooltipItem.label);
+    const labelText =
+      typeof this.options.formatLabel === 'function' ? this.options.formatLabel(tooltipItem.label) : tooltipItem.label;
+    return new DomElement('span').addClass(`${TOOLTIP_CLASS}-label`).setHtml(labelText);
   }
 
   private generateHtmlForValues(tooltipItem: TooltipItem, labelHidden?: boolean): DomElement {
