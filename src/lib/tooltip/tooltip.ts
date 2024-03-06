@@ -234,7 +234,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
 
     // value
     if (!isNullOrUndefined(tooltipItem.value)) {
-      let valueText =
+      const valueText =
         typeof this.options.formatLabel === 'function'
           ? (this.options.formatLabel(tooltipItem).value as number).toString()
           : formatNumber(tooltipItem.value!, this.chartOptions.valuePrecision!) +
