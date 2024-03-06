@@ -24,7 +24,8 @@ export interface TooltipOptions {
   backgroundColor?: string;
   title?: string | string[] | ((tooltip: CJTooltipModel<CJUnknownChartType>) => string | string[]);
   formatTitle?: (title: string) => string;
-  formatLabel?: (item: TooltipItem) => TooltipItem;
+  formatLabel?: (item: string) => string;
+  formatValue?: (value: number) => string;
   footer?: string | string[] | ((a: unknown) => string | string[]);
   showPercentage?: boolean;
   showUnit?: boolean;

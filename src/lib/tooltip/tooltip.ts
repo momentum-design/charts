@@ -221,7 +221,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
   // label
   private generateHtmlForLabel(tooltipItem: TooltipItem): DomElement {
     const labelText =
-      typeof this.options.formatLabel === 'function' ? this.options.formatLabel(tooltipItem).label : tooltipItem.label;
+      typeof this.options.formatLabel === 'function' ? this.options.formatLabel(tooltipItem.label) : tooltipItem.label;
     return new DomElement('span').addClass(`${TOOLTIP_CLASS}-label`).setHtml(labelText);
   }
 
@@ -235,8 +235,8 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
     // value
     if (!isNullOrUndefined(tooltipItem.value)) {
       const valueText =
-        typeof this.options.formatLabel === 'function'
-          ? (this.options.formatLabel(tooltipItem).value as number).toString()
+        typeof this.options.formatValue === 'function'
+          ? this.options.formatValue(tooltipItem.value as number)
           : formatNumber(tooltipItem.value!, this.chartOptions.valuePrecision!) +
             (this.options.showUnit ? this.chartOptions.valueUnit || '' : '');
       valuesEl.newChild('span').setText(valueText);
