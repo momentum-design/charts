@@ -1,5 +1,12 @@
-import { Chart as CJ, ChartConfiguration as CJConfiguration, ChartOptions as CJOptions, FontSpec } from 'chart.js/auto';
+import {
+  Chart as CJ,
+  ChartConfiguration as CJConfiguration,
+  ChartOptions as CJOptions,
+  Color,
+  FontSpec,
+} from 'chart.js/auto';
 import { formatBigNumber as fbn, settings, ThemeKey } from '../../core';
+import { ThemeSchema, themeSchemas } from '../../core/theme-schema';
 import { darkenColor, formatNumber, getRandomColor, lightenColor, mergeObjects } from '../../helpers';
 import { ChartContainer, ChartData, ChartOptions, ColorMode, Font, TableData } from '../../types';
 import { Legend } from '../legend';
@@ -12,12 +19,11 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
       size: 13,
       family: 'CiscoSansTT Regular,Helvetica Neue,Helvetica,Arial,sans-serif',
       style: 'normal',
-      color: '#121212',
       weight: undefined,
       lineHeight: 1.2,
     },
-    mutedColor: '#535759',
     valuePrecision: 2,
+    themeSchemaKey: 'lighten',
   };
 
   api?: CJ;
@@ -25,6 +31,8 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   rootElement?: HTMLElement;
   legend?: Legend<typeof this>;
   segmentClick?: SegmentClickable<typeof this>;
+  themeSchema?: ThemeSchema;
+  currentTheme?: string; //TODO(Jian Liang) will remove it after move themeSchemaKey to global settings
 
   private colors?: string[];
   private lastColor?: string;
@@ -45,6 +53,7 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
     CJ.defaults.font = this.getCJFont();
 
     this.initColors();
+    this.initThemeSchema();
   }
 
   render(container: ChartContainer): void {
@@ -74,6 +83,11 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
 
   destroy(): void {
     this.api?.destroy();
+  }
+
+  themeSchemaChange(themeSchemaKey: string) {
+    this.currentTheme = themeSchemaKey;
+    this.initThemeSchema(themeSchemaKey);
   }
 
   protected enableLegend(): void {
@@ -111,6 +125,25 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
       formatted += ' ' + this.options.valueUnit;
     }
     return formatted;
+  }
+
+  protected updateThemeSchema(): void {}
+
+  private initThemeSchema(themeSchemaKey?: string): void {
+    if (!themeSchemaKey && !this.currentTheme) {
+      themeSchemaKey = this._options?.themeSchemaKey || 'lighten';
+      this.setThemeSchema(themeSchemaKey);
+      return;
+    }
+
+    this.setThemeSchema(themeSchemaKey || this.currentTheme || 'lighten');
+    this.updateThemeSchema();
+    this.update();
+  }
+
+  private setThemeSchema(themeSchemaKey: string): void {
+    this.themeSchema = themeSchemas.get(themeSchemaKey);
+    CJ.defaults.color = this.themeSchema?.textColorPrimary as Color;
   }
 
   private getColorForKey(key: string, total: number): string {

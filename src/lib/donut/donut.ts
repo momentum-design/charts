@@ -113,7 +113,7 @@ export class DonutChart extends PieChart<DonutData, DonutChartOptions> {
           label.text = this.formatBigNumber(total);
         }
         if (!label.font.color) {
-          label.font.color = this.options.font?.color;
+          label.font.color = this.options.font?.color ? this.options.font?.color : this.themeSchema?.textColorPrimary;
         }
       }
       if (index === 1) {
@@ -124,7 +124,7 @@ export class DonutChart extends PieChart<DonutData, DonutChartOptions> {
         // if the font color does not specified
         if (!label.font?.color) {
           // set the muted color
-          label.font.color = this.options.mutedColor;
+          label.font.color = this.options.mutedColor ? this.options.mutedColor : this.themeSchema?.textColorSecondary;
         }
       }
 

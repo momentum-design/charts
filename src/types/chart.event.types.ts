@@ -7,7 +7,8 @@ export enum ChartEventType {
   LegendItemSelect = 'legendItemSelect',
   LegendItemUnselect = 'legendItemUnselect',
   SegmentItemClick = 'SegmentItemClick',
-  WorkClick = 'wordClick',
+  ThemeSchemaChange = 'themeSchemaChange',
+  WordClick = 'wordClick',
   Wheel = 'wheel',
 }
 

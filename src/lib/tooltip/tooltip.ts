@@ -13,8 +13,6 @@ const TOOLTIP_CLASS = TOOLTIP_ID;
 export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
   static defaults: TooltipOptions = {
     fontSize: '13px',
-    textColor: '#efefef',
-    backgroundColor: '#000000e6',
     borderRadius: '4px',
     padding: '0.5rem 0.75rem',
   };
@@ -192,8 +190,8 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
 
     // display, position, and set styles
     tooltipEl.setStyle('font-size', this.options.fontSize);
-    tooltipEl.setStyle('background-color', this.options.backgroundColor);
-    tooltipEl.setStyle('color', this.options.textColor);
+    tooltipEl.setStyle('background-color', this.chart.themeSchema?.tooltipBackgroundColor);
+    tooltipEl.setStyle('color', this.chart.themeSchema?.tooltipTextColor);
     tooltipEl.setStyle('opacity', '1');
     tooltipEl.setStyle('left', left);
     tooltipEl.setStyle('top', top);
