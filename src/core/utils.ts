@@ -3,36 +3,36 @@ import * as helper from '../helpers';
 import { settings } from './settings';
 
 /**
- * Gets the current theme object.
+ * Gets the current ColorSet object.
  *
- * @returns The current theme object
+ * @returns The current ColorSet object
  */
-export function getCurrentTheme(): { name: string; colors: string[] | undefined } {
+export function getCurrentColorSet(): { name: string; colors: string[] | undefined } {
   return {
-    name: settings.theme,
-    colors: settings.themes.get(settings.theme),
+    name: settings.colorSet,
+    colors: settings.colorSets.get(settings.colorSet),
   };
 }
 
 /**
- * Gets colors by the specified theme.
+ * Gets colors by the specified ColorSet.
  *
- * @param theme The theme key
- * @returns An array which includes all colors in this theme or undefined.
+ * @param name The ColorSet name
+ * @returns An array which includes all colors in this ColorSet or undefined.
  */
-export function getColorsByTheme(theme: string): string[] | undefined {
-  return settings.themes.get(theme);
+export function getColorsByName(name: string): string[] | undefined {
+  return settings.colorSets.get(name);
 }
 
 /**
- * Gets color by specified index number in the theme.
+ * Gets color by specified index number in the colorSets.
  *
- * @param theme The theme key.
+ * @param name The ColorSet name.
  * @param index The index of color.
  * @returns A color if matched, otherwise an empty string.
  */
-export function getColor(theme: string, index: number): string {
-  const colors = getColorsByTheme(theme);
+export function getColor(name: string, index: number): string {
+  const colors = getColorsByName(name);
   if (colors && index < colors?.length) {
     return colors[index];
   }
@@ -40,21 +40,21 @@ export function getColor(theme: string, index: number): string {
 }
 
 /**
- * Gets color of specified index from an array of color or theme.
- * First get from the specified colors. If not matched, then from the theme.
+ * Gets color of specified index from an array of color.
+ * First get from the specified colors. If not matched, then from the colorSet.
  *
  * @param index The index in the array of color.
  * @param colors The array of color. It is optional.
- * @param chartTheme The theme which should be defined or under built-in themes.
+ * @param colorSetName The ColorSet name which should be defined or under built-in themes.
  * @returns The color string or empty string if not matched.
  */
-export function getColorForChart(index: number, colors?: string[], chartTheme?: string): string {
+export function getColorForChart(index: number, colors?: string[], colorSetName?: string): string {
   if (colors && colors.length > index) {
     return colors[index];
   }
 
-  if (chartTheme) {
-    const themeColors = getColorsByTheme(chartTheme);
+  if (colorSetName) {
+    const themeColors = getColorsByName(colorSetName);
     if (themeColors && themeColors.length > index) {
       return themeColors[index];
     }

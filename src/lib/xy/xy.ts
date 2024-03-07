@@ -75,9 +75,6 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
 
   private hiddenDatasets: { label?: string; borderColor?: Color; backgroundColor?: Color }[] = [];
   private borderDash = [3, 3];
-  private clickedLabelColor = this.themeSchema?.textActiveColor;
-  private unClickedLabelColor = this.themeSchema?.textInactiveColor;
-  private defaultLabelColor = this.themeSchema?.textColorPrimary;
   private defaultMinTicksLimit = 2;
   private defaultPaddingForX = 100;
   private defaultPaddingCategoryAxisForY = 20;
@@ -126,7 +123,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     };
   }
 
-  protected updateThemeSchema(): void {
+  protected onThemeChanging(): void {
     if (this.api?.options) {
       this.api.options = this.getChartOptions();
     }
@@ -179,7 +176,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
         title: {
           display: !!this.options.title,
           text: this.options.title,
-          color: this.themeSchema?.textColorPrimary,
+          color: this.getCurrentTheme()?.textColorPrimary,
         },
         legend: this.legend?.getChartJSConfiguration({
           overwriteLabels: (labels: CJLegendItem[], chart: CJ<CJChartType>) => this.overwriteLabels(labels, chart),
@@ -248,7 +245,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       if (options.scales?.categoryAxis) {
         options.scales.categoryAxis = {
           border: {
-            color: this.themeSchema?.gridColor,
+            color: this.getCurrentTheme()?.gridColor,
           },
           stacked: this.options.categoryAxis.stacked,
           title: {
@@ -257,7 +254,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
           },
           grid: {
             display: this.options.categoryAxis.gridDisplay,
-            color: this.themeSchema?.gridColor,
+            color: this.getCurrentTheme()?.gridColor,
           },
           max:
             typeof this.options.categoryAxis.maxLabels === 'number'
@@ -344,14 +341,14 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
               return selectedLabels.indexOf(label as string) >= 0
                 ? textColor
                   ? textColors[index]
-                  : this.clickedLabelColor
+                  : this.getCurrentTheme()?.textActiveColor
                 : textColor
                 ? textColors[index] + '8D'
-                : this.unClickedLabelColor;
+                : this.getCurrentTheme()?.textInactiveColor;
             });
             return (allColors?.slice(firstTickIndex, lastTickIndex + 1) ?? []) as unknown as Color;
           } else {
-            return textColor ? (textColor as Color) : this.defaultLabelColor;
+            return textColor ? (textColor as Color) : this.getCurrentTheme()?.textColorPrimary;
           }
         },
       };
@@ -374,7 +371,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
         XYChart.defaultScaleOptions,
         {
           border: {
-            color: this.themeSchema?.gridColor,
+            color: this.getCurrentTheme()?.gridColor,
           },
           stacked: valueAxis.stacked,
           title: {
@@ -383,7 +380,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
           },
           grid: {
             display: valueAxis.gridDisplay,
-            color: this.themeSchema?.gridColor,
+            color: this.getCurrentTheme()?.gridColor,
           },
           display: valueAxis.display,
         },
@@ -472,7 +469,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     dataset: ChartDataset<'line', number[]>,
     styleMapping: SeriesStyleOptions,
   ): ChartDataset<'line', number[]> {
-    dataset.borderWidth = 2;
+    dataset.borderWidth = 1;
     dataset = dataset as ChartDataset<'line', number[]>;
     if (styleMapping.fillGaps) {
       dataset.spanGaps = styleMapping.fillGaps;

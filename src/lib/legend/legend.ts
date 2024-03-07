@@ -167,7 +167,7 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
       const newTop = `${top - 4 + topOffset}px`;
       const newWidth = `${width + 14}px`;
       const newHeight = `${height + 8}px`;
-      const backgroundColor = this.chart.themeSchema?.legendSelectedBackgroundColor;
+      const backgroundColor = this.chart.getCurrentTheme()?.legendSelectedBackgroundColor;
       focusBox.setAttribute(
         'style',
         `left:${newLeft};top:${newTop};width:${newWidth};height:${newHeight};background-color:${backgroundColor};pointer-events:none;position:absolute;border-radius:10px;`,

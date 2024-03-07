@@ -186,7 +186,7 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
 
         const cx = chart.getDatasetMeta(0).data[0].x;
         const cy = chart.getDatasetMeta(0).data[0].y;
-        const fontColor = this.themeSchema?.textColorPrimary;
+        const fontColor = this.getCurrentTheme()?.textColorPrimary;
         const fontFamily = this.options.font?.family;
         const averageY = chart.height - cy - 6;
         ctx.save();
@@ -198,7 +198,7 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
         ctx.moveTo(0, -2);
         ctx.lineTo(cy - 80, 0);
         ctx.lineTo(0, 2);
-        ctx.fillStyle = this.themeSchema?.textColorPrimary;
+        ctx.fillStyle = this.getCurrentTheme()?.textColorPrimary;
         ctx.fill();
 
         // Needle dot

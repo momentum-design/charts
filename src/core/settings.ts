@@ -1,15 +1,15 @@
 import { merge } from 'lodash-es';
-import { defaultTheme, ThemeKey, themes } from './theme';
-import { defaultThemeSchema, ThemeSchema, ThemeSchemaKey, themeSchemas } from './theme-schema';
+import { ColorSetName, colorSets, defaultColorSet } from './colorsets';
+import { defaultTheme, Theme, ThemeName, themes } from './themes';
 
 /**
  * The global settings.
  */
 export interface Settings {
-  theme: ThemeKey;
-  themes: Map<ThemeKey | string, string[]>;
-  themeSchema: ThemeSchemaKey;
-  themeSchemas: Map<ThemeSchemaKey | string, ThemeSchema>;
+  colorSet: ColorSetName | string;
+  colorSets: Map<ColorSetName | string, string[]>;
+  theme: ThemeName | string;
+  themes: Map<ThemeName | string, Theme>;
 
   /**
    * Suffixed for big numbers. It's an array of objects of number/suffix pairs.
@@ -21,27 +21,27 @@ export interface Settings {
    * Changes the default settings with the partial object of {@link Settings}.
    *
    * @param partialSettings a partial object of {@link Settings} which will be merged into the default settings.
-   * @returns the default settings
+   * @returns the settings
    */
   set: (partialSettings: Partial<Settings>) => Settings;
 
   /**
-   * Creates a new theme and append to {@link Settings.themes | themes}.
+   * Creates a new ColorSet and append to {@link Settings.colorSets | colorSets }.
    *
-   * @param themeKey the theme key which is unique
-   * @param colors an array of color for this theme
-   * @returns the default settings
+   * @param name the ColorSet name which is unique
+   * @param colors an array of color for this ColorSet
+   * @returns the settings
    */
-  addTheme: (themeKey: string, colors: string[]) => Settings;
+  addColorSet: (name: string, colors: string[]) => Settings;
 
   /**
-   * Creates a new theme schema and append to {@link Settings.themes | themes}.
+   * Creates a new theme and append to {@link Settings.themes | themes}.
    *
-   * @param themeSchemaKey the theme schema key which is unique
-   * @param themeSchema an Object about theme settings of this theme schema
-   * @returns the default settings
+   * @param name the theme name which is unique
+   * @param theme an theme Object related to colors
+   * @returns the settings
    */
-  addThemeSchema: (themeKey: string, themeSchema: ThemeSchema) => Settings;
+  addTheme: (name: string, theme: Theme) => Settings;
 }
 
 /**
@@ -49,9 +49,9 @@ export interface Settings {
  * And the parameter should be partial {@link Settings}.
  *
  * @example
- * The following code will show you how to add new theme and set it as global default theme.
+ * The following code will show you how to add new theme and set it as global default colors for all charts.
  * ```ts
- * settings.addTheme('new-theme', ['#ff0000', '#00ff00']).set({theme: 'new-theme'});
+ * settings.addColorSet('new-colorset', ['#ff0000', '#00ff00']);
  * ```
  */
 export const settings: Settings = {
@@ -65,24 +65,24 @@ export const settings: Settings = {
     { number: 1e21, suffix: 'Z' },
     { number: 1e24, suffix: 'Y' },
   ],
+  colorSet: defaultColorSet,
+  colorSets: colorSets,
   theme: defaultTheme,
-  themes,
-  themeSchema: defaultThemeSchema,
-  themeSchemas: themeSchemas,
+  themes: themes,
 
   set: function (partialSettings: Partial<Settings>): Settings {
     return merge(this, partialSettings);
   },
 
-  addTheme: function (themeKey: string, colors: string[]): Settings {
-    this.themes.set(themeKey, colors);
-    this.set({ theme: themeKey as ThemeKey });
+  addColorSet: function (name: string, colors: string[]): Settings {
+    this.colorSets.set(name, colors);
+    this.set({ colorSet: name as ColorSetName });
     return this;
   },
 
-  addThemeSchema: function (themeSchemaKey: string, themeSchema: ThemeSchema): Settings {
-    this.themeSchemas.set(themeSchemaKey, themeSchema);
-    this.set({ themeSchema: themeSchemaKey as ThemeSchemaKey });
+  addTheme: function (name: string, theme: Theme): Settings {
+    this.themes.set(name, theme);
+    this.set({ theme: name as ThemeName });
     return this;
   },
 };

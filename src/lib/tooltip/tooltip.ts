@@ -190,8 +190,8 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
 
     // display, position, and set styles
     tooltipEl.setStyle('font-size', this.options.fontSize);
-    tooltipEl.setStyle('background-color', this.chart.themeSchema?.tooltipBackgroundColor);
-    tooltipEl.setStyle('color', this.chart.themeSchema?.tooltipTextColor);
+    tooltipEl.setStyle('background-color', this.chart.getCurrentTheme()?.tooltipBackgroundColor);
+    tooltipEl.setStyle('color', this.chart.getCurrentTheme()?.tooltipTextColor);
     tooltipEl.setStyle('opacity', '1');
     tooltipEl.setStyle('left', left);
     tooltipEl.setStyle('top', top);

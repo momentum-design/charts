@@ -1,12 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Chart } from '../src/lib/.internal';
 import { CategoryLabelSelectable } from '../src/lib/xy/xy.category-label-selectable';
-import { ChartOptions, ColorMode, TableData } from '../src/types';
+import { ChartData, ChartOptions, ColorMode, TableData } from '../src/types';
 
 interface TestChartOptions extends ChartOptions {
   id?: string;
 }
 
-class TestChart extends Chart<any, TestChartOptions> {
+interface TextChartData extends ChartData {}
+
+class TestChart extends Chart<TextChartData, TestChartOptions> {
   static defaults: TestChartOptions = {
     id: 'TestChart',
   };
@@ -35,6 +38,7 @@ class TestChart extends Chart<any, TestChartOptions> {
 describe('chart', () => {
   let chart: TestChart;
   const chartData = {};
+  const chartContainer = '#chartContainer';
 
   describe('theme and colors', () => {
     const keys = ['key1', 'key2', 'key3', 'key4'];
@@ -42,26 +46,26 @@ describe('chart', () => {
     const chartOptions: TestChartOptions = { id: 'testChartInstance', colors: chartColors };
 
     it('should create an instance', () => {
-      chart = new TestChart(chartData, chartOptions);
+      chart = new TestChart(chartContainer, chartData, chartOptions);
       expect(chart).toBeTruthy();
     });
 
     it('should return correct colors', () => {
-      chart = new TestChart(chartData, chartOptions);
+      chart = new TestChart(chartContainer, chartData, chartOptions);
       const colors = (<any>chart).getColorsForKeys(keys);
       expect(colors.length).toBe(keys.length);
       expect(colors[0]).toBe(chartColors[0]);
     });
 
     it('should repeat the colors if exceeding the color definitions', () => {
-      chart = new TestChart(chartData, { colorMode: ColorMode.Repeat, ...chartOptions });
+      chart = new TestChart(chartContainer, chartData, { colorMode: ColorMode.Repeat, ...chartOptions });
       const colors = (<any>chart).getColorsForKeys(keys);
       expect(colors[3]).toBe(chartColors[0]);
     });
 
     it('should repeat the colors if exceeding the color definitions and there are some color mapping definitions', () => {
       const firstColor = '#000000';
-      chart = new TestChart(chartData, {
+      chart = new TestChart(chartContainer, chartData, {
         colorMode: ColorMode.Repeat,
         colorMapping: {
           [keys[0]]: firstColor,
@@ -76,7 +80,7 @@ describe('chart', () => {
 
   describe('data', () => {
     describe('format value', () => {
-      const chart = new TestChart(chartData, {
+      const chart = new TestChart(chartContainer, chartData, {
         valuePrecision: 5,
         valueUnit: 'mins',
       });

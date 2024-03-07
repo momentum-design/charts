@@ -1,13 +1,9 @@
-/**
- * The keys of the built-in themes
- */
-
-export enum ThemeSchemaKey {
-  Lighten = 'lighten',
-  Darken = 'darken',
+export enum ThemeName {
+  Light = 'light',
+  Dark = 'dark',
 }
 
-export interface ThemeSchema {
+export interface Theme {
   gridColor: string;
   legendSelectedBackgroundColor: string;
   textColorPrimary: string;
@@ -18,9 +14,9 @@ export interface ThemeSchema {
   tooltipBackgroundColor: string;
 }
 
-export const themeSchemas = new Map<string, ThemeSchema>([
+export const themes = new Map<ThemeName | string, Theme>([
   [
-    'lighten',
+    ThemeName.Light,
     {
       gridColor: '#E5E6E6',
       legendSelectedBackgroundColor: '#2b2b2b1a',
@@ -33,7 +29,7 @@ export const themeSchemas = new Map<string, ThemeSchema>([
     },
   ],
   [
-    'darken',
+    ThemeName.Dark,
     {
       gridColor: '#535759',
       legendSelectedBackgroundColor: '#F1EFEF1a',
@@ -47,4 +43,8 @@ export const themeSchemas = new Map<string, ThemeSchema>([
   ],
 ]);
 
-export const defaultThemeSchema = ThemeSchemaKey.Lighten;
+export const defaultTheme = ThemeName.Light;
+
+export function getThemeByName(name: string | undefined): Theme | undefined {
+  return name ? themes.get(name) : undefined;
+}

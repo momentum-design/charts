@@ -6,7 +6,7 @@ import { COMPONENT_PREFIX, settings } from '../../core';
 /**
  * @ignore
  */
-@customElement(`${COMPONENT_PREFIX}-themes`)
+@customElement(`${COMPONENT_PREFIX}-colorsets`)
 export class Themes extends LitElement {
   static styles = css`
     :host {
@@ -53,23 +53,23 @@ export class Themes extends LitElement {
   `;
 
   render() {
-    return html`${Array.from(settings.themes.keys()).map(
+    return html`${Array.from(settings.colorSets.keys()).map(
       (key) =>
         html`<div class="item ${classMap(this.getClasses(key))}">
           <div class="item-name">${key}</div>
-          <div class="item-values">${this.getThemeDetails(settings.themes.get(key) || [])}</div>
+          <div class="item-values">${this.getColorItem(settings.colorSets.get(key) || [])}</div>
         </div>`,
     )} `;
   }
 
-  getClasses(key: string): { current?: boolean } {
-    if (settings.theme === key) {
+  getClasses(name: string): { current?: boolean } {
+    if (settings.colorSet === name) {
       return { current: true };
     }
     return {};
   }
 
-  getThemeDetails(colors: string[]) {
+  getColorItem(colors: string[]) {
     return html`${colors.map(
       (color) =>
         html`<div class="color-item">

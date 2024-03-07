@@ -105,6 +105,7 @@ module.exports = {
       `${this.baseUrl}dist-lib/widgets.umd.js`,
       `${this.baseUrl}data.js`,
       `${this.baseUrl}ga.js`,
+      `${this.baseUrl}script.js`,
     ];
   }
 };

@@ -18,7 +18,7 @@ export function chartSegmentStatus(originChartColor: string | string[]) {
         const result = originBG.map((color: string, index: number) => {
           if (selectedArr[index]) {
             return color;
-          } else {
+          } else if (color) {
             return alphaColor(color, 0.4);
           }
         });

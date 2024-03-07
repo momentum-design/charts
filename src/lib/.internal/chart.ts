@@ -5,8 +5,7 @@ import {
   Color,
   FontSpec,
 } from 'chart.js/auto';
-import { formatBigNumber as fbn, settings, ThemeKey } from '../../core';
-import { ThemeSchema, themeSchemas } from '../../core/theme-schema';
+import { ColorSetName, formatBigNumber as fbn, getThemeByName, settings, Theme, ThemeName, themes } from '../../core';
 import { darkenColor, formatNumber, getRandomColor, lightenColor, mergeObjects } from '../../helpers';
 import { ChartContainer, ChartData, ChartOptions, ColorMode, Font, TableData } from '../../types';
 import { Legend } from '../legend';
@@ -23,7 +22,6 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
       lineHeight: 1.2,
     },
     valuePrecision: 2,
-    themeSchemaKey: 'lighten',
   };
 
   api?: CJ;
@@ -31,34 +29,29 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   rootElement?: HTMLElement;
   legend?: Legend<typeof this>;
   segmentClick?: SegmentClickable<typeof this>;
-  themeSchema?: ThemeSchema;
-  currentTheme?: string; //TODO(Jian Liang) will remove it after move themeSchemaKey to global settings
 
+  private currentTheme?: string;
   private colors?: string[];
   private lastColor?: string;
   private countColored = 0;
+
   private _options: TOptions;
+  private _theme?: Theme;
 
   get options(): TOptions {
     return this._options;
   }
 
-  constructor(protected data: TData, options?: TOptions) {
+  constructor(private container: ChartContainer, protected data: TData, options?: TOptions) {
     this._options = mergeObjects({}, Chart.defaults, this.getDefaultOptions(), options);
+  }
 
+  render(): void {
+    this.destroy();
     this.init();
-  }
 
-  init(): void {
-    CJ.defaults.font = this.getCJFont();
-
-    this.initColors();
-    this.initThemeSchema();
-  }
-
-  render(container: ChartContainer): void {
-    let config = this.getConfiguration();
-    this.api = new CJ(container, {
+    const config = this.getConfiguration();
+    this.api = new CJ(this.container, {
       type: config.type,
       plugins: config.plugins,
     } as CJConfiguration);
@@ -82,12 +75,14 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   }
 
   destroy(): void {
+    this.colors = undefined;
+    this.lastColor = undefined;
+    this.countColored = 0;
     this.api?.destroy();
   }
 
-  themeSchemaChange(themeSchemaKey: string) {
-    this.currentTheme = themeSchemaKey;
-    this.initThemeSchema(themeSchemaKey);
+  changeTheme(name: string) {
+    this.setTheme(name);
   }
 
   protected enableLegend(): void {
@@ -127,23 +122,37 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
     return formatted;
   }
 
-  protected updateThemeSchema(): void {}
+  private init(): void {
+    this.initTheme();
+    this.initColors();
 
-  private initThemeSchema(themeSchemaKey?: string): void {
-    if (!themeSchemaKey && !this.currentTheme) {
-      themeSchemaKey = this._options?.themeSchemaKey || 'lighten';
-      this.setThemeSchema(themeSchemaKey);
-      return;
-    }
-
-    this.setThemeSchema(themeSchemaKey || this.currentTheme || 'lighten');
-    this.updateThemeSchema();
-    this.update();
+    CJ.defaults.font = this.getCJFont();
+    CJ.defaults.color = this.getCurrentTheme().textColorPrimary as Color;
   }
 
-  private setThemeSchema(themeSchemaKey: string): void {
-    this.themeSchema = themeSchemas.get(themeSchemaKey);
-    CJ.defaults.color = this.themeSchema?.textColorPrimary as Color;
+  private initTheme(): void {
+    this.setTheme(this.options.theme ?? settings.theme);
+  }
+
+  private setTheme(name: string): void {
+    const needToRender = this.currentTheme && this.currentTheme !== name;
+    this.currentTheme = name;
+
+    if (needToRender) {
+      this.onThemeChanging();
+      if (this.api) {
+        this.render();
+      }
+    }
+  }
+
+  getCurrentTheme(): Theme {
+    this._theme = getThemeByName(this.currentTheme);
+    if (!this._theme) {
+      console.warn(`No theme found for name "${this.currentTheme}". Will use light theme instead.`);
+      this._theme = themes.get(ThemeName.Light)!;
+    }
+    return this._theme;
   }
 
   private getColorForKey(key: string, total: number): string {
@@ -194,24 +203,24 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
       return;
     }
 
-    let themeModel = {
-      name: settings.theme,
-      colors: settings.themes.get(settings.theme),
+    let colorSet = {
+      name: settings.colorSet,
+      colors: settings.colorSets.get(settings.colorSet),
     };
-    if (this.options?.theme) {
-      if (!settings.themes.has(this.options.theme)) {
+    if (this.options?.colorSet) {
+      if (!settings.colorSets.has(this.options.colorSet)) {
         throw new Error(
-          `There is no definition for theme ${this.options.theme}, we will use the default theme instead.`,
+          `There is no definition for colorset "${this.options.colorSet}", we will use the default colorset instead.`,
         );
       } else {
-        themeModel = {
-          name: this.options.theme as ThemeKey,
-          colors: settings.themes.get(this.options.theme),
+        colorSet = {
+          name: this.options.colorSet as ColorSetName,
+          colors: settings.colorSets.get(this.options.colorSet),
         };
       }
     }
 
-    this.colors = themeModel.colors || [];
+    this.colors = colorSet.colors || [];
     this.lastColor = this.colors[this.colors.length - 1];
   }
 
@@ -220,12 +229,15 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   }
 
   abstract getTableData(): TableData;
+
   protected abstract getConfiguration(): any;
   protected abstract getDefaultOptions(): TOptions;
 
   onWheel?(event: WheelEvent): void;
   getCategoryLabelSelectable?(): CategoryLabelSelectable<typeof this>;
   calculateMaxLimitTicks?(options: CJOptions): void;
+
+  protected onThemeChanging(): void {}
 }
 
 export type TypedChart = typeof Chart<ChartData, ChartOptions>;

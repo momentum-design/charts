@@ -1,14 +1,13 @@
-/**
- * The keys of the built-in themes
- */
-export enum ThemeKey {
+export enum ColorSetName {
   Default = 'default',
   Material = 'material',
+  Dark = 'dark',
+  Blue = 'blue',
 }
 
-export const themes = new Map<ThemeKey | string, string[]>([
+export const colorSets = new Map<ColorSetName | string, string[]>([
   [
-    ThemeKey.Default,
+    ColorSetName.Default,
     [
       '#3366CC',
       '#DC3912',
@@ -33,7 +32,7 @@ export const themes = new Map<ThemeKey | string, string[]>([
     ],
   ],
   [
-    ThemeKey.Material,
+    ColorSetName.Material,
     [
       '#F44336',
       '#E91E63',
@@ -57,6 +56,32 @@ export const themes = new Map<ThemeKey | string, string[]>([
       '#0A414D',
     ],
   ],
+  [
+    ColorSetName.Dark,
+    [
+      '#19D0CD',
+      '#DE196B',
+      '#FC5F5C',
+      '#FFD771',
+      '#DA00FF',
+      '#9001CB',
+      '#D4BBFF',
+      '#72CCFF',
+      '#2E96FF',
+      '#3B48E0',
+      '#0059B2',
+      '#2E96FF',
+      '#FFC24C',
+      '#F38200',
+      '#2ABFDE',
+      '#1F94AD',
+      '#BD2C38',
+      '#FF3143',
+      '#FF8282',
+      '#FFF1F1',
+    ],
+  ],
+  [ColorSetName.Blue, ['#BFE3FF', '#8BC1F7', '#64B4FA', '#3492EB', '#1170CF', '#0353A8', '#0353A8', '#063A75']],
 ]);
 
-export const defaultTheme = ThemeKey.Default;
+export const defaultColorSet = ColorSetName.Default;

@@ -1,4 +1,4 @@
-import { ChartData, ChartOptions, ChartType } from '../types';
+import { ChartContainer, ChartData, ChartOptions, ChartType } from '../types';
 import { Chart } from './.internal';
 import { AreaChart } from './area';
 import { BarChart } from './bar';
@@ -21,6 +21,7 @@ export const SUPPORTED_CHARTS = new Map<ChartType, typeof Chart<ChartData, Chart
 ]);
 
 export function createChart(
+  chartContainer: ChartContainer,
   chartType: ChartType,
   chartData: ChartData,
   chartOptions?: ChartOptions,
@@ -29,7 +30,7 @@ export function createChart(
   const ctor = SUPPORTED_CHARTS.get(chartType) as any;
 
   if (ctor) {
-    return new ctor(chartData, chartOptions);
+    return new ctor(chartContainer, chartData, chartOptions);
   }
 
   throw new Error(`Invalid chart type ${chartType}.`);

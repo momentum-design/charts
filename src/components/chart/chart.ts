@@ -89,9 +89,9 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     }
   };
 
-  private onThemeSchemaChange = (event: CustomEvent) => {
+  private onThemeChange = (event: CustomEvent<string>) => {
     if (event.detail) {
-      this.chart?.themeSchemaChange(event.detail.themeSchemaKey);
+      this.chart?.changeTheme(event.detail);
     }
   };
 
@@ -109,7 +109,7 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     window.addEventListener('resize', this.boundResizeHandler); //TODO(yiwei): Check whether windows resize still needs to be retained
     this.renderRoot.addEventListener(ChartEventType.LegendItemSelect, this.onLegendItemSelect as EventListener);
     this.renderRoot.addEventListener(ChartEventType.LegendItemUnselect, this.onLegendItemUnselect as EventListener);
-    document.addEventListener(ChartEventType.ThemeSchemaChange, this.onThemeSchemaChange as EventListener);
+    document.addEventListener(ChartEventType.ThemeChange, this.onThemeChange as EventListener);
   }
 
   disconnectedCallback(): void {
@@ -117,7 +117,7 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     window.removeEventListener('resize', this.boundResizeHandler);
     this.renderRoot.removeEventListener(ChartEventType.LegendItemSelect, this.onLegendItemSelect as EventListener);
     this.renderRoot.removeEventListener(ChartEventType.LegendItemUnselect, this.onLegendItemUnselect as EventListener);
-    document.removeEventListener(ChartEventType.ThemeSchemaChange, this.onThemeSchemaChange as EventListener);
+    document.removeEventListener(ChartEventType.ThemeChange, this.onThemeChange as EventListener);
 
     this.destroy();
   }
@@ -168,8 +168,13 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
   protected initChart(): void {
     if (this.data && this.type) {
       this.destroy();
-      this.chart = createChart(this.type as ChartType, this.data, this.options);
-      this.chart.render(this.renderRoot.querySelector('canvas') as HTMLCanvasElement);
+      this.chart = createChart(
+        this.renderRoot.querySelector('canvas') as HTMLCanvasElement,
+        this.type as ChartType,
+        this.data,
+        this.options,
+      );
+      this.chart.render();
       this.observeChartResize();
       this.observeCanvasResize();
       if (this.chart.onWheel) {
