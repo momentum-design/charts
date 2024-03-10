@@ -12,13 +12,13 @@ setTimeout(() => {
   btnElements.forEach(function (element) {
 
     // toggle of color mode
-    if (element.className.indexOf('ColorModeToggle') > 0) {
+    if (element.className.indexOf('ColorModeToggle') > 0 || element.className.indexOf('toggleButton') > 0) {
       element.addEventListener('click', function () {
         setTimeout(() => {
           const theme = localStorage.getItem('theme');
           // eslint-disable-next-line no-undef
           mdw.changeTheme(theme, themeColorSetMapping[theme]);
-        }, 100);
+        }, 200);
       });
     }
   });
