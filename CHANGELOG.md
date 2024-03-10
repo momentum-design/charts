@@ -1,3 +1,27 @@
+# [1.0.0-alpha.17](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.16...v1.0.0-alpha.17) (2024-03-10)
+
+
+### Bug Fixes
+
+* **pie:** reset pie series border width to 1 ([#58](https://github.com/momentum-design/momentum-widgets/issues/58)) ([91c663d](https://github.com/momentum-design/momentum-widgets/commit/91c663d337b66e39624138bd28a12935814f808d))
+
+
+### Features
+
+* **pie:** interactions between slice and legend ([6a7b355](https://github.com/momentum-design/momentum-widgets/commit/6a7b3554e2e13db735c1dd51c1b5b814f70e4db1))
+* **theme:** support multiple themes includes dark mode ([1cacea3](https://github.com/momentum-design/momentum-widgets/commit/1cacea32b2914602a838264119820497c5ce3603))
+* **tooltip:** chart tooltip support label customization ([#56](https://github.com/momentum-design/momentum-widgets/issues/56)) ([9e57aa4](https://github.com/momentum-design/momentum-widgets/commit/9e57aa43e1fd88f0ec6ad5a3f0332b04662c188b))
+* **tooltip:** tooltip implementation for charts ([64f7fb1](https://github.com/momentum-design/momentum-widgets/commit/64f7fb15f3a1dca746518f938180d55778b7a0d6))
+* **xy:** add default value precision for ticks of valueAxis ([#47](https://github.com/momentum-design/momentum-widgets/issues/47)) ([9ea1144](https://github.com/momentum-design/momentum-widgets/commit/9ea1144de8134d9af2155d7eb83cae510379bea3))
+* **xy:** add fade effect to custom label color under selectable mode ([#52](https://github.com/momentum-design/momentum-widgets/issues/52)) ([a0c925f](https://github.com/momentum-design/momentum-widgets/commit/a0c925f32184b83ef2aa478742b91b29433710ac))
+* **xy:** calculate the number of ticks based on canvas height ([#48](https://github.com/momentum-design/momentum-widgets/issues/48)) ([ef7cda9](https://github.com/momentum-design/momentum-widgets/commit/ef7cda989ff45107975e7047b77f143467310584))
+* **xy:** labels of category axis can be selected ([#46](https://github.com/momentum-design/momentum-widgets/issues/46)) ([40fc84e](https://github.com/momentum-design/momentum-widgets/commit/40fc84e11d33cd8471ff98e147c0bac12382f2c1))
+
+
+### Reverts
+
+* feat(word-cloud): new chart type support about wordCloud ([#55](https://github.com/momentum-design/momentum-widgets/issues/55)) ([3748d1c](https://github.com/momentum-design/momentum-widgets/commit/3748d1cf5f8537fc39bb3020f088a9636d7f5c29))
+
 # [1.0.0-alpha.16](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.15...v1.0.0-alpha.16) (2024-01-22)
 
 
