@@ -52,6 +52,7 @@ describe('chart', () => {
 
     it('should return correct colors', () => {
       chart = new TestChart(chartContainer, chartData, chartOptions);
+      (<any>chart).init();
       const colors = (<any>chart).getColorsForKeys(keys);
       expect(colors.length).toBe(keys.length);
       expect(colors[0]).toBe(chartColors[0]);
@@ -59,6 +60,7 @@ describe('chart', () => {
 
     it('should repeat the colors if exceeding the color definitions', () => {
       chart = new TestChart(chartContainer, chartData, { colorMode: ColorMode.Repeat, ...chartOptions });
+      (<any>chart).init();
       const colors = (<any>chart).getColorsForKeys(keys);
       expect(colors[3]).toBe(chartColors[0]);
     });
@@ -72,6 +74,7 @@ describe('chart', () => {
         },
         ...chartOptions,
       });
+      (<any>chart).init();
       const colors = (<any>chart).getColorsForKeys(keys);
       expect(colors[0]).toBe(firstColor);
       expect(colors[1]).toBe(chartColors[0]);

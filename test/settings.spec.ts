@@ -13,6 +13,6 @@ describe('settings', () => {
 
   it('should add new colorSet', () => {
     settings.addColorSet('new-colorSet', ['#000', '#fff']);
-    expect(settings.themes.get('new-colorSet')).toBeTruthy();
+    expect(settings.colorSets.get('new-colorSet')).toBeTruthy();
   });
 });
