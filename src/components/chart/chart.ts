@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import { css, CSSResult, CSSResultGroup, CSSResultOrNative, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { createChart } from '../../charts';
+import { Chart } from '../../charts/.internal';
 import { COMPONENT_PREFIX } from '../../core';
 import { wrapSelector } from '../../helpers';
-import { createChart } from '../../lib';
-import { Chart } from '../../lib/.internal';
 import { ChartData, ChartEvent, ChartEventType, ChartOptions, ChartType, LegendItem } from '../../types';
 
 const tag = `${COMPONENT_PREFIX}-chart`;

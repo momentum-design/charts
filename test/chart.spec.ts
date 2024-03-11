@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Chart } from '../src/lib/.internal';
-import { CategoryLabelSelectable } from '../src/lib/xy/xy.category-label-selectable';
+import { Chart } from '../src/charts/.internal';
+import { CategoryLabelSelectable } from '../src/charts/xy/xy.category-label-selectable';
 import { ChartData, ChartOptions, ColorMode, TableData } from '../src/types';
 
 interface TestChartOptions extends ChartOptions {

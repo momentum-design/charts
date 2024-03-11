@@ -1,5 +1,5 @@
 import { ChartEvent as CJEvent } from 'chart.js/auto';
-import { Chart } from '../lib/.internal';
+import { Chart } from '../charts/.internal';
 import { ChartData, ChartOptions } from '../types';
 
 export enum ChartEventType {
