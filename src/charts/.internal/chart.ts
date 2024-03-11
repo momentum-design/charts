@@ -8,8 +8,8 @@ import {
 import { ColorSetName, formatBigNumber as fbn, getThemeByName, settings, Theme, ThemeName, themes } from '../../core';
 import { darkenColor, formatNumber, getRandomColor, lightenColor, mergeObjects } from '../../helpers';
 import { ChartContainer, ChartData, ChartOptions, ColorMode, Font, TableData } from '../../types';
+import { SegmentClickable } from '../.plugins/segment-clickable';
 import { Legend } from '../legend';
-import { SegmentClickable } from '../plugins/segment-click';
 import { CategoryLabelSelectable } from '../xy/xy.category-label-selectable';
 
 export abstract class Chart<TData extends ChartData, TOptions extends ChartOptions> {
