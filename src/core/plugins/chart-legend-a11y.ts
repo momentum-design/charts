@@ -78,7 +78,7 @@ class ChartLegendManager {
     const keyboardNavigation = (e: KeyboardEvent) => {
       const index = Number(focusBox.getAttribute('data-legend-index'));
       const maxIndex = this.hitBoxes.length - 1;
-      if (e.key === KeyboardCode.ArrowRight) {
+      if (e.key === KeyboardCode.ArrowRight || e.key === KeyboardCode.ArrowDown) {
         e.preventDefault();
         e.stopPropagation();
         if (index >= maxIndex) {
@@ -88,7 +88,7 @@ class ChartLegendManager {
         moveFocusBox();
         return;
       }
-      if (e.key === KeyboardCode.ArrowLeft) {
+      if (e.key === KeyboardCode.ArrowLeft || e.key === KeyboardCode.ArrowUp) {
         e.preventDefault();
         e.stopPropagation();
         if (index <= 0) {
@@ -119,7 +119,10 @@ class ChartLegendManager {
       const newTop = `${top - this.focusBoxMargin}px`;
       const newWidth = `${width + 2 * this.focusBoxMargin}px`;
       const newHeight = `${height + 2 * this.focusBoxMargin}px`;
-      focusBox.setAttribute('style', `position:absolute; left: ${newLeft}; top:${newTop}; width:${newWidth}; height:${newHeight}`);
+      focusBox.setAttribute(
+        'style',
+        `position:absolute; left: ${newLeft}; top:${newTop}; width:${newWidth}; height:${newHeight}`,
+      );
       focusBox.setAttribute('aria-label', `${text}, ${index + 1} of ${this.hitBoxes.length}`);
     };
 
