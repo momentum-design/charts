@@ -1,6 +1,6 @@
 /* eslint-disable */
 import type { Chart } from 'chart.js/auto';
-import { KeyboardCode } from './plugin.types';
+import { KeyboardCode } from '../../../types';
 
 const chartStates = new Map();
 
@@ -167,8 +167,8 @@ const initialize = (chart: Chart, margin: number): ChartLegendManager => {
   return manager;
 };
 
-export const chartLegendA11y = {
-  id: 'chartLegendA11y',
+export const a11yLegend = {
+  id: 'a11yLegend',
   afterInit: (chart: Chart, options: any): void => {
     const manager = initialize(chart, options.margin);
     updateForLegends(chart, manager);

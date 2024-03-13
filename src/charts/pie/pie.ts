@@ -9,7 +9,6 @@ import {
   TooltipModel as CJTooltipModel,
 } from 'chart.js/auto';
 import { merge } from 'lodash-es';
-import { ChartA11y, chartLegendA11y, chartSegmentStatus } from '../../core/plugins';
 import { tableDataToJSON } from '../../helpers/data';
 import { isNullOrUndefined, mergeObjects } from '../../helpers/utils';
 import {
@@ -23,6 +22,8 @@ import {
   TableData,
 } from '../../types';
 import { Chart } from '../.internal';
+import { A11yChart } from '../.plugins/a11y/a11y-chart';
+import { a11yLegend } from '../.plugins/a11y/a11y-legend';
 import { Tooltip, TooltipItem } from '../tooltip';
 import { PieChartOptions, PieData } from './pie.types';
 
@@ -70,9 +71,9 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
       },
       options: this.currentChartOptions,
       plugins: [
-        new ChartA11y().toCJ(),
-        chartLegendA11y,
-        chartSegmentStatus(chartDatasets[0].backgroundColor as string | string[]),
+        new A11yChart().toCJPlugin(),
+        a11yLegend,
+        this.segmentClickable?.toCJPlugin(chartDatasets[0].backgroundColor as string | string[]),
       ],
     };
   }
@@ -124,13 +125,13 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
         return this.setItemActiveStyle(legendItem);
       },
     };
-    this.enableSegmentClick();
+    this.enableSegmentClickable();
     this.enableLegend();
     let options: ChartOptions = {
       maintainAspectRatio: false,
       responsive: true,
       onClick: (event, elements, chart) => {
-        this.segmentClick?.onSegmentClick(event, elements, chart);
+        this.segmentClickable?.onClick(event, elements, chart);
       },
       plugins: {
         legend: this.legend?.getChartJSConfiguration({
@@ -157,7 +158,7 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
             }
           },
         }),
-        tooltip: this.getTooltip().toCJ(),
+        tooltip: this.getTooltip().toCJPlugin(),
       },
     };
     if (this.getType() !== ChartType.Pie) {

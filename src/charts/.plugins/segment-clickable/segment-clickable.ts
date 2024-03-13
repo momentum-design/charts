@@ -2,10 +2,11 @@ import {
   ActiveElement,
   Chart as CJ,
   ChartEvent as CJChartEvent,
-  Element,
+  Element as CJElement,
   LegendItem as CJLegendItem,
 } from 'chart.js/auto';
 import { deepClone } from '../../../core';
+import { alphaColor } from '../../../helpers';
 import { ChartData, ChartEvent, ChartEventType, ChartOptions, EventContext, LegendItem } from '../../../types';
 import { Chart } from '../../.internal';
 
@@ -14,7 +15,7 @@ export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
 
   constructor(public chart: TChart) {}
 
-  public onSegmentClick(cjEvent: CJChartEvent, elements: ActiveElement[], chart: CJ): void {
+  public onClick(cjEvent: CJChartEvent, elements: ActiveElement[], chart: CJ): void {
     // TODO: Pie Chart use legend.selectable attribute.
     if (!elements || !elements.length || !this.chart.options.legend?.selectable) return;
     // TODO: element.index is Pie chart attribute.
@@ -44,7 +45,7 @@ export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
 
     const metaData = this.chart.api?.getDatasetMeta(0);
     if (metaData) {
-      metaData.data.forEach((item: Element & { selected?: boolean }, index: number): void => {
+      metaData.data.forEach((item: CJElement & { selected?: boolean }, index: number): void => {
         item.selected = Boolean(this.selectedSegment?.find((selected) => selected.index === index));
       });
     }
@@ -52,5 +53,36 @@ export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
     if (manualTrigger) {
       this.chart.api?.update();
     }
+  }
+
+  public toCJPlugin(segmentColor: string | string[]): any {
+    return {
+      id: 'segmentClickable',
+      beforeUpdate: (chart: CJ): void => {
+        const data = chart.config.data;
+        if (!data?.datasets?.length) {
+          return;
+        }
+        const metaData = chart.getDatasetMeta(0);
+        const originBG = segmentColor;
+
+        const selectedArr = metaData?.data?.map((data: CJElement & { selected?: boolean }) => data?.selected ?? false);
+
+        if (typeof originBG !== 'string' && originBG?.length > 0) {
+          const result = originBG.map((color: string, index: number) => {
+            if (selectedArr[index]) {
+              return color;
+            } else if (color) {
+              return alphaColor(color, 0.4);
+            }
+          });
+          data.datasets[0].backgroundColor = result;
+        }
+
+        if (selectedArr.every((selected) => selected === false)) {
+          data.datasets[0].backgroundColor = originBG;
+        }
+      },
+    };
   }
 }

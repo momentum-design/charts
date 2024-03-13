@@ -25,7 +25,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
     this.options = merge({}, Tooltip.defaults, options || {});
   }
 
-  toCJ(): any {
+  toCJPlugin(): any {
     const plugin: any = {
       enabled: this.options?.useNative,
       position: 'nearest',

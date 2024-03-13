@@ -1,6 +1,5 @@
 import { Chart as CJ, ChartDataset } from 'chart.js/auto';
-import { ChartType as CJType } from '../../types';
-import { KeyboardCode } from './plugin.types';
+import { ChartType as CJType, KeyboardCode } from '../../../types';
 
 /* eslint-disable */
 interface A11yState {
@@ -36,7 +35,7 @@ interface DatasetStyleAttributes {
   [key: string]: StyleAttributes;
 }
 
-export default class ChartA11y {
+export class A11yChart {
   private state: A11yState = {
     currentState: {
       datasetIndex: 0,
@@ -66,11 +65,11 @@ export default class ChartA11y {
   private currentActiveBorderColor = '';
   private whiteColor = 'white';
 
-  public toCJ(a11yBorderColor = 'blue'): CJA11y {
+  public toCJPlugin(a11yBorderColor = 'blue'): CJA11y {
     this.currentActiveBorderColor = a11yBorderColor;
 
     return {
-      id: 'chartA11y',
+      id: 'a11yChart',
       start: (chart: CJ, options: { chartLabel: string }): void => {
         chart.canvas.addEventListener('focus', () => this.onFocus(chart));
         chart.canvas.addEventListener('blur', () => this.onBlur(chart));

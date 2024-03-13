@@ -12,3 +12,11 @@ export type TRBL = {
   bottom: number;
   left: number;
 };
+
+export enum KeyboardCode {
+  ArrowDown = 'ArrowDown',
+  ArrowLeft = 'ArrowLeft',
+  ArrowRight = 'ArrowRight',
+  ArrowUp = 'ArrowUp',
+  Enter = 'Enter',
+}

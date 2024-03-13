@@ -22,7 +22,7 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   canvasElement?: HTMLCanvasElement;
   rootElement?: HTMLElement;
   legend?: Legend<typeof this>;
-  segmentClick?: SegmentClickable<typeof this>;
+  segmentClickable?: SegmentClickable<typeof this>;
 
   private currentTheme?: string;
   private colors?: string[];
@@ -77,12 +77,21 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
     this.setTheme(name);
   }
 
+  getCurrentTheme(): Theme {
+    this._theme = getThemeByName(this.currentTheme);
+    if (!this._theme) {
+      console.warn(`No theme found for name "${this.currentTheme}". Will use light theme instead.`);
+      this._theme = themes.get(ThemeName.Light)!;
+    }
+    return this._theme;
+  }
+
   protected enableLegend(): void {
     this.legend = new Legend(this);
   }
 
-  protected enableSegmentClick(): void {
-    this.segmentClick = new SegmentClickable(this);
+  protected enableSegmentClickable(): void {
+    this.segmentClickable = new SegmentClickable(this);
   }
 
   protected getColorsForKeys(keys: string[]): string[] {
@@ -136,15 +145,6 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
         this.render();
       }
     }
-  }
-
-  getCurrentTheme(): Theme {
-    this._theme = getThemeByName(this.currentTheme);
-    if (!this._theme) {
-      console.warn(`No theme found for name "${this.currentTheme}". Will use light theme instead.`);
-      this._theme = themes.get(ThemeName.Light)!;
-    }
-    return this._theme;
   }
 
   private getColorForKey(key: string, total: number): string {
