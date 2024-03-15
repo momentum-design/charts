@@ -8,7 +8,6 @@ import {
   Color,
   TooltipModel as CJTooltipModel,
 } from 'chart.js/auto';
-import { merge } from 'lodash-es';
 import { tableDataToJSON } from '../../helpers/data';
 import { isNullOrUndefined, mergeObjects } from '../../helpers/utils';
 import {
@@ -165,7 +164,7 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
       options = this.afterOptionsCreated(options);
     }
     if (this.options.padding) {
-      options.layout = merge({}, options.layout, { padding: this.options.padding });
+      options.layout = mergeObjects(options.layout, { padding: this.options.padding });
     }
 
     return options;

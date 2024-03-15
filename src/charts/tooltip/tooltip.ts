@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CoreInteractionOptions as CJCoreInteractionOptions } from 'chart.js/auto';
-import { merge } from 'lodash-es';
-import { formatNumber, isNullOrUndefined } from '../../helpers';
+import { formatNumber, isNullOrUndefined, mergeObjects } from '../../helpers';
 import { DomElement, findDomElement } from '../../helpers/dom';
 import { ChartData, ChartOptions } from '../../types';
 import { Chart } from '../.internal';
@@ -22,7 +21,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
 
   constructor(public chart: TChart, options?: TooltipOptions) {
     this.chartOptions = this.chart.options;
-    this.options = merge({}, Tooltip.defaults, options || {});
+    this.options = mergeObjects(Tooltip.defaults, options || {});
   }
 
   toCJPlugin(): any {

@@ -5,8 +5,7 @@ import {
   Element as CJElement,
   LegendItem as CJLegendItem,
 } from 'chart.js/auto';
-import { deepClone } from '../../../core';
-import { alphaColor } from '../../../helpers';
+import { alphaColor, deepClone } from '../../../helpers';
 import { ChartData, ChartEvent, ChartEventType, ChartOptions, EventContext, LegendItem } from '../../../types';
 import { Chart } from '../../.internal';
 

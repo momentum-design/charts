@@ -1,5 +1,5 @@
 import { Chart as CJ, ChartEvent, Plugin } from 'chart.js/auto';
-import { getColorsByLength } from '../../helpers/utils';
+import { padToArray } from '../../helpers/utils';
 import { ChartData, ChartOptions, ChartType } from '../../types';
 import { Chart } from '../.internal';
 
@@ -90,7 +90,7 @@ export class CategoryLabelSelectable<TChart extends Chart<ChartData, ChartOption
         }
         let backgroundColors = this.datasetColors[dataset.label];
         if (!backgroundColors && dataset.backgroundColor) {
-          backgroundColors = getColorsByLength(
+          backgroundColors = padToArray(
             typeof dataset.backgroundColor === 'string'
               ? (dataset.backgroundColor as string)
               : (dataset.backgroundColor as string[]),

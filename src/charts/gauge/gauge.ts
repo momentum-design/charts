@@ -1,6 +1,6 @@
 import { ChartConfiguration, ChartDataset, ChartOptions, ChartType as CJType } from 'chart.js/auto';
+import { convertToCJType } from '../../core';
 import { tableDataToJSON } from '../../helpers/data';
-import { toChartJSType } from '../../helpers/utils';
 import { ChartData, ChartType, TableData } from '../../types';
 import { Chart } from '../.internal';
 import { A11yChart } from '../.plugins/a11y/a11y-chart';
@@ -109,7 +109,7 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
     return {
       data: Object.values(series.data ?? []) as number[],
       label: series.name,
-      type: toChartJSType(ChartType.Gauge),
+      type: convertToCJType(ChartType.Gauge),
       backgroundColor: this.chartColors,
     };
   }

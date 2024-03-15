@@ -1,38 +1,31 @@
-import { ChartType as CJType } from 'chart.js/auto';
-import merge from 'lodash-es/merge';
-import { ChartType } from '../types';
+import { cloneDeep, merge } from 'lodash-es';
 
-export function toChartJSType(type?: string): CJType {
-  let chartType: CJType;
-  switch (type) {
-    case ChartType.Bar:
-    case ChartType.Column:
-      chartType = 'bar';
-      break;
-    case ChartType.Line:
-    case ChartType.Area:
-    case ChartType.Range:
-    case 'dashed':
-    case 'dashedArea':
-      chartType = 'line';
-      break;
-    case ChartType.Pie:
-      chartType = 'pie';
-      break;
-    case ChartType.Gauge:
-    case ChartType.Donut:
-      chartType = 'doughnut';
-      break;
-    default:
-      chartType = 'bar';
-      break;
-  }
-  return chartType;
-}
-
+export function mergeObjects<TObject1>(object1: TObject1): TObject1;
+export function mergeObjects<TObject1, TObject2>(object1: TObject1, object2: TObject2): TObject1 & TObject2;
+export function mergeObjects<TObject1, TObject2, TObject3>(
+  object1: TObject1,
+  object2: TObject2,
+  object3: TObject2,
+): TObject1 & TObject2 & TObject3;
+export function mergeObjects<TObject1, TObject2, TObject3, TObject4>(
+  object1: TObject1,
+  object2: TObject2,
+  object3: TObject2,
+  object4: TObject4,
+): TObject1 & TObject2 & TObject3 & TObject4;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function mergeObjects(...objs: any[]): any {
   return merge({}, ...objs);
+}
+
+/**
+ * Merges objects to the source object.
+ * @param source The destination object.
+ * @param objs The objects to be merged.
+ * @returns the destination object with merged fields.
+ */
+export function mergeObjectsTo<TSource>(source: TSource, ...objs: unknown[]): TSource {
+  return merge(source, ...objs);
 }
 
 /**
@@ -56,10 +49,28 @@ export function isEmptyObject(value: Record<string, unknown>): boolean {
   return false;
 }
 
-export function getColorsByLength(sourceColor: string | string[], length: number): string[] {
-  if (length < 0 || !sourceColor || (Array.isArray(sourceColor) && sourceColor.length === 0)) {
+/**
+ * Pads to array from source array or array item.
+ * It will repeat the array item if the length is greater than source array length.
+ *
+ * @param itemOrSourceArray The array item or source array.
+ * @param length The final array length
+ * @returns an new array
+ */
+export function padToArray<TItem>(itemOrSourceArray: TItem | TItem[], length: number): TItem[] {
+  if (length < 0 || !itemOrSourceArray || (Array.isArray(itemOrSourceArray) && itemOrSourceArray.length === 0)) {
     return [];
   }
-  const colorArray = Array.isArray(sourceColor) ? sourceColor : [sourceColor];
-  return Array.from({ length }, (_, index) => colorArray[index % colorArray.length]);
+  const tempArray = Array.isArray(itemOrSourceArray) ? itemOrSourceArray : [itemOrSourceArray];
+  return Array.from({ length }, (_, index) => tempArray[index % tempArray.length]);
+}
+
+/**
+ * Creates a shallow clone of `value`.
+ *
+ * @param value The value to clone.
+ * @returns the cloned value.
+ */
+export function deepClone<T>(value: T): T {
+  return cloneDeep(value);
 }

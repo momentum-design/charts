@@ -1,5 +1,6 @@
-import { FontSpec } from 'chart.js/auto';
+import { ChartType as CJType, FontSpec } from 'chart.js/auto';
 import * as helper from '../helpers';
+import { ChartType } from '../types';
 import { settings } from './settings';
 
 /**
@@ -84,10 +85,34 @@ export function formatBigNumber(value: number, precision = 0): string {
 }
 
 /**
- * That it clones value.
- * @param obj The value to recursively clone.
- * @returns  Returns the deep cloned value.
+ * Converts to chart type of chart.js.
+ * @param type The built-in chart type.
+ * @returns The chart type of chart.js.
  */
-export function deepClone<T>(obj: T): T {
-  return JSON.parse(JSON.stringify(obj)) as T;
+export function convertToCJType(type: string | ChartType): CJType {
+  let chartType: CJType;
+  switch (type) {
+    case ChartType.Bar:
+    case ChartType.Column:
+      chartType = 'bar';
+      break;
+    case ChartType.Line:
+    case ChartType.Area:
+    case ChartType.Range:
+    case 'dashed':
+    case 'dashedArea':
+      chartType = 'line';
+      break;
+    case ChartType.Pie:
+      chartType = 'pie';
+      break;
+    case ChartType.Gauge:
+    case ChartType.Donut:
+      chartType = 'doughnut';
+      break;
+    default:
+      chartType = 'bar';
+      break;
+  }
+  return chartType;
 }

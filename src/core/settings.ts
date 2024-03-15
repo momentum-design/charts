@@ -1,4 +1,4 @@
-import { merge } from 'lodash-es';
+import { mergeObjectsTo } from '../helpers';
 import { ColorSetName, colorSets, defaultColorSet } from './colorsets';
 import { defaultTheme, Theme, ThemeName, themes } from './themes';
 
@@ -71,7 +71,8 @@ export const settings: Settings = {
   themes: themes,
 
   set: function (partialSettings: Partial<Settings>): Settings {
-    return merge(this, partialSettings);
+    mergeObjectsTo(this, partialSettings);
+    return this;
   },
 
   addColorSet: function (name: string, colors: string[]): Settings {

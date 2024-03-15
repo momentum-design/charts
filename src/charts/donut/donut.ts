@@ -3,9 +3,8 @@ import {
   ChartOptions as CJChartOptions,
   Plugin as CJPlugin,
 } from 'chart.js/auto';
-import { cloneDeep } from 'lodash-es';
 import { getFontStyleAbbreviation } from '../../core';
-import { mergeObjects } from '../../helpers';
+import { deepClone, mergeObjects } from '../../helpers';
 import { ChartType, Position } from '../../types';
 import { PieChart } from '../pie';
 import { CenterLabel, DonutChartOptions, DonutData } from './donut.type';
@@ -64,7 +63,7 @@ export class DonutChart extends PieChart<DonutData, DonutChartOptions> {
     const chartHeight = chartArea.bottom - chartArea.top;
     const canvasCenterX = chartWidth / 2 + chartArea.left;
     const canvasCenterY = chartHeight / 2 + chartArea.top;
-    const centerLabels = this.options.centerLabels ? cloneDeep<CenterLabel[]>(this.options.centerLabels) : [];
+    const centerLabels = this.options.centerLabels ? deepClone<CenterLabel[]>(this.options.centerLabels) : [];
 
     // remove the unit placeholder if no unit specified
     // in order to put total label in the middle

@@ -103,7 +103,7 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
       fonts.push(Chart.defaults.font);
     }
     fonts.reverse();
-    return mergeObjects({}, ...fonts);
+    return mergeObjects(...(fonts as [FontSpec]));
   }
 
   protected formatBigNumber(value: number): string {

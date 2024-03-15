@@ -14,9 +14,9 @@ import {
 } from 'chart.js/auto';
 import 'chartjs-adapter-moment';
 import zoomPlugin from 'chartjs-plugin-zoom';
-import { merge } from 'lodash-es';
+import { convertToCJType } from '../../core';
 import { tableDataToJSON } from '../../helpers/data';
-import { getColorsByLength, isNullOrUndefined, mergeObjects, toChartJSType } from '../../helpers/utils';
+import { isNullOrUndefined, mergeObjects, padToArray } from '../../helpers/utils';
 import {
   ChartDataView,
   ChartType,
@@ -63,7 +63,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
   };
 
   protected getDefaultOptions(): XYChartOptions {
-    return merge({}, XYChart.defaults);
+    return mergeObjects(XYChart.defaults);
   }
 
   protected chartData: ChartDataView = {
@@ -113,7 +113,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       }
     }
     return {
-      type: toChartJSType(this.getType()),
+      type: convertToCJType(this.getType()),
 
       data: {
         labels: this.chartData.category.labels ?? [],
@@ -235,7 +235,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       options.plugins.legend.labels.padding = 16;
     }
     if (this.options.padding) {
-      options.layout = merge({}, options.layout, { padding: this.options.padding });
+      options.layout = mergeObjects(options.layout, { padding: this.options.padding });
     }
     this.assembleCategoryAxis(options);
     this.assembleValueAxes(options);
@@ -268,7 +268,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
           },
           display: this.options.categoryAxis.display,
         };
-        options.scales.categoryAxis = merge({}, XYChart.defaultScaleOptions, options.scales.categoryAxis);
+        options.scales.categoryAxis = mergeObjects(XYChart.defaultScaleOptions, options.scales.categoryAxis);
         if (this.options.categoryAxis.position) {
           options.scales.categoryAxis.position = this.options.categoryAxis.position;
         } else {
@@ -325,7 +325,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
           const textColor = this.options.categoryAxis?.textColor;
           let textColors: string[];
           if (textColor && ctx.chart.data.labels) {
-            textColors = getColorsByLength(
+            textColors = padToArray(
               typeof textColor === 'string' ? (textColor as string) : (textColor as string[]),
               ctx.chart.data.labels.length,
             );
@@ -361,14 +361,13 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       this.options.valueAxes = [{}];
     }
     this.options.valueAxes.forEach((valueAxis, index) => {
-      valueAxis = merge({}, XYChart.defaultValueAxisOptions, valueAxis);
+      valueAxis = mergeObjects(XYChart.defaultValueAxisOptions, valueAxis);
       if (!valueAxis.position) {
         valueAxis.position = this.isHorizontal() ? Position.Bottom : Position.Left;
       }
       const valueAxisKey = this.getValueAxisAlias(index);
       options.scales = options.scales || {};
-      options.scales[valueAxisKey] = merge(
-        {},
+      options.scales[valueAxisKey] = mergeObjects(
         XYChart.defaultScaleOptions,
         {
           border: {
@@ -448,7 +447,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     dataset.label = series.name;
     dataset.borderColor = this.options.categoryAxis?.enableColor ? colors : colors[index];
     dataset.backgroundColor = this.options.categoryAxis?.enableColor ? colors : colors[index];
-    dataset.type = toChartJSType(styleMapping?.type ?? this.options.seriesOptions?.type ?? this.getType());
+    dataset.type = convertToCJType(styleMapping?.type ?? this.options.seriesOptions?.type ?? this.getType());
     dataset = this.setAxisIDs(dataset, styleMapping.valueAxisIndex);
     if (styleMapping.order) {
       dataset.order = styleMapping.order;
