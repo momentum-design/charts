@@ -1,1 +1,39 @@
 /* here to place your scss code and must import in index.ts file */
+:root,
+body.mdw-theme--light {
+  --rems-1px: 0.0625rem;
+  --rems-2px: 0.125rem;
+  --rems-4px: 0.25rem;
+  --rems-5px: 0.3125rem;
+  --rems-8px: 0.5rem;
+  --rems-10px: 0.625rem;
+  --rems-12px: 0.75rem;
+  --rems-14px: 0.875rem;
+  --rems-16px: 1rem;
+  --rems-20px: 1.25rem;
+  --rems-24px: 1.5rem;
+  --rems-30px: 1.875rem;
+  --rems-40px: 2.5rem;
+  --rems-50px: 3.125rem;
+  --rems-100px: 6.25rem;
+  --base-rem-size: 16;
+  --icon-info: url('data:image/svg+xml;base64,PHN2ZyB0PSIxNzEwNDY2ODQ0MjkzIiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjI0MDgiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHBhdGggZD0iTTg5NiA1MTJhMzg0IDM4NCAwIDEgMC03NjggMCAzODQgMzg0IDAgMCAwIDc2OCAwek00Mi42NjY2NjcgNTEyQzQyLjY2NjY2NyAyNTIuOCAyNTIuOCA0Mi42NjY2NjcgNTEyIDQyLjY2NjY2N3M0NjkuMzMzMzMzIDIxMC4xMzMzMzMgNDY5LjMzMzMzMyA0NjkuMzMzMzMzLTIxMC4xMzMzMzMgNDY5LjMzMzMzMy00NjkuMzMzMzMzIDQ2OS4zMzMzMzNTNDIuNjY2NjY3IDc3MS4yIDQyLjY2NjY2NyA1MTJ6IG00MjYuNjY2NjY2IDB2MjEzLjMzMzMzM2g4NS4zMzMzMzR2LTI5OC42NjY2NjZIMzg0djg1LjMzMzMzM2g4NS4zMzMzMzN6IG04NS4zMzMzMzQtMTI4VjI5OC42NjY2NjdoLTg1LjMzMzMzNHY4NS4zMzMzMzNoODUuMzMzMzM0eiIgZmlsbD0iIzUyNUE2NSIgcC1pZD0iMjQwOSIvPjwvc3ZnPg==');
+  --icon-more: url('data:image/svg+xml;base64,PHN2ZyB0PSIxNzEwNDY2NzEwOTU1IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjMwNjg0IiB3aWR0aD0iMzIiIGhlaWdodD0iMzIiPjxwYXRoIGQ9Ik01MTIgMjM0LjY2NjY2N20tNjQgMGE2NCA2NCAwIDEgMCAxMjggMCA2NCA2NCAwIDEgMC0xMjggMFoiIGZpbGw9IiM2NjY2NjYiIHAtaWQ9IjMwNjg1Ii8+PHBhdGggZD0iTTUxMiA1MTJtLTY0IDBhNjQgNjQgMCAxIDAgMTI4IDAgNjQgNjQgMCAxIDAtMTI4IDBaIiBmaWxsPSIjNjY2NjY2IiBwLWlkPSIzMDY4NiIvPjxwYXRoIGQ9Ik01MTIgNzg5LjMzMzMzM20tNjQgMGE2NCA2NCAwIDEgMCAxMjggMCA2NCA2NCAwIDEgMC0xMjggMFoiIGZpbGw9IiM2NjY2NjYiIHAtaWQ9IjMwNjg3Ii8+PC9zdmc+');
+  --dropdown-link-bg-active: #f5f5f5;
+  --dropdown-link-color-active: #262626;
+  --button-secondary-bg-active: #ffffff;
+  --button-secondary-bg-hover: #dedede;
+  --text-primary-normal: #535759;
+  --text-secondary-normal: #7d7f7f;
+  --bg-primary-color: #ffffff;
+  --bg-secondary-color: #ededed;
+  --border-color: #e5e6e6;
+}
+
+body.mdw-theme--dark {
+  --icon-info: url('data:image/svg+xml;base64,PHN2ZyB0PSIxNzEwNDY2ODQ0MjkzIiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjI0MDgiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHBhdGggZD0iTTg5NiA1MTJhMzg0IDM4NCAwIDEgMC03NjggMCAzODQgMzg0IDAgMCAwIDc2OCAwek00Mi42NjY2NjcgNTEyQzQyLjY2NjY2NyAyNTIuOCAyNTIuOCA0Mi42NjY2NjcgNTEyIDQyLjY2NjY2N3M0NjkuMzMzMzMzIDIxMC4xMzMzMzMgNDY5LjMzMzMzMyA0NjkuMzMzMzMzLTIxMC4xMzMzMzMgNDY5LjMzMzMzMy00NjkuMzMzMzMzIDQ2OS4zMzMzMzNTNDIuNjY2NjY3IDc3MS4yIDQyLjY2NjY2NyA1MTJ6IG00MjYuNjY2NjY2IDB2MjEzLjMzMzMzM2g4NS4zMzMzMzR2LTI5OC42NjY2NjZIMzg0djg1LjMzMzMzM2g4NS4zMzMzMzN6IG04NS4zMzMzMzQtMTI4VjI5OC42NjY2NjdoLTg1LjMzMzMzNHY4NS4zMzMzMzNoODUuMzMzMzM0eiIgZmlsbD0iI2ZmZmZmZiIgcC1pZD0iMjQwOSIvPjwvc3ZnPg==');
+  --icon-more: url('data:image/svg+xml;base64,PHN2ZyB0PSIxNzEwNDY2NzEwOTU1IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjMwNjg0IiB3aWR0aD0iMzIiIGhlaWdodD0iMzIiPjxwYXRoIGQ9Ik01MTIgMjM0LjY2NjY2N20tNjQgMGE2NCA2NCAwIDEgMCAxMjggMCA2NCA2NCAwIDEgMC0xMjggMFoiIGZpbGw9IiNmZmZmZmYiIHAtaWQ9IjMwNjg1Ii8+PHBhdGggZD0iTTUxMiA1MTJtLTY0IDBhNjQgNjQgMCAxIDAgMTI4IDAgNjQgNjQgMCAxIDAtMTI4IDBaIiBmaWxsPSIjZmZmZmZmIiBwLWlkPSIzMDY4NiIvPjxwYXRoIGQ9Ik01MTIgNzg5LjMzMzMzM20tNjQgMGE2NCA2NCAwIDEgMCAxMjggMCA2NCA2NCAwIDEgMC0xMjggMFoiIGZpbGw9IiNmZmZmZmYiIHAtaWQ9IjMwNjg3Ii8+PC9zdmc+');
+  --text-primary-normal: #ffffff;
+  --bg-primary-color: #000000ff;
+  --border-color: #2b2b2b;
+}

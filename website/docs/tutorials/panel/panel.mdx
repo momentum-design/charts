@@ -1,0 +1,223 @@
+---
+sidebar_position: 2000
+---
+
+# Panel
+
+```jsx live
+function showComponent() {
+  const data = {
+    title: 'Panel Title',
+    description:
+      'Panel Description <a target="_blank" href="https://github.com/momentum-design/momentum-widgets" class="astro-RNZJA7ZV">Home</a>',
+  };
+  const options = {
+    descriptionMode: 'subtitle',
+    radioButtonGroups: [
+      {
+        index: 1,
+        type: 'chartType',
+        a11y: {
+          tabindex: 0,
+          role: 'button',
+          ariaLabel: 'Aria chart type',
+        },
+        buttons: [
+          {
+            label: 'Bar',
+            value: '1',
+            a11y: {
+              role: 'button',
+              ariaLabel: 'Aria Bar',
+            },
+          },
+          {
+            label: 'Line',
+            value: '2',
+            active: true,
+            a11y: {
+              tabindex: 0,
+              role: 'button',
+              ariaLabel: 'Aria Line',
+            },
+          },
+        ],
+      },
+      {
+        type: 'timeGrain',
+        a11y: {
+          tabindex: 0,
+          role: 'button',
+          ariaLabel: 'Aria time grain',
+        },
+        buttons: [
+          {
+            label: 'Hourly',
+            value: 'hourly',
+            onClick: () => {
+              console.log('Hourly');
+            },
+          },
+          {
+            label: 'Daily',
+            value: 'daily',
+            active: true,
+            a11y: {
+              role: 'button',
+              ariaLabel: 'Aria Daily',
+            },
+          },
+          {
+            label: 'Weekly',
+            value: 'weekly',
+          },
+        ],
+        onClick: () => {
+          console.log('timeGrain');
+        },
+      },
+    ],
+    actions: {
+      items: [
+        {
+          label: 'Delete',
+          value: '1',
+          a11y: {
+            tabindex: 0,
+            role: 'button',
+            ariaLabel: 'Aria Delete',
+            ariaHidden: true,
+          },
+        },
+        {
+          label: 'Download',
+          value: '2',
+        },
+      ],
+      a11y: {
+        tabindex: 0,
+        role: 'button',
+        ariaLabel: 'Aria More Actions',
+        ariaHidden: true,
+      },
+    },
+  };
+  return (
+    <div>
+      <mdw-panel data={JSON.stringify(data)} options={JSON.stringify(options)}>
+        <mdw-chart
+          type="column"
+          data={JSON.stringify([
+            {
+              dateTime: '2022-12-01',
+              'New Mexico': 8757,
+              Florida: 5588,
+              Nevada: 7370,
+              Wyoming: 8478,
+              Arkansas: 2174,
+            },
+            {
+              dateTime: '2023-01-01',
+              'New Mexico': 2602,
+              Florida: 8134,
+              Nevada: 198,
+              Wyoming: 1204,
+              Arkansas: 894,
+            },
+            {
+              dateTime: '2023-02-01',
+              'New Mexico': 4191,
+              Florida: 3375,
+              Nevada: 3473,
+              Wyoming: 6359,
+              Arkansas: 7669,
+            },
+            {
+              dateTime: '2023-03-01',
+              'New Mexico': 7684,
+              Florida: 8590,
+              Nevada: 3483,
+              Wyoming: 792,
+              Arkansas: 9651,
+            },
+            {
+              dateTime: '2023-04-01',
+              'New Mexico': 5332,
+              Florida: 5670,
+              Nevada: 3803,
+              Wyoming: 8538,
+              Arkansas: 7468,
+            },
+            {
+              dateTime: '2023-05-01',
+              'New Mexico': 8579,
+              Florida: 627,
+              Nevada: 1531,
+              Wyoming: 6598,
+              Arkansas: 3762,
+            },
+            {
+              dateTime: '2023-06-01',
+              'New Mexico': 3409,
+              Florida: 2120,
+              Nevada: 7987,
+              Wyoming: 6407,
+              Arkansas: 6416,
+            },
+            {
+              dateTime: '2023-07-01',
+              'New Mexico': 5513,
+              Florida: 6070,
+              Nevada: 3558,
+              Wyoming: 351,
+              Arkansas: 8387,
+            },
+            {
+              dateTime: '2023-08-01',
+              'New Mexico': 1015,
+              Florida: 4560,
+              Nevada: 6241,
+              Wyoming: 6344,
+              Arkansas: 7394,
+            },
+            {
+              dateTime: '2023-09-01',
+              'New Mexico': 3060,
+              Florida: 6139,
+              Nevada: 9757,
+              Wyoming: 4808,
+              Arkansas: 1121,
+            },
+          ])}
+          options={JSON.stringify({
+            legend: { selectable: true },
+            categoryAxis: {
+              gridDisplay: true,
+              dataKey: 'dateTime',
+              type: 'time',
+              timeUnit: 'month',
+              labelFormat: 'MM/YYYY',
+            },
+            valueAxes: [
+              {
+                gridDisplay: true,
+                position: 'left',
+              },
+            ],
+            seriesOptions: {
+              styleMapping: {
+                Florida: {
+                  order: 1,
+                },
+              },
+            },
+          })}
+          style={{ height: '500px' }}
+        ></mdw-chart>
+      </mdw-panel>
+    </div>
+  );
+}
+```
+
+import { lab } from 'chroma-js';

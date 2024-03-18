@@ -1,3 +1,4 @@
+export * from './a11y.types';
 export * from './chart.event.types';
 export * from './chart.legend.types';
 export * from './chart.types';
