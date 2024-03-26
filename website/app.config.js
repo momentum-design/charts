@@ -100,6 +100,7 @@ module.exports = {
   get externalScripts() {
     return [
       `https://cdn.tailwindcss.com`,
+      `https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js`,
       `https://www.googletagmanager.com/gtag/js?id=G-ZCWJTWP3ZS`,
       `${this.baseUrl}tw.config.js`,
       `${this.baseUrl}dist-lib/widgets.umd.js`,

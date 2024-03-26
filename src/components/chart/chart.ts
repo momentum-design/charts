@@ -3,8 +3,8 @@ import { css, CSSResult, CSSResultGroup, CSSResultOrNative, html, LitElement, Te
 import { customElement, property } from 'lit/decorators.js';
 import { createChart } from '../../charts';
 import { Chart } from '../../charts/.internal';
-import { COMPONENT_PREFIX } from '../../core';
-import { wrapSelector } from '../../helpers';
+import { COMPONENT_PREFIX, requestFromPattern } from '../../core';
+import { debounce, wrapSelector } from '../../helpers';
 import { ChartData, ChartEvent, ChartEventType, ChartOptions, ChartType, LegendItem } from '../../types';
 
 const tag = `${COMPONENT_PREFIX}-chart`;
@@ -62,13 +62,26 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
   /**
    * The data for current chart.
    */
-  @property({ type: Object, hasChanged: () => true })
+  @property({
+    type: Object,
+    hasChanged: (newVal, oldVal) => {
+      return JSON.stringify(newVal) !== JSON.stringify(oldVal);
+    },
+  })
   data?: TData;
+
+  @property({ attribute: 'data-url', type: String })
+  dataUrl?: string;
 
   /**
    * The options for current chat.
    */
-  @property({ type: Object, hasChanged: () => true })
+  @property({
+    type: Object,
+    hasChanged: (newVal, oldVal) => {
+      return JSON.stringify(newVal) !== JSON.stringify(oldVal);
+    },
+  })
   options?: TOptions;
 
   @property({ type: Object, hasChanged: () => true })
@@ -77,6 +90,8 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
   private boundResizeHandler: () => void;
   private canvasResizeObserver: ResizeObserver | undefined;
   private chartResizeObserver: ResizeObserver | undefined;
+
+  private debounceId?: ReturnType<typeof setTimeout>;
 
   private onLegendItemSelect = (event: ChartEvent<LegendItem>) => {
     if (event.context?.data) {
@@ -132,8 +147,18 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
   updated(changedProperties: Map<PropertyKey, unknown>): void {
     super.updated(changedProperties);
 
+    if (changedProperties.has('dataUrl')) {
+      this.updateDataFromAPI();
+    }
+
     if (changedProperties.has('type') || changedProperties.has('data') || changedProperties.has('options')) {
-      this.initChart();
+      this.debounceId = debounce(
+        this.debounceId,
+        () => {
+          this.initChart();
+        },
+        100,
+      );
     }
 
     if (changedProperties.has('states')) {
@@ -232,6 +257,14 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     }
     if (this.chartResizeObserver && this.chart?.api?.canvas.parentElement) {
       this.chartResizeObserver?.unobserve(this.chart.api.canvas.parentElement);
+    }
+  }
+
+  private updateDataFromAPI(): void {
+    if (this.dataUrl) {
+      requestFromPattern(this.dataUrl).then((data) => {
+        this.setAttribute('data', JSON.stringify(data));
+      });
     }
   }
 }

@@ -1,0 +1,34 @@
+---
+sidebar_position: 1001
+---
+
+# Data from URL
+
+We do not provide any HTTP client for you. So you need to set it before starting using this function.
+The following code example will show you how to set it with popular HTTP client library([Axios](https://axios-http.com/)).
+If you are using TypeScript as the programming language, we recommend to implement the interface [Http](/docs/api/interfaces/Http).
+
+```javascript
+mdw.settings.set({
+  http: new (function () {
+    const endpoint = 'http://localhost:3000';
+    this.get = function (url) {
+      return axios.get(endpoint + url).then((response) => {
+        return response.data;
+      });
+    };
+  })(),
+});
+```
+
+Then you can set the attribute **data-url** for getting data from your backend APIs.
+
+```jsx live noInline
+render(
+  <mdw-chart
+    type="line"
+    data-url="/data.json#line"
+    options='{"categoryAxis":{"dataKey":"date","type":"time","labelFormat":"MMM D"}}'
+  ></mdw-chart>,
+);
+```

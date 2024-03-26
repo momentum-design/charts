@@ -3,6 +3,7 @@ import { settings } from './settings';
 
 export * from './colorsets';
 export * from './constants';
+export * from './http';
 export * from './settings';
 export * from './themes';
 export * from './utils';

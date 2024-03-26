@@ -1,4 +1,4 @@
-import { cloneDeep, merge } from 'lodash-es';
+import { cloneDeep, get, merge } from 'lodash-es';
 
 export function mergeObjects<TObject1>(object1: TObject1): TObject1;
 export function mergeObjects<TObject1, TObject2>(object1: TObject1, object2: TObject2): TObject1 & TObject2;
@@ -73,4 +73,67 @@ export function padToArray<TItem>(itemOrSourceArray: TItem | TItem[], length: nu
  */
 export function deepClone<T>(value: T): T {
   return cloneDeep(value);
+}
+
+/**
+ * Gets a field from an object.
+ * @param obj The source object.
+ * @param path The path to find.
+ * @returns The field in the source object.
+ */
+export function getFieldFromObject<T>(obj: object, path: string): T {
+  return get(obj, path) as T;
+}
+
+/**
+ * Splits and gets the item by the specified index.
+ * @param source The source text,
+ * @param separator The separator to split.
+ * @param index The index to get.
+ * @returns A string or null.
+ */
+export function splitAndGet(source: string, separator: string, index: number | 'last'): string | null {
+  if (!source) {
+    return null;
+  }
+
+  const items = source.split(separator);
+  let indexToGet = index;
+  if (indexToGet === 'last') {
+    indexToGet = items.length - 1;
+  }
+  if (indexToGet < items.length) {
+    return items[indexToGet];
+  }
+  return null;
+}
+
+/**
+ * Checks if the strings of object one and two are consistent.
+ * @param obj1 The first object.
+ * @param obj2 The second object.
+ * @returns true if the string is same, otherwise false.
+ */
+export function equalsJSONString(obj1: object, obj2: object): boolean {
+  return JSON.stringify(obj1) === JSON.stringify(obj2);
+}
+
+/**
+ * Debounces a function call.
+ * @param debounceId The debounce id, it should be only a variable without initialization.
+ * @param func The function to be called.
+ * @param delay The debounce time in millisecond.
+ * @returns The debounce id should be assigned back to the variable.
+ */
+export function debounce(
+  debounceId: ReturnType<typeof setTimeout> | undefined,
+  func: () => void,
+  delay: number,
+): ReturnType<typeof setTimeout> {
+  if (debounceId) {
+    clearTimeout(debounceId);
+  }
+  return setTimeout(() => {
+    func();
+  }, delay);
 }

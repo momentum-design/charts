@@ -1,5 +1,5 @@
-import { ColorSetName, defaultColorSet } from '../src/core/colorsets';
-import { settings } from '../src/core/settings';
+import { ColorSetName, defaultColorSet } from '../../src/core/colorsets';
+import { settings } from '../../src/core/settings';
 
 describe('settings', () => {
   it('should have the default ColorSet', () => {

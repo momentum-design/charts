@@ -7,7 +7,7 @@ import { COMPONENT_PREFIX, settings } from '../../core';
  * @ignore
  */
 @customElement(`${COMPONENT_PREFIX}-colorsets`)
-export class Themes extends LitElement {
+export class ColorSets extends LitElement {
   static styles = css`
     :host {
       display: table;

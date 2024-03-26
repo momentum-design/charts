@@ -1,5 +1,6 @@
 import { mergeObjectsTo } from '../helpers';
 import { ColorSetName, colorSets, defaultColorSet } from './colorsets';
+import { Http } from './http';
 import { defaultTheme, Theme, ThemeName, themes } from './themes';
 
 /**
@@ -10,6 +11,7 @@ export interface Settings {
   colorSets: Map<ColorSetName | string, string[]>;
   theme: ThemeName | string;
   themes: Map<ThemeName | string, Theme>;
+  http?: Http;
 
   /**
    * Suffixed for big numbers. It's an array of objects of number/suffix pairs.
@@ -42,6 +44,14 @@ export interface Settings {
    * @returns the settings
    */
   addTheme: (name: string, theme: Theme) => Settings;
+
+  /**
+   * Sets an http client for API calls.
+   *
+   * @param httpInstance The http client instance.
+   * @returns the settings
+   */
+  setHttpClient: (httpInstance: Http) => Settings;
 }
 
 /**
@@ -84,6 +94,11 @@ export const settings: Settings = {
   addTheme: function (name: string, theme: Theme): Settings {
     this.themes.set(name, theme);
     this.set({ theme: name as ThemeName });
+    return this;
+  },
+
+  setHttpClient: function (httpInstance: Http): Settings {
+    this.http = httpInstance;
     return this;
   },
 };

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const themeColorSetMapping = {
   light: 'default',
   dark: 'dark',
@@ -23,3 +24,18 @@ setTimeout(() => {
     }
   });
 }, 2000);
+
+// set http
+mdw.settings.setHttpClient(new function () {
+  this.get = function (url) {
+    return axios.get(url).then((response) => {
+      return response.data;
+    });
+  }
+
+  this.post = function (url, data) {
+    return axios.post(url, data).then((response) => {
+      return response.data;
+    });
+  }
+});

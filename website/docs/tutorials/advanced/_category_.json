@@ -1,0 +1,9 @@
+{
+  "label": "Advanced",
+  "position": 100,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "This section will show you some advanced options or features."
+  }
+}
