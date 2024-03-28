@@ -1,40 +1,54 @@
 /* eslint-disable no-undef */
-const themeColorSetMapping = {
+/* eslint-disable @typescript-eslint/no-unused-vars */
+var themeColorSetMapping = {
   light: 'default',
   dark: 'dark',
 };
-var defaultTheme = getCurrentTheme()
-if (defaultTheme) {
-  // eslint-disable-next-line no-undef
-  mdw.settings.set({ theme: defaultTheme, colorSet: themeColorSetMapping[defaultTheme] });
-}
+
+initTheme();
 
 function getCurrentTheme() {
-  return localStorage.getItem('theme'); // light or dark
+  return localStorage.getItem('theme') ?? 'light'; // light or dark
 }
 
-function listenThemeChange(callback, sender, listenEventOptions) {
+function initTheme() {
+  const theme = getCurrentTheme();
+  // eslint-disable-next-line no-undef
+  mdw.settings.set({ theme: theme, colorSet: themeColorSetMapping[theme] });
+}
+
+function isThemeButton(element) {
+  if (!element) {
+    return false;
+  }
+  const cls = element.getAttribute('class');
+  return cls && (cls.indexOf('ColorModeToggle') > 0 || cls.indexOf('toggleButton') > 0);
+}
+
+function getThemeButton() {
   const btnElements = document.querySelectorAll('#__docusaurus > .navbar > .navbar__inner > .navbar__items--right button');
-  btnElements.forEach(function (element) {
-
-    // toggle of color mode
-    if (element.className.indexOf('ColorModeToggle') > 0 || element.className.indexOf('toggleButton') > 0) {
-      const fnCallback = () => {
-        setTimeout(() => {
-          const theme = localStorage.getItem('theme');
-          callback.call(sender, theme);
-        }, 200);
-      }
-      element.addEventListener('click', fnCallback, listenEventOptions);
-    }
-  });
+  return Array.from(btnElements).find(element => isThemeButton(element));
 }
 
-setTimeout(() => {
-  listenThemeChange((theme) => {
-    mdw.changeTheme(theme, themeColorSetMapping[theme]);
-  })
-}, 2000);
+function listenThemeChange(callback, listenEventOptions) {
+  const btnElement = getThemeButton();
+  console.log(btnElement);
+  if (btnElement) {
+    const fnCallback = () => {
+      setTimeout(() => {
+        callback(getCurrentTheme());
+      }, 200);
+    }
+    btnElement.addEventListener('click', fnCallback, listenEventOptions);
+  }
+}
+
+function lookupElement(element, fnCondition) {
+  if (!element)
+    return null;
+
+  return fnCondition(element) ? element : lookupElement(element.parentNode, fnCondition);
+}
 
 // set http
 mdw.settings.setHttpClient(new function () {

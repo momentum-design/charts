@@ -156,6 +156,8 @@ const getConfig = (app) => (
     stylesheets: app.externalStylesheets,
 
     scripts: app.externalScripts,
+
+    clientModules: ['./static/app.js'],
   });
 
 module.exports = {

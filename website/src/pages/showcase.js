@@ -45,7 +45,7 @@ export default function Showcase() {
     }
   })
   themeChangeId = setTimeout(() => {
-    window.listenThemeChange(onThemeChange, this, {
+    window.listenThemeChange(onThemeChange, {
       once: true
     });
   }, 100);
