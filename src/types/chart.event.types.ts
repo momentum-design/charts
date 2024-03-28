@@ -10,6 +10,7 @@ export enum ChartEventType {
   ThemeChange = 'themeChange',
   WordClick = 'wordClick',
   Wheel = 'wheel',
+  BoxRenderComplete = 'boxRenderComplete',
 }
 
 export interface EventContext<TData> {

@@ -1,0 +1,196 @@
+---
+sidebar_position: 2000
+---
+
+# Layout
+
+This is a layout component. Generate fixed layout based on Grid data structure. Support responsiveness.
+
+## Web Component
+
+```jsx live
+function showComponent() {
+  const data = [
+    { width: 2, height: 2, y: 1, x: 3, id: '1' },
+    { width: 1, height: 1, y: 4, x: 4, id: '2' },
+    { width: 1, height: 1, y: 2, x: 0, id: '3' },
+    { width: 2, height: 2, y: 5, x: 3, id: '4' },
+    { width: 2, height: 2, y: 3, x: 1, id: '5' },
+    { width: 2, height: 1, y: 2, x: 1, id: '6' },
+    { width: 1, height: 1, y: 3, x: 3, id: '7' },
+  ];
+
+  const options = {
+    gap: 10,
+    cols: 6,
+    cellHeight: 30,
+  };
+
+  const slots = data.map((item, index) => {
+    const slotName = `${item.id}`;
+    return <p key={index} slot={slotName}>{`P${index + 1}`}</p>;
+  });
+
+  return (
+    <mdw-layout options={JSON.stringify(options)} data={JSON.stringify(data)}>
+      {slots}
+    </mdw-layout>
+  );
+}
+```
+
+## Options Defaults
+
+** Data **
+
+```javascript
+data: LayoutData = [
+  { width: 2, height: 2, y: 1, x: 3, id: '1' },
+  { width: 1, height: 1, y: 4, x: 4, id: '2' },
+  { width: 1, height: 1, y: 2, x: 0, id: '3' },
+  { width: 2, height: 2, y: 5, x: 3, id: '4' },
+  { width: 2, height: 2, y: 3, x: 1, id: '5' },
+  { width: 2, height: 1, y: 2, x: 1, id: '6' },
+  { width: 1, height: 1, y: 3, x: 3, id: '7' },
+];
+
+interface LayoutData {
+  x: number; // X-axis starting point
+  y: number; //  Y-axis starting point
+  width: number; // How many squares is the width?
+  height: number; //How many squares is the height?
+  id?: string;
+}
+```
+
+** Options **
+
+| Name       | Type     | Default | Description                           |
+| ---------- | -------- | ------- | ------------------------------------- |
+| gap        | `number` | `10`    | Set the gap between rows and columns. |
+| cols       | `number` | `6`     | Of columns in a grid layout.          |
+| cellHeight | `number` | `30`    | The height of a cell.                 |
+
+## HTML
+
+Supports non-framed HTML display layout.
+
+```html
+<div class="container">
+  <div id="mdw-layout">
+    <div class="mdw-layout-item">1</div>
+    <div class="mdw-layout-item">2</div>
+    <div class="mdw-layout-item">3</div>
+    <div class="mdw-layout-item">4</div>
+    <div class="mdw-layout-item">5</div>
+    <div class="mdw-layout-item">6</div>
+  </div>
+</div>
+```
+
+``` css
+.container{
+  height:100%;
+  width:100%;
+  padding:10px;
+  box-sizing: border-box;
+}
+
+#mdw-layout {
+  width: 100%;
+  height: 100%;
+  background: #e5e5e5;
+}
+
+.mdw-layout-item {
+  background: #fff;
+}
+```
+
+```` javascript
+export class LayoutHandler {
+  private layoutElement: HTMLElement;
+  private options: { gap: number; cols: number; cellHeight: number };
+  private data: { width: number; height: number; x: number; y: number }[];
+
+  constructor(
+    layoutSelector: string,
+    data: { id: string; width: number; height: number; x: number; y: number }[],
+    options: { gap: number; cols: number; cellHeight: number }
+  ) {
+    this.layoutElement = document.querySelector(layoutSelector) as HTMLElement;
+    this.layoutElement.style.position = "relative";
+    this.options = options;
+    this.data = data;
+
+    this.createLayout(data);
+
+    window.addEventListener("resize", this.handleResize.bind(this));
+  }
+
+  private createLayout(
+    data: { width: number; height: number; x: number; y: number }[]
+  ) {
+    // Render Box
+    const gap = this.options.gap;
+    const cellHeight = this.options.cellHeight;
+    const gridWidth = this.layoutElement.clientWidth;
+    const cols = this.options.cols;
+    const cellWidth = (gridWidth - gap * (cols + 1)) / cols;
+    let maxHeight = 0;
+
+    const boxElements = this.layoutElement.querySelectorAll(".mdw-layout-item");
+    boxElements.forEach((box, index) => {
+      const curData = data[index];
+      const width = curData.width * (cellWidth + gap) - gap + "px";
+      const height = curData.height * (cellHeight + gap) - gap + "px";
+      const left = curData.x * (cellWidth + gap) + "px";
+      const top = curData.y * (cellHeight + gap) + "px";
+
+      box.style.position = "absolute";
+      box.style.width = width;
+      box.style.height = height;
+      box.style.transform = `translate3d(${left}, ${top}, 0)`;
+
+      const boxBottom =
+        curData.y * (cellHeight + gap) + curData.height * cellHeight;
+      if (boxBottom > maxHeight) {
+        maxHeight = boxBottom;
+      }
+    });
+
+     this.layoutElement.style.height = maxHeight + "px";
+  }
+
+  private handleResize() {
+    this.createLayout(this.data);
+  }
+
+  static render(
+    layoutSelector: string,
+    data: { width: number; height: number; x: number; y: number }[],
+    options: { gap: number; cols: number; cellHeight: number }
+  ) {
+    new LayoutHandler(layoutSelector, data, options);
+  }
+}
+
+const layoutSelector = "#mdw-layout";
+const data = [
+  { width: 2, height: 2, y: 1, x: 3 },
+  { width: 1, height: 1, y: 4, x: 4 },
+  { width: 1, height: 1, y: 2, x: 0 },
+  { width: 2, height: 2, y: 5, x: 3 },
+  { width: 2, height: 2, y: 3, x: 1 },
+  { width: 2, height: 1, y: 2, x: 1 }
+];
+
+const options = {
+  gap: 10,
+  cols: 6,
+  cellHeight: 100
+};
+
+LayoutHandler.render("#mdw-layout", data, options);
+
+````
