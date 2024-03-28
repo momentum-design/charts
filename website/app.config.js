@@ -25,6 +25,7 @@ module.exports = {
         label: 'API',
       },
       { to: '/blog', label: 'Blog', position: 'left' },
+      { to: '/showcase', label: 'Showcase', position: 'left' },
       { to: '/playground', label: 'Playground', position: 'left' },
       {
         href: `https://github.com/${this.githubUser}/${this.githubRepo}`,

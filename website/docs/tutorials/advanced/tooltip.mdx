@@ -2,7 +2,9 @@
 sidebar_position: 1000
 ---
 
-# Chart Tooltip
+# Tooltip
+
+## Chart Tooltip
 
 We will use donut chart as an example to show what options are available for tooltip. The tooltip includes **title**, **items** and **footer**.
 
@@ -71,7 +73,7 @@ const Example = () =>
 render(<Example />);
 ```
 
-## Options
+### Options
 
 | Name            | <div style={{width: '240px'}}>Type</div>                                | Default            | Description                                                                                                                              |
 | :-------------- | :---------------------------------------------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
@@ -88,7 +90,7 @@ render(<Example />);
 | footer          | `string`<br />`string[]`<br /><code>() => string &#124; string[]</code> |                    | Set the footer of tooltip.                                                                                                               |
 | combineItems    | `boolean`                                                               |                    | Only for pie/donut charts. `true` will show all items in tooltip. For XY-based charts, the default is to combine items into the tooltip. |
 
-## Styles
+### Styles
 
 The following example will show you the tooltip html code.
 

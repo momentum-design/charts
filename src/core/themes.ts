@@ -24,8 +24,8 @@ export const themes = new Map<ThemeName | string, Theme>([
       textColorSecondary: '#7D7F7F',
       textActiveColor: 'black',
       textInactiveColor: '#7D7F7F',
-      tooltipTextColor: '#efefef',
-      tooltipBackgroundColor: '#000000e6',
+      tooltipTextColor: '#EFEFEF',
+      tooltipBackgroundColor: '#000000F2',
     },
   ],
   [
@@ -38,7 +38,7 @@ export const themes = new Map<ThemeName | string, Theme>([
       textActiveColor: '#FFFFFF',
       textInactiveColor: '#7D7F7F',
       tooltipTextColor: '#000000e6',
-      tooltipBackgroundColor: '#efefef',
+      tooltipBackgroundColor: '#EFEFEFF2',
     },
   ],
 ]);
