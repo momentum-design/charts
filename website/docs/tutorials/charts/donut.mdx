@@ -37,42 +37,7 @@ function showComponent() {
 
 ## Options Defaults
 
-** Basic configuration (all chart types) **
-
-| Name          | Type                                | Default | Description                              |
-| ------------- | ----------------------------------- | ------- | ---------------------------------------- |
-| chartLabel    | `string` \| `number` \| `string[]`; | -       | Data label                               |
-| theme         |                                     | -       | Chart theme                              |
-| fontColor     | `string`                            | -       | Plugin text font color                   |
-| fontFamily    | `string`                            | -       | Plugin text font family                  |
-| aspectRatio   | `number`                            | 2       | The aspect ratio to maintain             |
-| paddingTop    | `number`                            | -       | Chart to parent container top padding    |
-| paddingBottom | `number`                            | -       | Chart to parent container bottom padding |
-| paddingLeft   | `number`                            | -       | Chart to parent container left padding   |
-| paddingRight  | `number`                            | -       | Chart to parent container right padding  |
-| legend        | [LegendOptions](#legendoptions)     | -       | Legend related configuration             |
-| tooltip       | [TooltipOptions](#tooltipoptions)   | -       | Tooltip related configuration            |
-
-## Private Configuration
-
-| Name        | Type               | Default | Description                                            |
-| ----------- | ------------------ | ------- | ------------------------------------------------------ |
-| cutout      | string             | 90%     | The portion of the chart that is cut out of the middle |
-| centerLabel | `string` or `HTML` | -       | The middle area displays content                       |
-
-## LegendOptions
-
-** Legend related configuration **
-
-| Name               | Type                                   | Default | Description                    |
-| ------------------ | -------------------------------------- | ------- | ------------------------------ |
-| legendDisplay      | `boolean`                              | true    | Legend show                    |
-| isLegendClick      | `boolean`                              | 90%     | Change legend default behavior |
-| legendPosition     | `left` \| `top` \| `right` \| `bottom` | `top`   | Legend position                |
-| legendLabelsWidth  | `number`                               | 12      | Legend color block width       |
-| legendLabelsHeight | `number`                               | 12      | Legend color block height      |
-
-> If isLegendClick is set to true, the default click behavior of chart legend will be disabled.
+> If `legend.selectable` is set to true, the default click behavior of chart legend will be disabled.
 
 ```jsx live
 function showComponent() {
@@ -117,18 +82,3 @@ function showComponent() {
   );
 }
 ```
-
-## TooltipOptions
-
-** Tooltip related configuration **
-
-| Name                | Type               | Default | Description                 |
-| ------------------- | ------------------ | ------- | --------------------------- |
-| seriesTooltipHead   | `HTML` \| `string` | -       | Series tooltip Header       |
-| seriesTooltipBody   | `HTML` \| `string` | -       | Series tooltip Body         |
-| seriesTooltipFooter | `HTML` \| `string` | -       | Series tooltip Footer       |
-| seriesTooltipFloor  | `number`           | 0       | Series tooltip number floor |
-| legendTooltipHead   | `HTML` \| `string` | -       | Legend tooltip Header       |
-| legendTooltipBody   | `HTML` \| `string` | -       | Legend tooltip Body         |
-| legendTooltipFooter | `HTML` \| `string` | -       | Legend tooltip Footer       |
-| legendTooltipFloor  | `number`           | 0       | Legend tooltip number floor |

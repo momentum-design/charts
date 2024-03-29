@@ -100,4 +100,26 @@ const Example = () => {
 render(<Example />);
 ```
 
-## [Options Defaults](doughnut#options-defaults)
+## Type
+
+type = `pie`
+
+## Data
+
+The data supports the following multiple data formats:
+
+| Mode                  | Type                                 | Example                                                       |
+| --------------------- | ------------------------------------ | ------------------------------------------------------------- |
+| Two-dimensional array | `unknown[][]`                        | [['Year','Things'],['2004',1000]                              |
+| Array                 | `Record<string, string \| number>[]` | [{"Year":"2004","Things":1000},{"Year":"2005","Things":1170}] |
+| Object                | `Object `                            | {'Brunei Darussalam': 739,'Jordan': 763,};                    |
+
+## Options
+
+| Name        | Type                 | Default | Description                                                                                                                                                  |
+| ----------- | -------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| innerRadius | `string` \| `number` | `0`     | The portion of the chart that is cut out of the middle. If string and ending with `%,` percentage of the chart radius. number is considered to be pixels.    |
+| dataKey     | `string`             | -       | Specifies the category field on the category axis. If not specified, the first field name of the first piece of data in data will be automatically obtained. |
+
+
+
