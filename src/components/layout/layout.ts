@@ -14,9 +14,40 @@ export class LayoutComponent extends LitElement {
       position: relative;
     }
     .mdw-layout-item {
-      background-color: #fff;
       position: absolute;
       box-sizing: border-box;
+    }
+    .item-loading {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 5px;
+      background-color: #e3e3e3;
+    }
+    .item-loading:after {
+      content: '';
+      display: block;
+      position: absolute;
+      height: 100%;
+      width: 20px;
+      top: 0;
+      animation: load 3s ease infinite;
+      background-image: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.5) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+    }
+
+    @keyframes load {
+      from {
+        left: -20px;
+      }
+      to {
+        left: 100%;
+      }
     }
   `;
 
@@ -42,9 +73,11 @@ export class LayoutComponent extends LitElement {
       ${repeat(
         this.data!,
         (item) => item,
-        (item, index) => html`
+        (item) => html`
           <div id="widget-${item.id}" class="mdw-layout-item">
-            <slot name="${item.id}"></slot>
+            <slot name="${item.id}">
+              <div class="item-loading"></div>
+            </slot>
           </div>
         `,
       )}
@@ -92,7 +125,7 @@ export class LayoutComponent extends LitElement {
 
     this.data?.forEach((item) => {
       const cellHeight = item.height * cellH + (item.height - 1) * gap;
-      const totalHeight = item.y * (cellH + gap) + cellHeight;
+      const totalHeight = item.y * (cellH + gap) + cellHeight - gap;
       if (totalHeight > maxHeight) {
         maxHeight = totalHeight;
       }
@@ -133,7 +166,7 @@ export class LayoutComponent extends LitElement {
     const cellH = this.options.cellHeight;
     const cols = this.options.cols;
 
-    const gridWidth = containerWidth - gap * (cols + 1);
+    const gridWidth = containerWidth - gap * (cols - 1);
     const cellWidth = gridWidth / cols;
 
     const left = item.x * (cellWidth + gap) + 'px';
