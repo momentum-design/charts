@@ -126,6 +126,7 @@
     "chroma-js": "^2.4.2",
     "lit": "^2.7.5",
     "lodash-es": "^4.17.21",
-    "moment": "^2.29.4"
+    "moment": "^2.29.4",
+    "moment-timezone": "~0.5.43"
   }
 }

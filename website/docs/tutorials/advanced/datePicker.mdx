@@ -1,0 +1,102 @@
+---
+sidebar_position: 3
+---
+
+import { useEffect, useRef } from 'react';
+
+# DatePicker
+
+Date picker - tiny size. has a large amount of options, which allows you to customize it to your needs.
+
+```jsx live
+
+function showComponent() {
+  const options = {
+    range: true,
+    lang: 'en-US',
+    minDate: '2023-5-3',
+    presetOptions: {
+      data: [
+        {
+          label: 'Today',
+          value: 0,
+        },
+        {
+          label: 'Yesterday',
+          value: -1,
+        },
+        {
+          label: 'Last 7 Days',
+          value: -7,
+        },
+        {
+          label: 'Last 30 Days',
+          value: -30,
+        },
+        {
+          label: 'Last 90 Days',
+          value: -90,
+        },
+        {
+          label: 'Last 365 Days',
+          value: -365,
+        },
+      ],
+    },
+  }
+
+  const datePickerRef = useRef(null);
+  useEffect(() => {
+    const handleDataChange = (event) => {
+      console.log('Date changed detail:', event.detail);
+    };
+
+    const datePickerElement = datePickerRef.current;
+    if (datePickerElement) {
+      datePickerElement.addEventListener('dateRangeChange', handleDataChange);
+    }
+
+    return () => {
+      if (datePickerElement) {
+        datePickerElement.removeEventListener('dateRangeChange', handleDataChange);
+      }
+    };
+  }, []);
+  
+  return  <div style={{'width': '220px'}} tabIndex="0">
+            <mdw-datepicker options={JSON.stringify(options)} ref={datePickerRef}></mdw-datepicker>
+          </div>;
+}
+```
+
+## Options
+
+| Name   | Type   | Default | Description                                             |
+| ------ | --------- | ---------------------------- | ------------------------------------------------------- |
+| autoApply | `boolean` | `false` | Hide the apply and cancel buttons, and automatically apply a new date range as soon as two dates are clicked|
+| startDate | `string` \| `Date` \| `number` | `new Date()`  | Date Object or Unix Timestamp (with milliseconds) or String (must be equal to option format)|
+| endDate | `string` \| `Date` \| `number` | `new Date()`  | Date Object or Unix Timestamp (with milliseconds) or String (must be equal to option format)|
+| minDate | `string` \| `Date` \| `number` | `null`  | The minimum/earliest date that can be selected. Date Object or Unix Timestamp (with milliseconds) or String (must be equal to option format)|
+| maxDate | `string` \| `Date` \| `number` | `null`  | The maximum/latest date that can be selected. Date Object or Unix Timestamp (with milliseconds) or String (must be equal to option format)|
+| format | `string` | `MM/DD/YYYY` | The default output format |
+| range | `boolean` | `true` | Provides the ability to select a date range |
+| presetOptions | [PresetOptions](#presetOptions) | `null` | Provides the ability to preset. Adds predefined ranges|
+| time | `boolean` | `false` | Adds time picker |
+| amp | `boolean` | `true` | Adds extra options (years and months supported select) |
+| readonly | `boolean` | `true` | Add readonly attribute to element |
+| lang | `string` | `en-US` | This option affect to day names, month names and also affect to plural rules via |
+| timezone | `string` | `null` | Define your own timezone |
+| theme | `string` | `light` | Define your own theme. Only `light` or `dark` is supported|
+
+## Event
+
+| Name   | Description   | Parameters |
+| ------ | --------- | ---------------------------- |
+| dateRangeChange | triggers when user confirms the value | `{detail: {start: Date,end: Date}}` `{detail:{date: Date}}` |
+
+### PresetOptions
+
+| Name   | Type   | Default | Description | Example                                             |
+| ------ | --------- | ---------------------------- | ------------------------------------------------------- | ----------|
+| data | `Object<string, string\|number>[]` | `null` | Define your own ranges `label: Preset name` `value: Preset date difference` | `[{label: 'Today',value: 0,},{label: 'Yesterday',value: -1,},{label: 'Last 7 Days',value: -7,},{label: 'Last 30 Days',value: -30,},{label: 'Last 90 Days',value: -90,},{label: 'Last 365 Days',value: -365,}]` |
+| position | `left` \| `right` | `left` | Position of preset block | |
