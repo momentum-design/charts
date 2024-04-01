@@ -31,11 +31,6 @@ export class LayoutComponent extends LitElement {
     cellHeight: 30,
   };
 
-  constructor() {
-    super();
-    this.addEventListener(ChartEventType.BoxRenderComplete, (event) => this.handleBoxRendered(event));
-  }
-
   render() {
     return html`
       ${repeat(
@@ -143,10 +138,5 @@ export class LayoutComponent extends LitElement {
     const translateX = `translate3d(${left}, ${top}, 0)`;
 
     return { width, height, transform: translateX };
-  }
-
-  private handleBoxRendered(event: Event): void {
-    const detail = (event as CustomEvent).detail;
-    console.log('Box rendered:', detail);
   }
 }

@@ -2,7 +2,7 @@
 sidebar_position: 1005
 ---
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 # Layout
 
@@ -32,6 +32,19 @@ function showComponent() {
     const slotName = `${item.id}`;
     return <p key={index} slot={slotName} style={{ backgroundColor: '#fff' }}>{`P${index + 1}`}</p>;
   });
+
+  const handleBoxRendered = (event) => {
+    console.log('boxRenderComplete event:', event);
+  };
+
+  useEffect(() => {
+    const mdwLayout = document.querySelector('mdw-layout');
+    mdwLayout.addEventListener('boxRenderComplete', handleBoxRendered);
+
+    return () => {
+      mdwLayout.removeEventListener('boxRenderComplete', handleBoxRendered);
+    };
+  }, []);
 
   return (
     <mdw-layout options={JSON.stringify(options)} data={JSON.stringify(data)}>
