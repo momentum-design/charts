@@ -12,7 +12,6 @@ This is a layout component. Generate fixed layout based on Grid data structure. 
 
 ```jsx live
 function showComponent() {
-  const [slots, setSlots] = useState([]);
   const data = [
     { width: 2, height: 2, y: 0, x: 4, id: '1' },
     { width: 1, height: 1, y: 4, x: 4, id: '2' },
@@ -29,17 +28,10 @@ function showComponent() {
     cellHeight: 30,
   };
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      const updatedSlots = data.map((item, index) => {
-        const slotName = `${item.id}`;
-        return <p key={index} slot={slotName}>{`P${index + 1}`}</p>;
-      });
-      setSlots(updatedSlots);
-    }, 5000);
-
-    return () => clearTimeout(timeout);
-  }, [data]);
+  const slots = data.map((item, index) => {
+    const slotName = `${item.id}`;
+    return <p key={index} slot={slotName} style={{ backgroundColor: '#fff' }}>{`P${index + 1}`}</p>;
+  });
 
   return (
     <mdw-layout options={JSON.stringify(options)} data={JSON.stringify(data)}>
@@ -112,7 +104,6 @@ Supports non-framed HTML display layout.
 }
 ```
 
-```` javascript
+```javascript
 <script src="/layout.js"></script>
-````
-
+```
