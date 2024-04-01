@@ -1,3 +1,5 @@
+export * from './.internal';
+export * from './.plugins';
 export * from './area';
 export * from './bar';
 export * from './charts';
@@ -7,3 +9,5 @@ export * from './gauge';
 export * from './line';
 export * from './pie';
 export * from './range';
+export * from './tooltip';
+export * from './xy';

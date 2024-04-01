@@ -32,7 +32,6 @@ function getThemeButton() {
 
 function listenThemeChange(callback, listenEventOptions) {
   const btnElement = getThemeButton();
-  console.log(btnElement);
   if (btnElement) {
     const fnCallback = () => {
       setTimeout(() => {
