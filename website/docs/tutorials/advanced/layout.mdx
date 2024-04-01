@@ -8,8 +8,6 @@ import { useEffect } from 'react';
 
 This is a layout component. Generate fixed layout based on Grid data structure. Support responsiveness.
 
-## Web Component
-
 ```jsx live
 function showComponent() {
   const data = [
@@ -56,7 +54,7 @@ function showComponent() {
 
 ## Options Defaults
 
-** Data **
+### Data
 
 ```javascript
 data: LayoutData = [
@@ -78,13 +76,19 @@ interface LayoutData {
 }
 ```
 
-** Options **
+### Options
 
 | Name       | Type     | Default | Description                           |
 | ---------- | -------- | ------- | ------------------------------------- |
 | gap        | `number` | `10`    | Set the gap between rows and columns. |
 | cols       | `number` | `6`     | Of columns in a grid layout.          |
 | cellHeight | `number` | `30`    | The height of a cell.                 |
+
+### Event
+
+| Name              | Description                     |
+| ----------------- | ------------------------------- |
+| boxRenderComplete | Layout box rendering completed. |
 
 ## HTML
 
