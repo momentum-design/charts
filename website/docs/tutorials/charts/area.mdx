@@ -10,26 +10,15 @@ Area chart support a fill area on the dataset object which can be used to create
 const data = [
   ['Year', 'Area', 'Line'],
   ['2016', 3000, 4000],
-  ['2017', 8700, 4600],
-  ['2018', 6600, 1200],
-  ['2019', 5300, 5400],
-  ['2020', 4300, 3400],
-  ['2021', 6300, 8400],
-  ['2022', 7300, 4400],
-  ['2023', 7300, 7400],
+  ['2017', 2700, 4600],
+  ['2018', 1600, 5200],
+  ['2019', 1300, 5400],
+  ['2020', 300, 3400],
+  ['2021', 2300, 8400],
+  ['2022', 1300, 4400],
+  ['2023', 4300, 7400],
 ];
-const initialOptions = {
-  seriesOptions: {
-    styleMapping: {
-      Line: {
-        tension: 0.3,
-      },
-      Area: {
-        tension: 0.3,
-      },
-    },
-  },
-};
+const initialOptions = {};
 const Example = () =>
   getExample(initialOptions, data, ({ key, data, options, setOptions }) => {
     const Buttons = () => (
@@ -37,39 +26,36 @@ const Example = () =>
         <Button onClick={() => setOptions(initialOptions)}>All Area</Button>
         <Button
           onClick={() =>
-            setOptions(
-              {
-                seriesOptions: {
-                  styleMapping: {
-                    Line: {
-                      type: 'line',
-                    },
+            setOptions({
+              seriesOptions: {
+                styleMapping: {
+                  Line: {
+                    type: 'line',
                   },
                 },
               },
-              false,
-            )
+            })
           }
         >
           Single Area
         </Button>
         <Button
           onClick={() =>
-            setOptions(
-              {
-                seriesOptions: {
-                  styleMapping: {
-                    Area: {
-                      type: 'dashedArea',
-                    },
+            setOptions({
+              seriesOptions: {
+                styleMapping: {
+                  Area: {
+                    type: 'dashedArea',
                   },
                 },
               },
-              false,
-            )
+            })
           }
         >
           Dashed Area
+        </Button>
+        <Button onClick={() => setOptions({ categoryAxis: { stacked: true }, valueAxes: [{ stacked: true }] })}>
+          Stacked
         </Button>
         {buttonsRelatedToColor(setOptions)}
       </>
@@ -77,12 +63,7 @@ const Example = () =>
 
     return (
       <WithActions buttons={<Buttons />}>
-        <mdw-chart
-          key={key}
-          type="area"
-          data={JSON.stringify(data)}
-          options={JSON.stringify(options)}
-        ></mdw-chart>
+        <mdw-chart key={key} type="area" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-chart>
       </WithActions>
     );
   });
@@ -96,8 +77,8 @@ type = 'area'
 
 ## Data
 
-See [Bar Chart](./bar#data)
+See [Data](./line#data)
 
 ## Options
 
-See [Bar Chart](./bar#options)
+See [Options](./line#options)

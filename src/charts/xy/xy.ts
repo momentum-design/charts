@@ -3,7 +3,6 @@ import {
   ChartConfiguration,
   ChartDataset,
   ChartOptions as CJOptions,
-  ChartType as CJChartType,
   ChartType as CJType,
   Color,
   LegendItem as CJLegendItem,
@@ -180,7 +179,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
           color: this.getCurrentTheme()?.textColorPrimary,
         },
         legend: this.legend?.getChartJSConfiguration({
-          overwriteLabels: (labels: CJLegendItem[], chart: CJ<CJChartType>) => this.overwriteLabels(labels, chart),
+          overwriteLabels: (labels: CJLegendItem[], chart: CJ<CJType>) => this.overwriteLabels(labels, chart),
           onItemClick: (chart: Chart<XYData, XYChartOptions>, legendItem: CJLegendItem) =>
             this.onItemClick(chart, legendItem),
         }),
@@ -196,7 +195,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     return options;
   }
 
-  private overwriteLabels(labels: CJLegendItem[], chart: CJ<CJChartType>): CJLegendItem[] {
+  private overwriteLabels(labels: CJLegendItem[], chart: CJ<CJType>): CJLegendItem[] {
     return labels.map((label) => {
       if (this.options.legend?.markerStyle) {
         label.pointStyle = this.options.legend?.markerStyle;
@@ -469,13 +468,13 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     dataset: ChartDataset<'line', number[]>,
     styleMapping: SeriesStyleOptions,
   ): ChartDataset<'line', number[]> {
-    dataset.borderWidth = 1;
+    dataset.borderWidth = styleMapping.lineWidth ?? this.options.seriesOptions?.lineWidth ?? 1;
     dataset = dataset as ChartDataset<'line', number[]>;
     if (styleMapping.fillGaps) {
       dataset.spanGaps = styleMapping.fillGaps;
       dataset.segment = {
         borderColor: (ctx: ScriptableLineSegmentContext) =>
-          ctx.p0.skip || ctx.p1.skip ? (dataset.borderColor as Color) : undefined,
+          ctx.p0.skip || ctx.p1.skip ? this.getCurrentTheme()?.textColorPrimary : undefined,
         borderDash: (ctx: ScriptableLineSegmentContext) => (ctx.p0.skip || ctx.p1.skip ? this.borderDash : undefined),
       };
     }

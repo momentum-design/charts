@@ -107,14 +107,14 @@ const data = [
 ];
 const initialOptions = {
   categoryAxis: {
-    stacked: false,
+    stacked: true,
     enableColor: false,
     dataKey: 'date',
     autoSkip: false,
   },
   valueAxes: [
     {
-      stacked: false,
+      stacked: true,
     },
   ],
 };
@@ -122,7 +122,12 @@ const Example = () =>
   getExample(initialOptions, data, ({ key, data, options, setOptions }) => {
     const Buttons = () => (
       <>
-        <Button onClick={() => setOptions(initialOptions)}>No Stacked</Button>
+        <Button onClick={() => setOptions({ categoryAxis: { stacked: true }, valueAxes: [{ stacked: true }] })}>
+          All Stacked
+        </Button>
+        <Button onClick={() => setOptions({ categoryAxis: { stacked: false }, valueAxes: [{ stacked: false }] })}>
+          No Stacked
+        </Button>
         <Button
           onClick={() =>
             setOptions(
@@ -149,21 +154,13 @@ const Example = () =>
         >
           Value Stacked
         </Button>
-        <Button onClick={() => setOptions({ categoryAxis: { stacked: true }, valueAxes: [{ stacked: true }] })}>
-          All Stacked
-        </Button>
         {buttonsRelatedToColor(setOptions)}
       </>
     );
 
     return (
       <WithActions buttons={<Buttons />}>
-        <mdw-chart
-          key={key}
-          type="column"
-          data={JSON.stringify(data)}
-          options={JSON.stringify(options)}
-        ></mdw-chart>
+        <mdw-chart key={key} type="column" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-chart>
       </WithActions>
     );
   });
@@ -177,8 +174,8 @@ type = 'column'
 
 ## Data
 
-See [Bar Chart](./bar#data)
+See [Data](./bar#data)
 
 ## Options
 
-See [Bar Chart](./bar#options)
+See [Options](./bar#options)
