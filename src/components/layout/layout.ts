@@ -1,10 +1,9 @@
-import { css, html, LitElement } from 'lit';
+import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { COMPONENT_PREFIX } from '../../core';
 import { mergeObjects } from '../../helpers';
-import { ChartEventType } from '../../types';
-import { LayoutData, LayoutOptions } from './layout.types';
+import { LayoutData, LayoutEventType, LayoutOptions } from './layout.types';
 
 @customElement(`${COMPONENT_PREFIX}-layout`)
 export class LayoutComponent extends LitElement {
@@ -20,7 +19,7 @@ export class LayoutComponent extends LitElement {
   `;
 
   @property({ type: Object, hasChanged: () => true })
-  data?: LayoutData[] = [];
+  data: LayoutData[] = [];
 
   @property({ type: Object, hasChanged: () => true })
   options!: LayoutOptions;
@@ -31,13 +30,13 @@ export class LayoutComponent extends LitElement {
     cellHeight: 30,
   };
 
-  render() {
+  render(): TemplateResult {
     return html`
       ${repeat(
-        this.data!,
+        this.data,
         (item) => item,
         (item) => html`
-          <div id="widget-${item.id}" class="mdw-layout-item">
+          <div id="mdw-widget-${item.id}" class="mdw-layout-item">
             <slot name="${item.id}"></slot>
           </div>
         `,
@@ -54,7 +53,7 @@ export class LayoutComponent extends LitElement {
     }
   }
 
-  connectedCallback() {
+  connectedCallback(): void {
     super.connectedCallback();
     const layoutElement = this.closest('mdw-layout');
     if (!layoutElement) return;
@@ -103,13 +102,13 @@ export class LayoutComponent extends LitElement {
     const containerWidth = containerRect.width;
 
     this.data?.forEach((item) => {
-      const box = this.shadowRoot?.querySelector(`#widget-${item.id}`) as HTMLElement;
+      const box = this.shadowRoot?.querySelector(`#mdw-widget-${item.id}`) as HTMLElement;
       if (box) {
         const style = this.calculateStyle(item, containerWidth);
         Object.assign(box.style, style);
 
         this.dispatchEvent(
-          new CustomEvent(ChartEventType.BoxRenderComplete, {
+          new CustomEvent(LayoutEventType.BoxRenderComplete, {
             detail: { item },
             bubbles: true,
             composed: true,

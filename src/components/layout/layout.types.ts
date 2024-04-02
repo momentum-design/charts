@@ -11,3 +11,7 @@ export interface LayoutOptions {
   gap: number;
   cellHeight: number;
 }
+
+export enum LayoutEventType {
+  BoxRenderComplete = 'boxRenderComplete',
+}
