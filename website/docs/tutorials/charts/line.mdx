@@ -186,12 +186,7 @@ const Example = () =>
 
     return (
       <WithActions buttons={<Buttons />}>
-        <mdw-chart
-          key={key}
-          type="line"
-          data={JSON.stringify(data)}
-          options={JSON.stringify(options)}
-        ></mdw-chart>
+        <mdw-chart key={key} type="line" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-chart>
       </WithActions>
     );
   });
@@ -205,8 +200,18 @@ type = 'line'
 
 ## Data
 
-See [Bar Chart](./bar#data)
+See [Data](./bar#data)
 
 ## Options
 
-See [Bar Chart](./bar#options)
+See [Options](./bar#options)
+
+### SeriesOptions
+
+#### styleMapping
+
+| Name      | Type      | Default | Description                                                                                                                                                                                                                                        |
+| --------- | --------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| lineWidth | `number`  | 1       | The line width (in pixels).                                                                                                                                                                                                                        |
+| fillGaps  | `boolean` |         | If true, lines will be drawn between points with no or null data. If false, points with NaN data will create a break in the line. Can also be a number specifying the maximum gap length to span. The unit of the value depends on the scale used. |
+| tension   | `number`  |         | Bezier curve tension (0 means no bezier curve).                                                                                                                                                                                                    |

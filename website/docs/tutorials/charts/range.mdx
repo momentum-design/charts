@@ -10,16 +10,18 @@ Range chart support a fill area on the dataset object which can be used to creat
 const data = [
   ['Year', 'Unfilled', 'Filled'],
   ['2004', 1000, 400],
-  ['2005', 1170, 460],
-  ['2006', 660, 1120],
-  ['2008', 630, 540],
-  ['2009', 1030, 740],
-  ['2010', 930, 640],
-  ['2011', 530, 340],
-  ['2012', 1030, 240],
+  ['2005', 2170, 5460],
+  ['2006', 660, 2120],
+  ['2008', 3630, 1340],
+  ['2009', 3030, 740],
+  ['2010', 330, 2640],
+  ['2011', 2930, 5340],
+  ['2012', 1030, 2240],
 ];
 const initialOptions = {
-  seriesOptions: {},
+  seriesOptions: {
+    tension: 0.3,
+  },
   valueAxes: [
     {
       position: 'left',
@@ -31,7 +33,7 @@ const Example = () =>
   getExample(initialOptions, data, ({ key, data, options, setOptions }) => {
     const Buttons = () => (
       <>
-        <Button onClick={() => setOptions(initialOptions)}>Single Axis</Button>
+        <Button onClick={() => setOptions(initialOptions)}>Default</Button>
         <Button
           onClick={() =>
             setOptions(
@@ -59,18 +61,27 @@ const Example = () =>
         >
           Multi Axis
         </Button>
+        <Button
+          onClick={() =>
+            setOptions({
+              seriesOptions: {
+                tension: 0,
+              },
+            })
+          }
+        >
+          No Tension
+        </Button>
+        <Button onClick={() => setOptions({ categoryAxis: { stacked: true }, valueAxes: [{ stacked: true }] })}>
+          Stacked
+        </Button>
         {buttonsRelatedToColor(setOptions)}
       </>
     );
 
     return (
       <WithActions buttons={<Buttons />}>
-        <mdw-chart
-          key={key}
-          type="range"
-          data={JSON.stringify(data)}
-          options={JSON.stringify(options)}
-        ></mdw-chart>
+        <mdw-chart key={key} type="range" data={JSON.stringify(data)} options={JSON.stringify(options)}></mdw-chart>
       </WithActions>
     );
   });
@@ -84,8 +95,8 @@ type = 'range'
 
 ## Data
 
-See [Bar Chart](./bar#data)
+See [Data](./line#data)
 
 ## Options
 
-See [Bar Chart](./bar#options)
+See [Options](./line#options)

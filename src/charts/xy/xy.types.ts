@@ -145,6 +145,10 @@ export interface SeriesStyleOptions {
    * If true, lines will be drawn between points with no or null data. If false, points with NaN data will create a break in the line. Can also be a number specifying the maximum gap length to span. The unit of the value depends on the scale used.
    */
   fillGaps?: boolean;
+  /**
+   * The line width (in pixels). default is 1
+   */
+  lineWidth?: number;
 }
 export interface XYChartOptions extends ChartOptions {
   /**
@@ -160,8 +164,9 @@ export interface XYChartOptions extends ChartOptions {
      */
     tension?: number;
     /**
-     * The style mapping is an object where keys are string identifiers.
+     * The line width (in pixels). default is 1
      */
+    lineWidth?: number;
     styleMapping?: {
       [key: string]: SeriesStyleOptions;
     };

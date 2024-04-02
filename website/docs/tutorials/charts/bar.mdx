@@ -71,28 +71,22 @@ const Example = () =>
         <Button onClick={() => setOptions(initialOptions)}>Default</Button>
         <Button
           onClick={() =>
-            setOptions(
-              {
-                categoryAxis: {
-                  enableColor: false,
-                },
+            setOptions({
+              categoryAxis: {
+                enableColor: false,
               },
-              false,
-            )
+            })
           }
         >
           Single Color
         </Button>
         <Button
           onClick={() =>
-            setOptions(
-              {
-                categoryAxis: {
-                  labelSelectable: true,
-                },
+            setOptions({
+              categoryAxis: {
+                labelSelectable: true,
               },
-              false,
-            )
+            })
           }
         >
           Toggle Label Select
@@ -163,15 +157,13 @@ The options for the series.
 
 #### styleMapping
 
-| Name           | Type                                                  | Default | Description                                                                                                                                                                                                                                        |
-| -------------- | ----------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| key            | `string`                                              |         | Series name.                                                                                                                                                                                                                                       |
-| type           | `bar` \| `line` \| `area` \| `dashed` \| `dashedArea` |         | The chart type of the series, if not set, it will be the same as the global type.                                                                                                                                                                  |
-| valueAxisIndex | `number`                                              |         | The index of the value axis.                                                                                                                                                                                                                       |
-| tension        | `number`                                              |         | Bezier curve tension (0 means no bezier curve).                                                                                                                                                                                                    |
-| order          | `number`                                              |         | The drawing order of dataset. Also affects order for stacking, tooltip and legend.                                                                                                                                                                 |
-| markerStyle    | `MarkerStyle`                                         |         | Style of the point.                                                                                                                                                                                                                                |
-| fillGaps       | `boolean`                                             |         | If true, lines will be drawn between points with no or null data. If false, points with NaN data will create a break in the line. Can also be a number specifying the maximum gap length to span. The unit of the value depends on the scale used. |
+| Name           | Type                                                  | Default | Description                                                                        |
+| -------------- | ----------------------------------------------------- | ------- | ---------------------------------------------------------------------------------- |
+| key            | `string`                                              |         | Series name.                                                                       |
+| type           | `bar` \| `line` \| `area` \| `dashed` \| `dashedArea` |         | The chart type of the series, if not set, it will be the same as the global type.  |
+| valueAxisIndex | `number`                                              |         | The index of the value axis.                                                       |
+| order          | `number`                                              |         | The drawing order of dataset. Also affects order for stacking, tooltip and legend. |
+| markerStyle    | `MarkerStyle`                                         |         | Style of the point.                                                                |
 
 ### CategoryAxisOptions
 
