@@ -128,7 +128,9 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
     this.initColors();
 
     CJ.defaults.font = this.getCJFont();
-    CJ.defaults.color = this.getCurrentTheme().textColorPrimary as Color;
+    CJ.defaults.color = this.options.font?.color
+      ? this.options.font?.color
+      : (this.getCurrentTheme().textColorPrimary as Color);
   }
 
   private initTheme(): void {
