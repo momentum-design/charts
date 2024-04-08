@@ -132,20 +132,21 @@ The data supports the following multiple data formats:
 
 These are only the common options supported by all axes. Please see specific axis documentation for all the available options for that axis.
 
-| Name          | Type                    | Default | Description                                                                                                                                                                                                     |
-| ------------- | ----------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| title         | `string`                |         | Title of value axis.                                                                                                                                                                                            |
-| type          | `category` \| `time`    |         | Type of scale being employed. Custom scales can be created and registered with a string key. This allows changing the type of an axis for a chart.                                                              |
-| position      | `Position`              |         | The location of the axis on the chart. Setting the position can determine whether the chart is a horizontal chart or a vertical chart.                                                                          |
-| stacked       | `boolean`               | `false` | Should the data be stacked.                                                                                                                                                                                     |
-| display       | `boolean`               | `true`  | Controls the axis global visibility (visible when true, hidden when false).                                                                                                                                     |
-| gridDisplay   | `boolean`               | `true`  | Controls the grid of axis global visibility (visible when true, hidden when false).                                                                                                                             |
-| maxTicksLimit | `number`                |         | Maximum number of ticks and gridlines to show.                                                                                                                                                                  |
-| autoSkip      | `boolean`               | `true`  | If true, automatically calculates how many labels can be shown and hides labels accordingly. Labels will be rotated up to maxRotation before skipping any. Turn autoSkip off to show all labels no matter what. |
-| ticksPadding  | `number`                |         | Padding between ticks on the horizontal or vertical axis.                                                                                                                                                       |
-| ticksStepSize | `number`                |         | User defined fixed step size for the axis.                                                                                                                                                                      |
-| textColor     | ` string` \| `string[]` |         | Text color of tick.                                                                                                                                                                                             |
-| callback      | `function`              |         | Returns the string representation of the tick values that should be displayed on the chart.                                                                                                                     |
+| Name          | Type                 | Default | Description                                                                                                                                        |
+| ------------- | -------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| title         | `string`             |         | Title of value axis.                                                                                                                               |
+| type          | `category` \| `time` |         | Type of scale being employed. Custom scales can be created and registered with a string key. This allows changing the type of an axis for a chart. |
+| position      | `Position`           |         | The location of the axis on the chart. Setting the position can determine whether the chart is a horizontal chart or a vertical chart.             |
+| stacked       | `boolean`            | `false` | Should the data be stacked.                                                                                                                        |
+| display       | `boolean`            | `true`  | Controls the axis global visibility (visible when true, hidden when false).                                                                        |
+| gridDisplay   | `boolean`            | `true`  | Controls the grid of axis global visibility (visible when true, hidden when false).                                                                |
+| maxTicksLimit | `number`             |         | Maximum number of ticks and gridlines to show.                                                                                                     |
+| maxRotation   | `number`             | 50      | Rotation for tick labels when rotating to condense labels.                                                                                         |
+| autoSkip      | `boolean`            | `true`  | If true, automatically calculates how many labels can be shown and hides labels accordingly.                                                       |
+| tickWidth     | `number`             |         | Tick width on the horizontal or vertical axis.                                                                                                     |
+| ticksStepSize | `number`             |         | User defined fixed step size for the axis.                                                                                                         |
+| labelFont     | Font                 |         | Label font of tick.                                                                                                                                |
+| callback      | `function`           |         | Returns the string representation of the tick values that should be displayed on the chart.                                                        |
 
 ### SeriesOptions
 
