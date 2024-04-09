@@ -1,5 +1,4 @@
 import { cloneDeep, get, merge } from 'lodash-es';
-import { Font, FontValueTypes } from '../types/font.types';
 
 export function mergeObjects<TObject1>(object1: TObject1): TObject1;
 export function mergeObjects<TObject1, TObject2>(object1: TObject1, object2: TObject2): TObject1 & TObject2;
@@ -137,24 +136,4 @@ export function debounce(
   return setTimeout(() => {
     func();
   }, delay);
-}
-
-/**
- * Get the Value of the Font property
- * @param font Font object
- * @param property Property in Font
- * @returns The result or collection of the property in Font.
- */
-export function getFontValueByProperty(font: Font | Font[], property: keyof Font): FontValueTypes | FontValueTypes[] {
-  if (Array.isArray(font)) {
-    const values: FontValueTypes[] = [];
-    font.forEach((f) => {
-      if (property in f) {
-        values.push(f[property as keyof Font]);
-      }
-    });
-    return values;
-  } else {
-    return font[property as keyof Font];
-  }
 }

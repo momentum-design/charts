@@ -15,7 +15,7 @@ import {
 import 'chartjs-adapter-moment';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { convertToCJType } from '../../core';
-import { alphaColor, getFontValueByProperty } from '../../helpers';
+import { alphaColor } from '../../helpers';
 import { tableDataToJSON } from '../../helpers/data';
 import { isNullOrUndefined, mergeObjects, padToArray } from '../../helpers/utils';
 import {
@@ -802,12 +802,11 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     return tooltipItems;
   }
 
-  private getColorFromFont(font?: Font | Font[]): FontValueTypes | FontValueTypes[] {
-    return (font ? getFontValueByProperty(font, FontKeys.Color) : undefined) ?? this.options.font?.color;
+  private getColorFromFont(font?: Font): FontValueTypes | FontValueTypes[] {
+    return (font ? (font[FontKeys.Color] as FontValueTypes | FontValueTypes[]) : undefined) ?? this.options.font?.color;
   }
 
   private getFont(font?: Font): Font {
-    //TODO(yiwei): support font array
     return mergeObjects({}, this.options.font, font);
   }
 }

@@ -56,7 +56,7 @@ export interface AxisOptions {
   /**
    * Font of label
    */
-  labelFont?: Font; //TODO(yiwei): support font array (Font[]);
+  labelFont?: Font;
   /**
    * Returns the string representation of the tick values that should be displayed on the chart.
    */

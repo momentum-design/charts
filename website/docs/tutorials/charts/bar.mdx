@@ -145,7 +145,7 @@ These are only the common options supported by all axes. Please see specific axi
 | autoSkip      | `boolean`            | `true`  | If true, automatically calculates how many labels can be shown and hides labels accordingly.                                                       |
 | tickWidth     | `number`             |         | Tick width on the horizontal or vertical axis.                                                                                                     |
 | ticksStepSize | `number`             |         | User defined fixed step size for the axis.                                                                                                         |
-| labelFont     | Font                 |         | Label font of tick.                                                                                                                                |
+| labelFont     | [Font](#font)        |         | Label font of tick.                                                                                                                                |
 | callback      | `function`           |         | Returns the string representation of the tick values that should be displayed on the chart.                                                        |
 
 ### SeriesOptions
@@ -184,3 +184,13 @@ CategoryAxisOptions extends [AxisOptions](#axisoptions)
 ### ValueAxisOptions
 
 ValueAxisOptions extends [AxisOptions](#axisoptions)
+
+### Font
+
+| Name   | Type     | Default | Description                                                                                                                                                       |
+| ------ | -------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| size   | `number` |         | Default font size (in px) for text. Supports single or multiple values. Example: `size:14` or `size:[12,14]`                                                      |
+| weight | `number` |         | Default font weight. Supports single or multiple values. Example: `weight:500` or `weight:[200,500]`                                                              |
+| style  | `string` |         | Default font style. Supports single or multiple values. Example: `style:'italic' `or `style:['normal','italic']`                                                  |
+| family | `string` |         | Default font family for all text, follows CSS font-family options. Supports single or multiple values. Example: `family:'Arial'` or `family:['serif', 'cursive']` |
+| color  | `string` |         | Default font color. Supports single or multiple values. Example: `color:'red'` or `color:[blue','purple']`                                                        |
