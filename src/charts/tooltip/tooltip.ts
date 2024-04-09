@@ -122,7 +122,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
       let beforeBody = '';
       if (typeof this.options.beforeBody === 'string') {
         beforeBody = this.options.beforeBody;
-      } else {
+      } else if (typeof this.options.beforeBody === 'function') {
         beforeBody = this.options.beforeBody(tooltip);
       }
       tooltipEl.newChild('div').addClass(`${TOOLTIP_CLASS}-before-body`).setHtml(beforeBody);
@@ -167,7 +167,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
       let afterBody = '';
       if (typeof this.options.afterBody === 'string') {
         afterBody = this.options.afterBody;
-      } else {
+      } else if (typeof this.options.beforeBody === 'function') {
         afterBody = this.options.afterBody(tooltip);
       }
       tooltipEl.newChild('div').addClass(`${TOOLTIP_CLASS}-after-body`).setHtml(afterBody);
@@ -233,8 +233,8 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
       typeof this.options.formatLabel === 'function' ? this.options.formatLabel(tooltipItem.label) : tooltipItem.label;
     return new DomElement('span')
       .addClass(`${TOOLTIP_CLASS}-label`)
-      .setHtml(labelText)
-      .setStyle('white-space', 'nowrap');
+      .setStyle('white-space', 'nowrap')
+      .setHtml(labelText);
   }
 
   private generateHtmlForValues(tooltipItem: TooltipItem, labelHidden?: boolean): DomElement {
