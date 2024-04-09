@@ -117,6 +117,17 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
         .setText(this.options.formatTitle ? this.options.formatTitle(title) : title);
     });
 
+    // beforeBody
+    if (this.options.beforeBody) {
+      let beforeBody = '';
+      if (typeof this.options.beforeBody === 'string') {
+        beforeBody = this.options.beforeBody;
+      } else {
+        beforeBody = this.options.beforeBody(tooltip);
+      }
+      tooltipEl.newChild('div').addClass(`${TOOLTIP_CLASS}-before-body`).setHtml(beforeBody);
+    }
+
     // items
     let tooltipItems: TooltipItem[] = [];
     if (typeof this.options.items === 'function') {
@@ -151,9 +162,15 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
       itemEl?.addChild(this.generateHtmlForValues(tooltipItem, labelShouldBeHidden));
     });
 
-    // content
-    if (this.options.content) {
-      tooltipEl.newChild('div').addClass(`${TOOLTIP_CLASS}-content`).setHtml(this.options.content);
+    // AfterBody
+    if (this.options.afterBody) {
+      let afterBody = '';
+      if (typeof this.options.afterBody === 'string') {
+        afterBody = this.options.afterBody;
+      } else {
+        afterBody = this.options.afterBody(tooltip);
+      }
+      tooltipEl.newChild('div').addClass(`${TOOLTIP_CLASS}-after-body`).setHtml(afterBody);
     }
 
     // footer
@@ -178,14 +195,9 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
       });
     }
 
-    // if the tooltip append to parent container, following items should be applied
-    // const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
-    // const left = positionX + tooltip.caretX + 'px';
-    // const top = positionY + tooltip.caretY + 'px';
-
     const position = context.chart.canvas.getBoundingClientRect();
-    const left = position.left + window.scrollX + tooltip.caretX + 'px';
-    const top = position.top + window.scrollY + tooltip.caretY + 'px';
+    const left = position.left + window.scrollX + tooltip.x + tooltip.width / 2 + 'px';
+    const top = position.top + window.scrollY + tooltip.y + 'px';
 
     // display, position, and set styles
     tooltipEl.setStyle('font-size', this.options.fontSize);
@@ -219,7 +231,10 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
   private generateHtmlForLabel(tooltipItem: TooltipItem): DomElement {
     const labelText =
       typeof this.options.formatLabel === 'function' ? this.options.formatLabel(tooltipItem.label) : tooltipItem.label;
-    return new DomElement('span').addClass(`${TOOLTIP_CLASS}-label`).setHtml(labelText);
+    return new DomElement('span')
+      .addClass(`${TOOLTIP_CLASS}-label`)
+      .setHtml(labelText)
+      .setStyle('white-space', 'nowrap');
   }
 
   private generateHtmlForValues(tooltipItem: TooltipItem, labelHidden?: boolean): DomElement {
@@ -234,9 +249,10 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
       const valueText =
         typeof this.options.formatValue === 'function'
           ? this.options.formatValue(tooltipItem.value as number)
-          : formatNumber(tooltipItem.value!, this.chartOptions.valuePrecision!) +
-            (this.options.showUnit ? this.chartOptions.valueUnit || '' : '');
-      valuesEl.newChild('span').setText(valueText);
+          : `<span>${formatNumber(tooltipItem.value!, this.chartOptions.valuePrecision!)}</span>${
+              this.options.showUnit ? this.chartOptions.valueUnit || '' : ''
+            }`;
+      valuesEl.setHtml(valueText);
     }
 
     // percentage
