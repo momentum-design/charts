@@ -1,7 +1,6 @@
 import { Chart as CJ, ChartDataset } from 'chart.js/auto';
 import { ChartType as CJType, KeyboardCode } from '../../../types';
 
-/* eslint-disable */
 interface A11yState {
   currentState: {
     datasetIndex: number;
@@ -39,7 +38,7 @@ export class A11yChart {
   private state: A11yState = {
     currentState: {
       datasetIndex: 0,
-      index: 0,
+      index: -1,
     },
 
     get() {
@@ -65,8 +64,8 @@ export class A11yChart {
   private currentActiveBorderColor = '';
   private whiteColor = 'white';
 
-  public toCJPlugin(a11yBorderColor = 'blue'): CJA11y {
-    this.currentActiveBorderColor = a11yBorderColor;
+  public toCJPlugin(focusColor = 'blue'): CJA11y {
+    this.currentActiveBorderColor = focusColor;
 
     return {
       id: 'a11yChart',
@@ -110,6 +109,9 @@ export class A11yChart {
    * @param {Number} index
    */
   private updateActivePoint(chart: CJ, datasetIndex: number, index: number): void {
+    if (datasetIndex < 0 || index < 0) {
+      return;
+    }
     chart.setActiveElements([{ datasetIndex, index }]);
     chart.tooltip && chart.tooltip.setActiveElements([{ datasetIndex, index }], { x: 0, y: 0 });
     this.state.set({ datasetIndex, index });
@@ -133,7 +135,6 @@ export class A11yChart {
             this.currentBorderColors?.push(Array(currentChartDataLength).fill(''));
           }
         }
-
         this.currentBorderWidths = dataset[chartAttrWidth]
           ? typeof dataset[chartAttrWidth] === 'number'
             ? Array(currentChartDataLength).fill(dataset[chartAttrWidth])
@@ -164,17 +165,21 @@ export class A11yChart {
    * @param {Object} chart
    */
   private onBlur(chart: any): void {
-    chart.data.datasets.forEach((dataset: any, index: number) => {
-      if (this.currentBorderColors) {
-        dataset[this.getDatasetBorderStyleAttribute('color')] = this.currentBorderColors[index];
-        if (this.currentChartType !== CJType.Line) {
-          dataset[this.getDatasetBorderStyleAttribute('width')] = this.currentBorderWidths[index];
+    const { index } = this.state.get();
+    if (index !== -1) {
+      this.state.set({ datasetIndex: 0, index: -1 });
+      chart.data.datasets.forEach((dataset: any, index: number) => {
+        if (this.currentBorderColors) {
+          dataset[this.getDatasetBorderStyleAttribute('color')] = this.currentBorderColors[index];
+          if (this.currentChartType !== CJType.Line) {
+            dataset[this.getDatasetBorderStyleAttribute('width')] = this.currentBorderWidths[index];
+          }
         }
-      }
-    });
-    chart.tooltip._active = [];
-    chart.tooltip.update(true);
-    chart.update();
+      });
+      chart.tooltip._active = [];
+      chart.tooltip.update(true);
+      chart.update();
+    }
   }
 
   /**
@@ -267,12 +272,16 @@ export class A11yChart {
           }
         }
       }
+      if (this.currentBorderWidths && this.currentChartType !== CJType.Line) {
+        if (datasetIndex === dataIndex) {
+          dataset.borderWidth = this.currentBorderWidths.map((width, widthIndex) =>
+            widthIndex === index ? this.currentActiveBorderWidth : width,
+          );
+        } else {
+          dataset.borderWidth = this.currentBorderWidths[datasetIndex];
+        }
+      }
     });
-    if (this.currentChartType !== CJType.Line) {
-      chart.data.datasets[datasetIndex].borderWidth = this.currentBorderWidths.map((width, widthIndex) =>
-        widthIndex === index ? this.currentActiveBorderWidth : width,
-      );
-    }
     chart.update();
   }
 
@@ -424,9 +433,9 @@ export class A11yChart {
    */
   private updateA11yLabel(chart: CJ): void {
     const { datasetIndex, index } = this.state.get();
-    const legendLabel = chart.config.data.datasets[datasetIndex].label;
+    const legendLabel = chart.config.data.datasets[datasetIndex]?.label;
     const currentLabel = chart.config.data.labels && chart.config.data.labels[index];
-    const currentValue = chart.config.data.datasets[datasetIndex].data[index];
+    const currentValue = chart.config.data.datasets[datasetIndex]?.data[index];
 
     const chartJsA11yLabel = document.getElementById('chartjs-a11y-label');
     if (chartJsA11yLabel) {

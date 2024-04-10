@@ -29,7 +29,7 @@ import {
 } from '../../types';
 import { Chart } from '../.internal';
 import { A11yChart } from '../.plugins/a11y/a11y-chart';
-import { a11yLegend } from '../.plugins/a11y/a11y-legend';
+import { A11yLegend } from '../.plugins/a11y/a11y-legend';
 import { Tooltip, TooltipItem } from '../tooltip';
 import { CategoryLabelSelectable } from './xy.category-label-selectable';
 import { SeriesStyleOptions, XYChartOptions, XYData } from './xy.types';
@@ -88,7 +88,10 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     if (this.chartData) {
       chartDatasets = this.getDatasets();
     }
-    const plugins: CJPlugin[] = [new A11yChart().toCJPlugin(), a11yLegend];
+    const plugins: CJPlugin[] = [
+      new A11yChart().toCJPlugin(this.getCurrentTheme()?.focusColor),
+      new A11yLegend().toCJPlugin(this.getCurrentTheme()?.focusColor),
+    ];
     if (this.options.scrollable) {
       plugins.push(zoomPlugin);
     }

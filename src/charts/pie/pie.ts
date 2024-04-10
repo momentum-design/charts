@@ -22,7 +22,7 @@ import {
 } from '../../types';
 import { Chart } from '../.internal';
 import { A11yChart } from '../.plugins/a11y/a11y-chart';
-import { a11yLegend } from '../.plugins/a11y/a11y-legend';
+import { A11yLegend } from '../.plugins/a11y/a11y-legend';
 import { Tooltip, TooltipItem } from '../tooltip';
 import { PieChartOptions, PieData } from './pie.types';
 
@@ -70,8 +70,8 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
       },
       options: this.currentChartOptions,
       plugins: [
-        new A11yChart().toCJPlugin(),
-        a11yLegend,
+        new A11yChart().toCJPlugin(this.getCurrentTheme()?.focusColor),
+        new A11yLegend().toCJPlugin(this.getCurrentTheme()?.focusColor),
         this.segmentClickable?.toCJPlugin(chartDatasets[0].backgroundColor as string | string[]),
       ],
     };

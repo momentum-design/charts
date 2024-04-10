@@ -52,7 +52,7 @@ export class GaugeChart extends Chart<GaugeData, GaugeOptions> {
         datasets: chartDatasets,
       },
       options: this.getChartOptions(),
-      plugins: [new A11yChart().toCJPlugin(), this.createPointerNeedle()],
+      plugins: [new A11yChart().toCJPlugin(this.getCurrentTheme()?.focusColor), this.createPointerNeedle()],
     };
   }
 
