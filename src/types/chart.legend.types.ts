@@ -1,4 +1,4 @@
-import { MarkerStyle, Position } from '.';
+import { Font, MarkerStyle, Position } from '.';
 import { TooltipOptions } from '../charts/tooltip';
 import { ChartEvent } from './chart.event.types';
 
@@ -12,6 +12,7 @@ export interface LegendItem {
 }
 
 export interface LegendOptions {
+  font?: Font;
   selectable?: boolean;
   onItemClick?(event: ChartEvent<LegendItem>): void;
   display?: boolean;

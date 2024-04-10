@@ -99,8 +99,8 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   }
 
   protected getCJFont(...fonts: Font[]): Partial<FontSpec> {
-    if (Chart.defaults.font) {
-      fonts.push(Chart.defaults.font);
+    if (this.options.font) {
+      fonts.push(this.options.font);
     }
     fonts.reverse();
     return mergeObjects(...(fonts as [FontSpec]));

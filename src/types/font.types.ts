@@ -8,3 +8,14 @@ export type Font = {
   color?: string;
   lineHeight?: string | number;
 };
+
+export enum FontKeys {
+  Size = 'size',
+  Family = 'family',
+  Style = 'style',
+  Weight = 'weight',
+  Color = 'color',
+  LineHeight = 'lineHeight',
+}
+
+export type FontValueTypes = string | number | undefined;

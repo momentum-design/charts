@@ -2,7 +2,7 @@
  * The default options for xy chart.
  */
 import { Tick, TimeUnit } from 'chart.js';
-import { ChartOptions, JsonData, MarkerStyle, Position, SeriesType, TableData } from '../../types';
+import { ChartOptions, Font, JsonData, MarkerStyle, Position, SeriesType, TableData } from '../../types';
 /**
  * Interface `AxisOptions` provides a set of configurations for the axis in a chart.
  */
@@ -36,22 +36,27 @@ export interface AxisOptions {
    */
   maxTicksLimit?: number;
   /**
-   *   If true, automatically calculates how many labels can be shown and hides labels accordingly. Labels will be rotated up to maxRotation before skipping any. Turn autoSkip off to show all labels no matter what.
+   * Rotation for tick labels when rotating to condense labels.
+   * @default true
+   */
+  rotation?: boolean;
+  /**
+   * If true, automatically calculates how many labels can be shown and hides labels accordingly.
    * @default true
    */
   autoSkip?: boolean;
   /**
-   * Padding between ticks on the horizontal or vertical axis.                                                                                                                                                               .
+   * Tick width on the horizontal or vertical axis.                                                                                                                                                               .
    */
-  ticksPadding?: number;
+  tickWidth?: number;
   /**
    * User defined fixed step size for the axis.
    */
   ticksStepSize?: number;
   /**
-   * Text color of tick.
+   * Font of label
    */
-  textColor?: string | string[];
+  labelFont?: Font;
   /**
    * Returns the string representation of the tick values that should be displayed on the chart.
    */
@@ -187,3 +192,7 @@ export interface XYChartOptions extends ChartOptions {
  * The "DataTableLike" type can be a two-dimensional array (unknown[][]) or an array of objects (Record<string, string | number>[]).
  */
 export type XYData = TableData | JsonData;
+export enum ScaleKeys {
+  CategoryAxis = 'categoryAxis',
+  ValueAxis = 'valueAxis',
+}

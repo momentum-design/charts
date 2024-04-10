@@ -1,7 +1,9 @@
 import { Chart as CJ, ChartEvent, Plugin } from 'chart.js/auto';
+import { alphaColor } from '../../helpers';
 import { padToArray } from '../../helpers/utils';
 import { ChartData, ChartOptions, ChartType } from '../../types';
 import { Chart } from '../.internal';
+import { ScaleKeys } from './xy.types';
 
 export class CategoryLabelSelectable<TChart extends Chart<ChartData, ChartOptions>> {
   constructor(public chart: TChart) {}
@@ -42,10 +44,10 @@ export class CategoryLabelSelectable<TChart extends Chart<ChartData, ChartOption
           const labels = chart.data.labels;
           const isHorizontal = chart.options.indexAxis === 'y';
           const xScale = Object.values(chart.scales).find(
-            (scale) => scale.id === (isHorizontal ? 'valueAxis' : 'categoryAxis'),
+            (scale) => scale.id === (isHorizontal ? ScaleKeys.ValueAxis : ScaleKeys.CategoryAxis),
           );
           const yScale = Object.values(chart.scales).find(
-            (scale) => scale.id === (isHorizontal ? 'categoryAxis' : 'valueAxis'),
+            (scale) => scale.id === (isHorizontal ? ScaleKeys.CategoryAxis : ScaleKeys.ValueAxis),
           );
           if (!xScale || !yScale || !labels) {
             return;
@@ -100,7 +102,7 @@ export class CategoryLabelSelectable<TChart extends Chart<ChartData, ChartOption
         }
         if (this.selectedLabels.length > 0) {
           backgroundColors = colorsStatus.map((value, index) =>
-            value ? backgroundColors[index] : backgroundColors[index] + '8D',
+            value ? backgroundColors[index] : alphaColor(backgroundColors[index], 0.4),
           );
         }
         dataset.backgroundColor = backgroundColors;

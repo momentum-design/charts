@@ -2,11 +2,13 @@ import {
   Chart as CJ,
   ChartEvent as CJChartEvent,
   ChartType as CJChartType,
+  FontSpec,
   LegendElement as CJLegendElement,
   LegendItem as CJLegendItem,
   LegendOptions as CJLegendOptions,
 } from 'chart.js/auto';
 import { _DeepPartialObject } from 'chart.js/dist/types/utils';
+import { mergeObjects } from '../../helpers';
 import {
   ChartData,
   ChartEvent,
@@ -15,6 +17,7 @@ import {
   EventContext,
   inactiveColor,
   LegendItem,
+  Position,
 } from '../../types';
 import { Chart } from '../.internal';
 
@@ -61,12 +64,13 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
     const chartOptions = this.chart.options;
     return {
       display: chartOptions.legend?.display ?? true,
-      position: chartOptions.legend?.position ?? 'top',
+      position: chartOptions.legend?.position ?? Position.Bottom,
       reverse: chartOptions.legend?.reverse ?? false,
       labels: {
         usePointStyle: true,
         pointStyle: chartOptions.legend?.markerStyle,
-        font: { size: 12 },
+        color: chartOptions.legend?.font?.color ?? chartOptions.font?.color,
+        font: mergeObjects(chartOptions.font, chartOptions.legend?.font) as FontSpec,
         generateLabels: (chart: CJ<CJChartType>) => {
           let gl = CJ.defaults.plugins.legend.labels.generateLabels;
           if (typeof opts?.generateLabels === 'function') {
