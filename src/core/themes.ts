@@ -19,7 +19,7 @@ export const themes = new Map<ThemeName | string, Theme>([
   [
     ThemeName.Light,
     {
-      focusColor: '#3492eb',
+      focusColor: '#3267C8',
       gridColor: '#E5E6E6',
       legendSelectedBackgroundColor: '#2b2b2b1a',
       textColorPrimary: '#535759',
