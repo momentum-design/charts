@@ -1,5 +1,5 @@
 import type { Chart as CJ } from 'chart.js/auto';
-import { A11yLegendManager } from './a11y-legend-manager';
+import { KeyboardCode } from '../../../types';
 
 interface CJA11yLegend {
   id: string;
@@ -10,31 +10,41 @@ interface CJA11yLegend {
     margin: number;
   };
 }
+interface HitBoxMeta {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  text: string;
+}
 
 export class A11yLegend {
-  private chartStates = new Map();
+  private hitBoxes: HitBoxMeta[] = [];
+  private focusBoxMargin: number = 0;
+  private focusBox: HTMLDivElement | null = null;
+  private chart: any;
+  private focusColor: string = '';
 
   public toCJPlugin(focusColor = 'blue'): CJA11yLegend {
     return {
       id: 'a11yLegend',
       afterInit: (chart: CJ, options: any): void => {
-        const manager = this.initialize(chart, options.margin, focusColor);
-        this.updateForLegends(chart, manager);
+        this.initialize(chart, options.margin, focusColor);
+        this.updateForLegends();
       },
       beforeDraw: (chart: CJ, options: any): void => {
-        let manager = this.chartStates.get(chart);
-        if (manager === undefined) {
-          manager = this.initialize(chart, options.margin, focusColor);
+        if (!this.chart) {
+          this.initialize(chart, options.margin, focusColor);
         }
         if (!chart.options.plugins?.legend?.display) {
-          return manager.suppressFocusBox();
+          return this.suppressFocusBox();
         }
-        manager.reviveFocusBox();
-        manager.focusBoxMargin = options.margin || 4;
-        this.updateForLegends(chart, manager);
+        this.reviveFocusBox();
+        this.focusBoxMargin = options.margin || 4;
+        this.updateForLegends();
       },
-      afterDestroy: (chart: CJ): void => {
-        this.chartStates.delete(chart);
+      afterDestroy: (): void => {
+        this.chart = null;
       },
       defaults: {
         margin: 4,
@@ -42,35 +52,127 @@ export class A11yLegend {
     };
   }
 
-  /**
-   *
-   * @param {Object} chart
-   * @param {Number} margin
-   * @returns {A11yLegendManager}
-   */
-  private initialize(chart: CJ, margin: number, focusColor: string): A11yLegendManager {
-    const manager = new A11yLegendManager(chart, margin, focusColor);
-    this.chartStates.set(chart, manager);
-    return manager;
+  private initialize(chart: CJ, margin: number, focusColor: string): void {
+    this.focusBoxMargin = margin;
+    this.chart = chart;
+    this.focusColor = focusColor;
+    this.focusBox = this.generateFocusBox();
+    chart.canvas.insertAdjacentElement('afterend', this.focusBox);
   }
 
-  /**
-   *
-   * @param {Object} chart
-   * @param {A11yLegendManager} manager
-   */
-  private updateForLegends(chart: CJ, manager: A11yLegendManager): void {
-    const { legend } = chart;
+  private updateForLegends(): void {
+    const { legend } = this.chart;
     if (!legend?.legendItems) {
-      return manager.suppressFocusBox();
+      return this.suppressFocusBox();
     }
-    manager.hitBoxes =
-      legend?.legendItems?.map(({ text }, index) => {
+    this.hitBoxes =
+      legend?.legendItems?.map(({ text }: { text: string }, index: number) => {
         return {
-          // @ts-ignore
           ...(legend.legendHitBoxes?.[index] ?? {}),
           text,
         };
       }) ?? [];
+  }
+
+  private suppressFocusBox(): void {
+    this.focusBox?.setAttribute('tabIndex', '-1');
+  }
+
+  private reviveFocusBox(): void {
+    this.focusBox?.setAttribute('tabIndex', '0');
+  }
+
+  private generateFocusBox(): HTMLDivElement {
+    const focusBox = document.createElement('div');
+    focusBox.setAttribute('tabIndex', '0');
+    focusBox.setAttribute('data-legend-index', '0');
+    focusBox.setAttribute('role', 'option');
+    focusBox.setAttribute('aria-selected', 'true');
+
+    const hideFocusBox = () => {
+      focusBox.style.left = '-1000px';
+    };
+
+    const activateFocusBox = (e: KeyboardEvent | MouseEvent) => {
+      const index = Number(focusBox.getAttribute('data-legend-index'));
+      if (['pie', 'doughnut'].includes(this.chart.config.type)) {
+        if (this.chart.config.options.isLegendClick) {
+          const legendObj = {
+            key: this.chart.config.data.labels[index],
+            value: this.chart.config.data.datasets[0].data[index as number],
+          };
+          this.chart.config.options.onLegendClick(legendObj);
+        } else {
+          this.chart.toggleDataVisibility(index);
+          const isVisible = this.chart.getDataVisibility(index);
+          focusBox.setAttribute('aria-selected', String(isVisible));
+        }
+      } else {
+        if (this.chart.isDatasetVisible(index)) {
+          this.chart.hide(index);
+          focusBox.setAttribute('aria-selected', 'false');
+        } else {
+          this.chart.show(index);
+          focusBox.setAttribute('aria-selected', 'true');
+        }
+      }
+      this.chart.update();
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    const keyboardNavigation = (e: KeyboardEvent) => {
+      const index = Number(focusBox.getAttribute('data-legend-index'));
+      const maxIndex = this.hitBoxes.length - 1;
+      if (e.key === KeyboardCode.ArrowRight || e.key === KeyboardCode.ArrowDown) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (index >= maxIndex) {
+          return;
+        }
+        focusBox.setAttribute('data-legend-index', String(index + 1));
+        moveFocusBox();
+        return;
+      }
+      if (e.key === KeyboardCode.ArrowLeft || e.key === KeyboardCode.ArrowUp) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (index <= 0) {
+          return;
+        }
+        focusBox.setAttribute('data-legend-index', String(index - 1));
+        moveFocusBox();
+        return;
+      }
+      if (e.key === ' ' || e.key === KeyboardCode.Enter) {
+        activateFocusBox(e);
+        return;
+      }
+    };
+
+    const moveFocusBox = () => {
+      const index = Number(focusBox.getAttribute('data-legend-index'));
+      if (isNaN(index)) {
+        return;
+      }
+      const { left, top, width, height, text } = this.hitBoxes[index];
+
+      const newLeft = `${left - this.focusBoxMargin}px`;
+      const newTop = `${top - this.focusBoxMargin}px`;
+      const newWidth = `${width + 2 * this.focusBoxMargin}px`;
+      const newHeight = `${height + 2 * this.focusBoxMargin}px`;
+      focusBox.setAttribute(
+        'style',
+        `position:absolute; left: ${newLeft}; top:${newTop}; width:${newWidth}; height:${newHeight}; outline-color:${this.focusColor};`,
+      );
+      focusBox.setAttribute('aria-label', `${text}, ${index + 1} of ${this.hitBoxes.length}`);
+    };
+
+    hideFocusBox();
+    focusBox.addEventListener('focus', moveFocusBox);
+    focusBox.addEventListener('blur', hideFocusBox);
+    focusBox.addEventListener('keydown', keyboardNavigation);
+    focusBox.addEventListener('click', activateFocusBox);
+    return focusBox;
   }
 }
