@@ -7,7 +7,7 @@ import TabItem from '@theme/TabItem';
 import styles from './showcase.module.css';
 
 const tabs = [{
-  title: 'Dashboard with no Framework',
+  title: 'Dashboard',
   url: 'https://codepen.io/bndynet/embed/poBwbNY?default-tab=&theme-id=${theme}',
 }, {
   title: 'Angular',
