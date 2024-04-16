@@ -1,10 +1,16 @@
-/* eslint-disable */
-import type { Chart } from 'chart.js/auto';
+import type { Chart as CJ } from 'chart.js/auto';
 import { KeyboardCode } from '../../../types';
 
-const chartStates = new Map();
-
-export interface HitBoxMeta {
+interface CJA11yLegend {
+  id: string;
+  afterInit: (chart: CJ, options: any) => void;
+  beforeDraw: (chart: CJ, options: any) => void;
+  afterDestroy: (chart: CJ) => void;
+  defaults: {
+    margin: number;
+  };
+}
+interface HitBoxMeta {
   left: number;
   top: number;
   width: number;
@@ -12,30 +18,71 @@ export interface HitBoxMeta {
   text: string;
 }
 
-class ChartLegendManager {
-  hitBoxes: HitBoxMeta[] = [];
-  focusBoxMargin: number;
-  focusBox: HTMLDivElement;
-  chart: any;
-  canvas: Chart['canvas'];
+export class A11yLegend {
+  private hitBoxes: HitBoxMeta[] = [];
+  private focusBoxMargin: number = 0;
+  private focusBox: HTMLDivElement | null = null;
+  private chart: any;
+  private focusColor: string = '';
 
-  constructor(chart: any, startingMargin = 0) {
-    this.focusBoxMargin = startingMargin;
-    this.chart = chart;
-    this.canvas = chart.canvas;
-    this.focusBox = this._generateFocusBox();
-    this.canvas.insertAdjacentElement('afterend', this.focusBox);
+  public toCJPlugin(focusColor = 'blue'): CJA11yLegend {
+    return {
+      id: 'a11yLegend',
+      afterInit: (chart: CJ, options: any): void => {
+        this.initialize(chart, options.margin, focusColor);
+        this.updateForLegends();
+      },
+      beforeDraw: (chart: CJ, options: any): void => {
+        if (!this.chart) {
+          this.initialize(chart, options.margin, focusColor);
+        }
+        if (!chart.options.plugins?.legend?.display) {
+          return this.suppressFocusBox();
+        }
+        this.reviveFocusBox();
+        this.focusBoxMargin = options.margin || 4;
+        this.updateForLegends();
+      },
+      afterDestroy: (): void => {
+        this.chart = null;
+      },
+      defaults: {
+        margin: 4,
+      },
+    };
   }
 
-  suppressFocusBox = () => {
-    this.focusBox.setAttribute('tabIndex', '-1');
-  };
+  private initialize(chart: CJ, margin: number, focusColor: string): void {
+    this.focusBoxMargin = margin;
+    this.chart = chart;
+    this.focusColor = focusColor;
+    this.focusBox = this.generateFocusBox();
+    chart.canvas.insertAdjacentElement('afterend', this.focusBox);
+  }
 
-  reviveFocusBox = () => {
-    this.focusBox.setAttribute('tabIndex', '0');
-  };
+  private updateForLegends(): void {
+    const { legend } = this.chart;
+    if (!legend?.legendItems) {
+      return this.suppressFocusBox();
+    }
+    this.hitBoxes =
+      legend?.legendItems?.map(({ text }: { text: string }, index: number) => {
+        return {
+          ...(legend.legendHitBoxes?.[index] ?? {}),
+          text,
+        };
+      }) ?? [];
+  }
 
-  private _generateFocusBox = () => {
+  private suppressFocusBox(): void {
+    this.focusBox?.setAttribute('tabIndex', '-1');
+  }
+
+  private reviveFocusBox(): void {
+    this.focusBox?.setAttribute('tabIndex', '0');
+  }
+
+  private generateFocusBox(): HTMLDivElement {
     const focusBox = document.createElement('div');
     focusBox.setAttribute('tabIndex', '0');
     focusBox.setAttribute('data-legend-index', '0');
@@ -49,7 +96,6 @@ class ChartLegendManager {
     const activateFocusBox = (e: KeyboardEvent | MouseEvent) => {
       const index = Number(focusBox.getAttribute('data-legend-index'));
       if (['pie', 'doughnut'].includes(this.chart.config.type)) {
-        // TODO: support Filter Click
         if (this.chart.config.options.isLegendClick) {
           const legendObj = {
             key: this.chart.config.data.labels[index],
@@ -109,19 +155,15 @@ class ChartLegendManager {
       if (isNaN(index)) {
         return;
       }
-      const box = this.canvas.getBoundingClientRect();
       const { left, top, width, height, text } = this.hitBoxes[index];
 
-      // TODO
-      // const newLeft = `${left - this.focusBoxMargin - window.pageXOffset}px`;
-      // const newTop = `${top - this.focusBoxMargin + window.pageYOffset}px`;
       const newLeft = `${left - this.focusBoxMargin}px`;
       const newTop = `${top - this.focusBoxMargin}px`;
       const newWidth = `${width + 2 * this.focusBoxMargin}px`;
       const newHeight = `${height + 2 * this.focusBoxMargin}px`;
       focusBox.setAttribute(
         'style',
-        `position:absolute; left: ${newLeft}; top:${newTop}; width:${newWidth}; height:${newHeight}`,
+        `position:absolute; left: ${newLeft}; top:${newTop}; width:${newWidth}; height:${newHeight}; outline-color:${this.focusColor};`,
       );
       focusBox.setAttribute('aria-label', `${text}, ${index + 1} of ${this.hitBoxes.length}`);
     };
@@ -132,63 +174,5 @@ class ChartLegendManager {
     focusBox.addEventListener('keydown', keyboardNavigation);
     focusBox.addEventListener('click', activateFocusBox);
     return focusBox;
-  };
-}
-
-/**
- *
- * @param {Object} chart
- * @param {ChartLegendManager} manager
- */
-const updateForLegends = (chart: Chart, manager: ChartLegendManager): void => {
-  const { legend } = chart;
-  if (!legend?.legendItems) {
-    return manager.suppressFocusBox();
   }
-  manager.hitBoxes =
-    legend?.legendItems?.map(({ text }, index) => {
-      return {
-        // @ts-ignore
-        ...(legend.legendHitBoxes?.[index] ?? {}),
-        text,
-      };
-    }) ?? [];
-};
-
-/**
- *
- * @param {Object} chart
- * @param {Number} margin
- * @returns {ChartLegendManager}
- */
-const initialize = (chart: Chart, margin: number): ChartLegendManager => {
-  const manager = new ChartLegendManager(chart, margin);
-  chartStates.set(chart, manager);
-  return manager;
-};
-
-export const a11yLegend = {
-  id: 'a11yLegend',
-  afterInit: (chart: Chart, options: any): void => {
-    const manager = initialize(chart, options.margin);
-    updateForLegends(chart, manager);
-  },
-  beforeDraw: (chart: Chart, args: any, options: any): void => {
-    let manager = chartStates.get(chart);
-    if (manager === undefined) {
-      manager = initialize(chart, options.margin);
-    }
-    if (!chart.options.plugins?.legend?.display) {
-      return manager.suppressFocusBox();
-    }
-    manager.reviveFocusBox();
-    manager.focusBoxMargin = options.margin || 4;
-    updateForLegends(chart, manager);
-  },
-  afterDestroy(chart: Chart): void {
-    chartStates.delete(chart);
-  },
-  defaults: {
-    margin: 4,
-  },
-};
+}

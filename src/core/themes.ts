@@ -4,6 +4,7 @@ export enum ThemeName {
 }
 
 export interface Theme {
+  focusColor: string;
   gridColor: string;
   legendSelectedBackgroundColor: string;
   textColorPrimary: string;
@@ -18,6 +19,7 @@ export const themes = new Map<ThemeName | string, Theme>([
   [
     ThemeName.Light,
     {
+      focusColor: '#3267C8',
       gridColor: '#E5E6E6',
       legendSelectedBackgroundColor: '#2b2b2b1a',
       textColorPrimary: '#535759',
@@ -31,6 +33,7 @@ export const themes = new Map<ThemeName | string, Theme>([
   [
     ThemeName.Dark,
     {
+      focusColor: '#3492eb',
       gridColor: '#535759',
       legendSelectedBackgroundColor: '#F1EFEF1a',
       textColorPrimary: '#C5CBCD',
