@@ -52,14 +52,17 @@ function lookupElement(element, fnCondition) {
 // set http
 mdw.settings.setHttpClient(new function () {
   this.get = function (url) {
-    return axios.get(url).then((response) => {
-      return response.data;
+    return fetch(url).then((response) => {
+      return response.json();
     });
   }
 
   this.post = function (url, data) {
-    return axios.post(url, data).then((response) => {
-      return response.data;
+    return fetch(url, {
+      method: 'POST',
+      body: typeof data === 'object' ? JSON.stringify(data) : data,
+    }).then((response) => {
+      return response.json();
     });
   }
 });
