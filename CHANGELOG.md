@@ -1,3 +1,20 @@
+# [1.0.0-alpha.18](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.17...v1.0.0-alpha.18) (2024-04-17)
+
+
+### Bug Fixes
+
+* **a11y:** Fixed a bug in which accessibiltity enabled mouse click color loss ([#67](https://github.com/momentum-design/momentum-widgets/issues/67)) ([ed05d45](https://github.com/momentum-design/momentum-widgets/commit/ed05d45ee432140f036a01e3465fb42dd8437b37))
+* **core:** optimize font settings of charts ([#65](https://github.com/momentum-design/momentum-widgets/issues/65)) ([52c6824](https://github.com/momentum-design/momentum-widgets/commit/52c6824d49f90d4c81f1042aa8f3caf87064ffef))
+* **core:** the color of options does not work ([#64](https://github.com/momentum-design/momentum-widgets/issues/64)) ([bd56283](https://github.com/momentum-design/momentum-widgets/commit/bd56283c2b04b6e12a05f90d5a3bb309adf7cce3))
+* **tooltip:** fix tooltip position issue ([#66](https://github.com/momentum-design/momentum-widgets/issues/66)) ([53c73dd](https://github.com/momentum-design/momentum-widgets/commit/53c73ddfe77f0f2811c5f16d321df6e4ad556424))
+
+
+### Features
+
+* **a11y:** for all charts ([#54](https://github.com/momentum-design/momentum-widgets/issues/54)) ([848967a](https://github.com/momentum-design/momentum-widgets/commit/848967a6d12ae7074256c88179181522a6a908f1))
+* **core:** support getting data from URL ([e292b50](https://github.com/momentum-design/momentum-widgets/commit/e292b503f053755de00c484db429f46e179e311b))
+* **xy:** add lineWidth option to change line size ([#62](https://github.com/momentum-design/momentum-widgets/issues/62)) ([0851409](https://github.com/momentum-design/momentum-widgets/commit/0851409ccff1f1653ca7086b738a820fb37520f9))
+
 # [1.0.0-alpha.17](https://github.com/momentum-design/momentum-widgets/compare/v1.0.0-alpha.16...v1.0.0-alpha.17) (2024-03-10)
 
 
