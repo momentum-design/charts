@@ -4,7 +4,7 @@ import { darkenColor, formatNumber, getRandomColor, lightenColor, mergeObjects }
 import { ChartContainer, ChartData, ChartOptions, ColorMode, Font, TableData } from '../../types';
 import { SegmentClickable } from '../.plugins/segment-clickable';
 import { Legend } from '../legend';
-import { CategoryLabelSelectable } from '../xy/xy.category-label-selectable';
+import type { CategoryLabelSelectable } from '../xy/xy.category-label-selectable';
 
 export abstract class Chart<TData extends ChartData, TOptions extends ChartOptions> {
   static defaults: ChartOptions = {

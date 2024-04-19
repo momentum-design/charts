@@ -1,6 +1,6 @@
 import { mergeObjectsTo } from '../helpers';
 import { ColorSetName, colorSets, defaultColorSet } from './colorsets';
-import { Http } from './http';
+import type { Http } from './http';
 import { defaultTheme, Theme, ThemeName, themes } from './themes';
 
 /**

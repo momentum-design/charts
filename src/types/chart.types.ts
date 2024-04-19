@@ -1,7 +1,9 @@
-import { ChartType as CJChartType, Element } from 'chart.js/auto';
-import { Font, LegendOptions, Padding } from '.';
-import { TooltipOptions } from '../charts/tooltip';
-import { ThemeName } from '../core';
+import type { ChartType as CJChartType, Element } from 'chart.js/auto';
+import type { TooltipOptions } from '../charts/tooltip';
+import type { ThemeName } from '../core';
+import type { LegendOptions } from './chart.legend.types';
+import type { Padding } from './common.types';
+import type { Font } from './font.types';
 
 export type MarkerStyle = 'circle' | 'rect' | 'rectRounded' | 'rectRot' | 'triangle' | false;
 export type SeriesType = 'bar' | 'line' | 'area' | 'dashed' | 'dashedArea';

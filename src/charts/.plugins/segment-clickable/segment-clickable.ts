@@ -7,7 +7,7 @@ import {
 } from 'chart.js/auto';
 import { alphaColor, deepClone } from '../../../helpers';
 import { ChartData, ChartEvent, ChartEventType, ChartOptions, EventContext, LegendItem } from '../../../types';
-import { Chart } from '../../.internal';
+import type { Chart } from '../../.internal';
 
 export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
   public selectedSegment: LegendItem[] = [];

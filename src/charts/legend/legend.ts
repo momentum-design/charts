@@ -19,7 +19,7 @@ import {
   LegendItem,
   Position,
 } from '../../types';
-import { Chart } from '../.internal';
+import type { Chart } from '../.internal';
 
 export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
   items: LegendItem[] = [];

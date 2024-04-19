@@ -1,6 +1,6 @@
-import { ChartEvent as CJEvent } from 'chart.js/auto';
-import { Chart } from '../charts/.internal';
-import { ChartData, ChartOptions } from '../types';
+import type { ChartEvent as CJEvent } from 'chart.js/auto';
+import type { Chart } from '../charts/.internal';
+import type { ChartData, ChartOptions } from '../types/chart.types';
 
 export enum ChartEventType {
   LegendItemClick = 'legendItemClick',
