@@ -39,10 +39,10 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
     return plugin;
   }
 
-  toCJInteraction(): CJCoreInteractionOptions {
+  toCJInteraction(isHorizontal?: boolean): CJCoreInteractionOptions {
     const interaction = {
       intersect: false,
-      axis: 'xy',
+      axis: isHorizontal ? 'y' : 'x',
       mode: 'nearest',
     };
     if (this.options.combineItems) {
