@@ -4,11 +4,11 @@ module.exports = {
   baseUrl: '/',
   logoUrl: '/img/logo.png',
   footerLogoUrl: 'img/md-logo.svg',
-  name: 'WIDGETS',
-  title: 'Widgets from Momentum Design',
-  tagline: 'A component-based widget library includes some charts based on Chart.js which can be used in any front-end framework.',
+  name: 'CHARTS',
+  title: 'Charts from Momentum Design',
+  tagline: 'A HTML-based chart library which can be used in any front-end frameworks and makes charting easier and simpler.',
   githubUser: 'momentum-design',
-  githubRepo: 'momentum-widgets',
+  githubRepo: 'charts',
   copyright: `Copyright © ${new Date().getFullYear()} Cisco and/or its affiliates. All rights reserved.`,
   get menus() {
     return [
@@ -95,14 +95,18 @@ module.exports = {
     ];
   },
   get externalStylesheets() {
-    return [`${this.baseUrl}dist-lib/widgets.css`];
+    return [
+      `${this.baseUrl}style.css`,
+      `${this.baseUrl}dist-lib/charts.css`,
+    ];
   },
   get externalScripts() {
     return [
       `https://cdn.tailwindcss.com`,
       `https://www.googletagmanager.com/gtag/js?id=G-ZCWJTWP3ZS`,
+      `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js`,
       `${this.baseUrl}tw.config.js`,
-      `${this.baseUrl}dist-lib/widgets.umd.js`,
+      `${this.baseUrl}dist-lib/charts.umd.js`,
       `${this.baseUrl}data.js`,
       `${this.baseUrl}ga.js`,
       `${this.baseUrl}script.js`,

@@ -16,13 +16,13 @@ const tag = `${COMPONENT_PREFIX}-chart`;
  *
  * @example
  * ```html
- * <mdw-chart type="pie"
+ * <md-chart type="pie"
  *   data='{
  *    "Alabama": 13,
  *    "Colorado": 17,
  *    "Arizona": 8,
  *    "Vermont": 10}'
- * ></mdw-chart>
+ * ></md-chart>
  * ```
  *
  * @typeParam TData - the type of chart data

@@ -16,7 +16,7 @@ We will use the Fetch and Axios as the examples to show you how to start.
 It's built into modern web browsers and allows you to make HTTP requests to servers and handle responses using promises.
 
 ```javascript
-mdw.settings.setHttpClient(new function () {
+md.settings.setHttpClient(new function () {
   this.get = function (url) {
     return fetch(url).then((response) => {
       return response.json();
@@ -31,7 +31,7 @@ The following code example will show you how to set it with popular HTTP client 
 If you are using TypeScript as the programming language, we recommend to implement the interface [Http](/docs/api/interfaces/Http).
 
 ```javascript
-mdw.settings.setHttpClient(
+md.settings.setHttpClient(
   new function () {
     const endpoint = 'http://localhost:3000';
     this.get = function (url) {
@@ -49,10 +49,10 @@ Then you can set the attribute **data-url** for getting data from your backend A
 
 ```jsx live noInline
 render(
-  <mdw-chart
+  <md-chart
     type="line"
-    data-url="https://momentum-design.github.io/momentum-widgets/data.json#line"
+    data-url="https://momentum-design.github.io/charts/data.json#line"
     options='{"categoryAxis":{"dataKey":"date","type":"time","labelFormat":"MMM D"}}'
-  ></mdw-chart>,
+  ></md-chart>,
 );
 ```

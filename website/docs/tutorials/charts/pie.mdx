@@ -21,19 +21,19 @@ function showComponent() {
   const options = {};
 
   return (
-    <mdw-chart
+    <md-chart
       type="pie"
       style={{ width: '300px' }}
       data={JSON.stringify(data)}
       options={JSON.stringify(options)}
-    ></mdw-chart>
+    ></md-chart>
   );
 }
 ```
 
 ## Selectable Legend
 
-In this way, you can implement some interactions with other widgets.
+In this way, you can implement some interactions with other components.
 
 ```jsx live noInline
 const data = {
@@ -69,13 +69,13 @@ const Example = () => {
   };
   return (
     <WithActions>
-      <mdw-chart
+      <md-chart
         ref={myRef}
         type="pie"
         data={JSON.stringify(data)}
         options={JSON.stringify(options)}
         states={JSON.stringify(chartStates)}
-      ></mdw-chart>
+      ></md-chart>
       <div className="flex">
         {selectedLegendItems.map((item) => (
           <div

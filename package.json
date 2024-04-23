@@ -1,9 +1,9 @@
 {
-  "name": "@momentum-design/widgets",
+  "name": "@momentum-design/charts",
   "version": "1.0.0-alpha.18",
-  "description": "widgets based on Chart.js for building dashboards",
-  "main": "dist/widgets.umd.js",
-  "module": "dist/widgets.es5.js",
+  "description": "Chart components based on Chart.js for building dashboards",
+  "main": "dist/charts.umd.js",
+  "module": "dist/charts.es5.js",
   "types": "dist/types/src/index.d.ts",
   "files": [
     "dist"
@@ -46,7 +46,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/momentum-design/momentum-widgets.git"
+    "url": "https://github.com/momentum-design/charts.git"
   },
   "publishConfig": {
     "access": "public"

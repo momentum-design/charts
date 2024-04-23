@@ -7,7 +7,7 @@ const fileGettingStarted = './website/docs/tutorials/getting-started.md';
 sh.cp('README.md', fileGettingStarted);
 let data = fs.readFileSync(fileGettingStarted, 'utf8');
 data = data.replace(
-  '# @momentum-design/widgets',
+  '# @momentum-design/charts',
   `---
 sidebar_position: 1
 ---

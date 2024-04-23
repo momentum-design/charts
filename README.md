@@ -1,13 +1,13 @@
-# @momentum-design/widgets
+# @momentum-design/charts
 
 A pure library based on web components and chart.js that is for building dashboards
 which can be used in any front-end framework.
 
-- [API](https://momentum-design.github.io/momentum-widgets/docs/api/)
-- [Tutorials](https://momentum-design.github.io/momentum-widgets/docs/tutorials/getting-started)
-- [Changelog](https://momentum-design.github.io/momentum-widgets/blog)
+- [API](https://momentum-design.github.io/charts/docs/api/)
+- [Tutorials](https://momentum-design.github.io/charts/docs/tutorials/getting-started)
+- [Changelog](https://momentum-design.github.io/charts/blog)
 
-All examples in website are using the JSX and online code editor to render widgets in real time.
+All examples in website are using the JSX and online code editor to render charts in real time.
 
 ## Installation
 
@@ -16,11 +16,11 @@ All examples in website are using the JSX and online code editor to render widge
 The UMD build is also available on unpkg.com:
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/@momentum-design/widgets/dist/widgets.css" />
-<script src="https://unpkg.com/@momentum-design/widgets/dist/widgets.umd.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/@momentum-design/charts/dist/charts.css" />
+<script src="https://unpkg.com/@momentum-design/charts/dist/charts.umd.js"></script>
 ```
 
-Then you can find the library on `window.mdw`.
+Then you can find the library on `window.md`.
 
 ### npm
 
@@ -28,7 +28,7 @@ NPM is the easiest and fastest way to get started using this library. It is also
 
 ```bash
 # latest stable
-$ npm i @momentum-design/widgets
+$ npm i @momentum-design/charts
 ```
 
 ### Use with Angular
@@ -38,7 +38,7 @@ $ npm i @momentum-design/widgets
    ```diff
    import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
    import { BrowserModule } from '@angular/platform-browser';
-   +import '@momentum-design/widgets';
+   +import '@momentum-design/charts';
 
    import { AppComponent } from './app.component';
 
@@ -59,7 +59,7 @@ $ npm i @momentum-design/widgets
 1. Use the components in your HTML template.
 
    ```html
-   <mdw-chart
+   <md-chart
      type="pie"
      data='{
             "Alabama": 13,
@@ -68,7 +68,7 @@ $ npm i @momentum-design/widgets
             "Vermont": 10,
             "South Carolina": 40
           }'
-   ></mdw-chart>
+   ></md-chart>
    ```
 
 ## Contributing

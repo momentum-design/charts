@@ -116,21 +116,21 @@ iframe#webpack-dev-server-client-overlay {
 }
 
 /* widget library */
-mdw-chart {
+md-chart {
   margin: 0 auto;
   height: 360px;
 }
 
-mdw-chart[type='pie'],
-mdw-chart[type='donut'] {
+md-chart[type='pie'],
+md-chart[type='donut'] {
   width: 320px;
   height: 320px;
 }
 
-mdw-chart[type='gauge'] {
+md-chart[type='gauge'] {
   width: 50%;
 }
 
-#mdw-tooltip .mdw-tooltip-item.active {
+#md-tooltip .md-tooltip-item.active {
   font-weight: bold;
 }

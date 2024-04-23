@@ -14,7 +14,7 @@ function getCurrentTheme() {
 function initTheme() {
   const theme = getCurrentTheme();
   // eslint-disable-next-line no-undef
-  mdw.settings.set({ theme: theme, colorSet: themeColorSetMapping[theme] });
+  md.settings.set({ theme: theme, colorSet: themeColorSetMapping[theme] });
 }
 
 function isThemeButton(element) {
@@ -50,7 +50,7 @@ function lookupElement(element, fnCondition) {
 }
 
 // set http
-mdw.settings.setHttpClient(new function () {
+md.settings.setHttpClient(new function () {
   this.get = function (url) {
     return fetch(url).then((response) => {
       return response.json();

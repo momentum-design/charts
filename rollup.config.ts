@@ -20,7 +20,7 @@ export default {
   output: [
     {
       file: pkg.main,
-      name: 'mdw',
+      name: 'md',
       format: 'umd',
       sourcemap: true,
       globals: {

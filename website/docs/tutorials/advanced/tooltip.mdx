@@ -9,7 +9,7 @@ sidebar_position: 1000
 We will use donut chart as an example to show what options are available for tooltip. The tooltip includes **title**, **items** and **footer**.
 
 ```jsx live noInline
-const data = mdwd.pie;
+const data = mdd.pie;
 const initialOptions = {};
 
 const Example = () =>
@@ -59,13 +59,13 @@ const Example = () =>
 
     return (
       <WithActions buttons={<Buttons />}>
-        <mdw-chart
+        <md-chart
           key={key}
           style={{ width: '300px' }}
           type="donut"
           data={JSON.stringify(data)}
           options={JSON.stringify(options)}
-        ></mdw-chart>
+        ></md-chart>
       </WithActions>
     );
   });
@@ -95,30 +95,30 @@ render(<Example />);
 The following example will show you the tooltip html code.
 
 ```html
-<div id="mdw-tooltip">
-  <div class="mdw-tooltip-title">Title</div>
-  <div class="mdw-tooltip-item">
-    <span class="mdw-tooltip-icon" style="background-color: #ff0000"></span>
-    <span class="mdw-tooltip-label">Label1</span>
-    <span class="mdw-tooltip-values">
+<div id="md-tooltip">
+  <div class="md-tooltip-title">Title</div>
+  <div class="md-tooltip-item">
+    <span class="md-tooltip-icon" style="background-color: #ff0000"></span>
+    <span class="md-tooltip-label">Label1</span>
+    <span class="md-tooltip-values">
       <span>2,452</span>
     </span>
   </div>
-  <div class="mdw-tooltip-item active">
-    <span class="mdw-tooltip-icon" style="background-color: #00ff00"></span>
-    <span class="mdw-tooltip-label">Label2</span>
-    <span class="mdw-tooltip-values">
+  <div class="md-tooltip-item active">
+    <span class="md-tooltip-icon" style="background-color: #00ff00"></span>
+    <span class="md-tooltip-label">Label2</span>
+    <span class="md-tooltip-values">
       <span>23,452</span>
     </span>
   </div>
-  <div class="mdw-tooltip-footer">Footer</div>
+  <div class="md-tooltip-footer">Footer</div>
 </div>
 ```
 
 You can define your styles in css file as below:
 
 ```css
-#mdw-tooltip .mdw-tooltip-item.active {
+#md-tooltip .md-tooltip-item.active {
   font-weight: bold;
 }
 ```

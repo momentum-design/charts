@@ -1,4 +1,4 @@
-var mdwd = {
+var mdd = {
   pie: {
     'Brunei Darussalam': 739,
     'Jordan': 763,

@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CoreInteractionOptions as CJCoreInteractionOptions } from 'chart.js/auto';
+import { COMPONENT_PREFIX } from '../../core';
 import { formatNumber, isNullOrUndefined, mergeObjects } from '../../helpers';
 import { DomElement, findDomElement } from '../../helpers/dom';
 import { ChartData, ChartOptions } from '../../types';
 import { Chart } from '../.internal';
 import { TooltipItem, TooltipOptions } from './tooltip.types';
 
-const TOOLTIP_ID = 'mdw-tooltip';
+const TOOLTIP_ID = `${COMPONENT_PREFIX}-tooltip`;
 const TOOLTIP_CLASS = TOOLTIP_ID;
 
 export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
