@@ -188,9 +188,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       maintainAspectRatio: false,
       responsive: true,
       indexAxis: this.getIndexAxis(),
-
-      interaction: tooltip.toCJInteraction(),
-
+      interaction: tooltip.toCJInteraction(this.isHorizontal()),
       plugins: {
         title: {
           display: !!this.options.title,
