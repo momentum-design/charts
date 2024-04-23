@@ -185,7 +185,6 @@ export interface XYChartOptions extends ChartOptions {
    */
   valueAxes?: ValueAxisOptions[];
 
-  scrollable?: boolean;
   scrollDirection?: 'x' | 'y' | 'xy';
 }
 /**

@@ -20,6 +20,7 @@ import { tableDataToJSON } from '../../helpers/data';
 import { isNullOrUndefined, mergeObjects, padToArray } from '../../helpers/utils';
 import {
   ChartDataView,
+  ChartEventType,
   ChartType,
   CJUnknownChartType,
   Font,
@@ -36,6 +37,7 @@ import { Chart } from '../.internal';
 import { A11yChart } from '../.plugins/a11y/a11y-chart';
 import { A11yLegend } from '../.plugins/a11y/a11y-legend';
 import { Tooltip, TooltipItem } from '../tooltip';
+import { BarScrollable } from './xy.bar-scrollable';
 import { CategoryLabelSelectable } from './xy.category-label-selectable';
 import {
   CategoryAxisOptions,
@@ -95,6 +97,11 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
   private defaultCategoryTickHeightForX = 30;
   private defaultTitleHeightOrWidth = 30;
   private defaultLegendHeightForX = 60;
+  private isScrollbarDragging = false;
+  private startPointClientY = 0;
+  private isScrollable = false;
+  private labelsCount = 0;
+  private labelSizePerPage = 0;
 
   private categoryLabelSelectable?: CategoryLabelSelectable<typeof this>;
 
@@ -102,14 +109,18 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     let chartDatasets: ChartDataset<CJType, number[]>[] = [];
     this.getChartData();
     if (this.chartData) {
+      if (this.options.categoryAxis?.maxLabels && this.chartData.category.labels) {
+        this.isScrollable = this.options.categoryAxis.maxLabels < this.chartData.category.labels.length;
+      }
       chartDatasets = this.getDatasets();
     }
     const plugins: CJPlugin[] = [
       new A11yChart().toCJPlugin(this.getCurrentTheme()?.focusColor),
       new A11yLegend().toCJPlugin(this.getCurrentTheme()?.focusColor),
     ];
-    if (this.options.scrollable) {
+    if (this.isScrollable) {
       plugins.push(zoomPlugin);
+      plugins.push(new BarScrollable(this).toCJPlugin());
     }
     if (this.isCategoryLabelSelectable()) {
       this.getCategoryLabelSelectable();
@@ -132,7 +143,6 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     }
     return {
       type: convertToCJType(this.getType()),
-
       data: {
         labels: this.chartData.category.labels ?? [],
         datasets: chartDatasets,
@@ -739,8 +749,72 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     return ScaleKeys.ValueAxis + (index > 0 ? '_' + index : '');
   }
 
-  onWheel(event: WheelEvent): void {
-    if (this.options?.scrollable && event && event.deltaY !== 0) {
+  addCustomEventListener(): void {
+    if (!this.isScrollable || !this.api?.canvas || !this.api?.data?.labels) {
+      return;
+    }
+    this.labelsCount = this.api.data.labels.length;
+    this.labelSizePerPage = Math.min(
+      this.labelsCount,
+      this.options.categoryAxis?.maxLabels ?? this.api.scales.categoryAxis.max - this.api.scales.categoryAxis.min,
+    );
+    if (this.labelSizePerPage < this.labelsCount) {
+      const canvas = this.api.canvas;
+      canvas.addEventListener(ChartEventType.MouseDown, this.startMouseDrag.bind(this));
+      canvas.addEventListener(ChartEventType.MouseMove, this.mouseDrag.bind(this));
+      canvas.addEventListener(ChartEventType.MouseUp, this.endMouseDrag.bind(this));
+      canvas.addEventListener(ChartEventType.MouseLeave, this.endMouseDrag.bind(this));
+      canvas.addEventListener(ChartEventType.Wheel, this.onMouseWheel.bind(this));
+    }
+  }
+
+  removeCustomEventListener(): void {
+    if (!this.isScrollable || !this.api?.canvas) {
+      return;
+    }
+    const canvas = this.api.canvas;
+    canvas.removeEventListener(ChartEventType.MouseDown, this.startMouseDrag);
+    canvas.removeEventListener(ChartEventType.MouseMove, this.mouseDrag);
+    canvas.removeEventListener(ChartEventType.MouseUp, this.endMouseDrag);
+    canvas.removeEventListener(ChartEventType.MouseLeave, this.endMouseDrag);
+    canvas.removeEventListener(ChartEventType.Wheel, this.onMouseWheel);
+  }
+
+  private startMouseDrag(event: MouseEvent): void {
+    const canvas = this.api?.canvas;
+    if (!canvas) {
+      return;
+    }
+    const rectWidth = 10;
+    const mouseX = (this.api?.canvas.getBoundingClientRect().right ?? 0) - event.clientX;
+    if (0 <= mouseX && mouseX <= rectWidth) {
+      this.isScrollbarDragging = true;
+      this.startPointClientY = event.clientY;
+    }
+  }
+
+  private mouseDrag(event: MouseEvent): void {
+    const currentClientY = event.clientY;
+    if (this.isScrollbarDragging) {
+      const panY = currentClientY - this.startPointClientY;
+      const scale = this.api?.scales.categoryAxis;
+      if (!scale || !this.api?.data.labels) {
+        return;
+      }
+      this.api.pan({
+        y: -panY * (this.labelsCount / this.labelSizePerPage),
+      });
+      this.startPointClientY = currentClientY;
+      event.preventDefault();
+    }
+  }
+
+  private endMouseDrag(): void {
+    this.isScrollbarDragging = false;
+  }
+
+  private onMouseWheel(event: WheelEvent): void {
+    if (event && event.deltaY !== 0) {
       this.api?.pan({
         y: -event.deltaY,
       });

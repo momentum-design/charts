@@ -10,6 +10,10 @@ export enum ChartEventType {
   ThemeChange = 'themeChange',
   WordClick = 'wordClick',
   Wheel = 'wheel',
+  MouseDown = 'mousedown',
+  MouseMove = 'mousemove',
+  MouseUp = 'mouseup',
+  MouseLeave = 'mouseleave',
 }
 
 export interface EventContext<TData> {

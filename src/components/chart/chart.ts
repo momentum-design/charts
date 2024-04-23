@@ -133,7 +133,9 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     this.renderRoot.removeEventListener(ChartEventType.LegendItemSelect, this.onLegendItemSelect as EventListener);
     this.renderRoot.removeEventListener(ChartEventType.LegendItemUnselect, this.onLegendItemUnselect as EventListener);
     document.removeEventListener(ChartEventType.ThemeChange, this.onThemeChange as EventListener);
-
+    if (this.chart?.removeCustomEventListener) {
+      this.chart.removeCustomEventListener();
+    }
     this.destroy();
   }
 
@@ -175,7 +177,6 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
     this.unobserveResize();
 
     if (this.chart) {
-      this.renderRoot.removeEventListener(ChartEventType.Wheel, this.chart.onWheel as EventListener);
       this.chart.destroy();
     }
   }
@@ -202,8 +203,9 @@ export class ChartComponent<TData extends ChartData, TOptions extends ChartOptio
       this.chart.render();
       this.observeChartResize();
       this.observeCanvasResize();
-      if (this.chart.onWheel) {
-        this.renderRoot.addEventListener(ChartEventType.Wheel, this.chart.onWheel.bind(this.chart) as EventListener);
+
+      if (this.chart.addCustomEventListener) {
+        this.chart.addCustomEventListener();
       }
     }
   }

@@ -6,6 +6,8 @@ export enum ThemeName {
 export interface Theme {
   focusColor: string;
   gridColor: string;
+  scrollbarBackgroundColor: string;
+  scrollbarThumbBackgroundColor: string;
   legendSelectedBackgroundColor: string;
   textColorPrimary: string;
   textColorSecondary: string;
@@ -21,6 +23,8 @@ export const themes = new Map<ThemeName | string, Theme>([
     {
       focusColor: '#3267C8',
       gridColor: '#E5E6E6',
+      scrollbarBackgroundColor: '#f3f3f3',
+      scrollbarThumbBackgroundColor: '#dddddd',
       legendSelectedBackgroundColor: '#2b2b2b1a',
       textColorPrimary: '#535759',
       textColorSecondary: '#7D7F7F',
@@ -35,6 +39,8 @@ export const themes = new Map<ThemeName | string, Theme>([
     {
       focusColor: '#3492eb',
       gridColor: '#535759',
+      scrollbarBackgroundColor: 'transparent',
+      scrollbarThumbBackgroundColor: '#ffffff33',
       legendSelectedBackgroundColor: '#F1EFEF1a',
       textColorPrimary: '#C5CBCD',
       textColorSecondary: '#7D7F7F',
