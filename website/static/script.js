@@ -48,21 +48,3 @@ function lookupElement(element, fnCondition) {
 
   return fnCondition(element) ? element : lookupElement(element.parentNode, fnCondition);
 }
-
-// set http
-md.settings.setHttpClient(new function () {
-  this.get = function (url) {
-    return fetch(url).then((response) => {
-      return response.json();
-    });
-  }
-
-  this.post = function (url, data) {
-    return fetch(url, {
-      method: 'POST',
-      body: typeof data === 'object' ? JSON.stringify(data) : data,
-    }).then((response) => {
-      return response.json();
-    });
-  }
-});

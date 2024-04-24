@@ -2,11 +2,11 @@ import { getFieldFromObject, mergeObjectsTo, splitAndGet } from '../helpers';
 import { settings } from './settings';
 
 export interface Http {
-  get: <T>(url: string) => Promise<T>;
-  post: <T>(url: string, data: unknown) => Promise<T>;
-  delete: <T>(url: string) => Promise<T>;
-  put: <T>(url: string, data: unknown) => Promise<T>;
-  patch: <T>(url: string, data: unknown) => Promise<T>;
+  get?: <T>(url: string) => Promise<T>;
+  post?: <T>(url: string, data: unknown) => Promise<T>;
+  delete?: <T>(url: string) => Promise<T>;
+  put?: <T>(url: string, data: unknown) => Promise<T>;
+  patch?: <T>(url: string, data: unknown) => Promise<T>;
 }
 
 export interface RequestOptions {

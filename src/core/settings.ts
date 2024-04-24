@@ -11,7 +11,7 @@ export interface Settings {
   colorSets: Map<ColorSetName | string, string[]>;
   theme: ThemeName | string;
   themes: Map<ThemeName | string, Theme>;
-  http?: Http;
+  http: Http;
 
   /**
    * Suffixed for big numbers. It's an array of objects of number/suffix pairs.
@@ -79,6 +79,44 @@ export const settings: Settings = {
   colorSets: colorSets,
   theme: defaultTheme,
   themes: themes,
+  http: new (class implements Http {
+    get(url: string) {
+      return fetch(url).then((response) => {
+        return response.json();
+      });
+    }
+    post(url: string, data: unknown) {
+      return fetch(url, {
+        method: 'POST',
+        body: (typeof data === 'object' ? JSON.stringify(data) : data) as BodyInit,
+      }).then((response) => {
+        return response.json();
+      });
+    }
+    delete(url: string) {
+      return fetch(url, {
+        method: 'DELETE',
+      }).then((response) => {
+        return response.json();
+      });
+    }
+    put(url: string, data: unknown) {
+      return fetch(url, {
+        method: 'PUT',
+        body: (typeof data === 'object' ? JSON.stringify(data) : data) as BodyInit,
+      }).then((response) => {
+        return response.json();
+      });
+    }
+    patch(url: string, data: unknown) {
+      return fetch(url, {
+        method: 'PATCH',
+        body: (typeof data === 'object' ? JSON.stringify(data) : data) as BodyInit,
+      }).then((response) => {
+        return response.json();
+      });
+    }
+  })(),
 
   set: function (partialSettings: Partial<Settings>): Settings {
     mergeObjectsTo(this, partialSettings);
