@@ -46,21 +46,36 @@ const data = [
   },
   {
     country: 'South Korea',
-    value: 443,
+    value: 543,
   },
   {
-    country: 'Canada',
+    country: 'Australia',
     value: 441,
+  },
+  {
+    country: 'Italy',
+    value: 311,
+  },
+  {
+    country: 'Mexico',
+    value: 245,
+  },
+  {
+    country: 'Turkey',
+    value: 243,
+  },
+  {
+    country: 'Switzerland',
+    value: 141,
   },
 ];
 const initialOptions = {
-  scrollable: true,
   categoryAxis: {
     labelSelectable: false,
     gridDisplay: true,
     enableColor: true,
     dataKey: 'country',
-    maxLabels: 6,
+    maxLabels: 10,
   },
   legend: {},
 };
@@ -91,7 +106,6 @@ const Example = () =>
         >
           Toggle Label Select
         </Button>
-        {buttonsRelatedToColor(setOptions)}
       </>
     );
 
@@ -120,13 +134,11 @@ The data supports the following multiple data formats:
 
 ## Options
 
-| Name            | Type                                        | Description                                           |
-| --------------- | ------------------------------------------- | ----------------------------------------------------- |
-| seriesOptions   | [SeriesOptions](#seriesoptions)             | Series related configuration, including styleMapping. |
-| categoryAxis    | [CategoryAxisOptions](#categoryaxisoptions) | Used to create a category-based axis for the chart.   |
-| valueAxis       | [ValueAxisOptions](#valueaxisoptions)       | Used to create a value axis for the chart.            |
-| scrollable      | `boolean`                                   | If true, chart supports scrolling.                    |
-| scrollDirection | `x` \| `y` \| `xy`                          | The direction of chart scrolling.                     |
+| Name          | Type                                        | Description                                           |
+| ------------- | ------------------------------------------- | ----------------------------------------------------- |
+| seriesOptions | [SeriesOptions](#seriesoptions)             | Series related configuration, including styleMapping. |
+| categoryAxis  | [CategoryAxisOptions](#categoryaxisoptions) | Used to create a category-based axis for the chart.   |
+| valueAxis     | [ValueAxisOptions](#valueaxisoptions)       | Used to create a value axis for the chart.            |
 
 ### AxisOptions
 
@@ -141,7 +153,7 @@ These are only the common options supported by all axes. Please see specific axi
 | display       | `boolean`            | `true`  | Controls the axis global visibility (visible when true, hidden when false).                                                                        |
 | gridDisplay   | `boolean`            | `true`  | Controls the grid of axis global visibility (visible when true, hidden when false).                                                                |
 | maxTicksLimit | `number`             |         | Maximum number of ticks and gridlines to show.                                                                                                     |
-| maxRotation   | `number`             | 50      | Rotation for tick labels when rotating to condense labels.                                                                                         |
+| rotation      | `boolean`            | `true`  | Rotation for tick labels when rotating to condense labels.                                                                                         |
 | autoSkip      | `boolean`            | `true`  | If true, automatically calculates how many labels can be shown and hides labels accordingly.                                                       |
 | tickWidth     | `number`             |         | Tick width on the horizontal or vertical axis.                                                                                                     |
 | ticksStepSize | `number`             |         | User defined fixed step size for the axis.                                                                                                         |

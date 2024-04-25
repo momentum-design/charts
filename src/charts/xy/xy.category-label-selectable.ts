@@ -40,6 +40,7 @@ export class CategoryLabelSelectable<TChart extends Chart<ChartData, ChartOption
         },
       ) => {
         const { type, x, y } = event.event;
+
         if (type === 'click' && typeof x === 'number' && typeof y === 'number') {
           const labels = chart.data.labels;
           const isHorizontal = chart.options.indexAxis === 'y';

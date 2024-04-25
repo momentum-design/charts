@@ -227,7 +227,8 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   protected abstract getConfiguration(): any;
   protected abstract getDefaultOptions(): TOptions;
 
-  onWheel?(event: WheelEvent): void;
+  addCustomEventListener?(): void;
+  removeCustomEventListener?(): void;
   getCategoryLabelSelectable?(): CategoryLabelSelectable<typeof this>;
   calculateMaxLimitTicks?(options: CJOptions): void;
 
