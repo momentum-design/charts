@@ -1,0 +1,67 @@
+.section {
+  padding: 4rem 0;
+}
+
+.container {
+  position: relative;
+  color: var(--ifm-color-white);
+}
+
+.demo {
+  padding: 1rem 0 0 1rem;
+  padding-right: 730px;
+
+  background-color: var(--ifm-color-black);
+  border-radius: var(--ifm-global-radius);
+  box-shadow: var(--ifm-global-shadow-lw);
+}
+
+.h2 {
+  position: relative;
+}
+
+.btncp {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0.5rem;
+  background-color: transparent;
+}
+
+.btncp path {
+  color: #dedede;
+}
+
+.btncp:hover {
+  background-color: var(--ifm-color-primary-darkest);
+}
+
+.btncp:hover path {
+  color: #00ff00;
+}
+
+.pre {
+  /* transform: perspective(1600px) rotateY(25deg) scale(1) translateX(1rem) rotateX(10deg); */
+  opacity: 0.8;
+  transition: 0.6s ease all;
+
+  background-color: transparent;
+  padding: 0 0 0.5rem 0;
+  height: 610px;
+  overflow-y: auto;
+}
+.code {
+  text-wrap: pretty;
+  font-size: 13px;
+}
+
+.win {
+  position: absolute;
+  top: -1rem;
+  right: -1rem;
+  width: 760px;
+}
+
+.bw {
+  margin-bottom: 0 !important;
+}

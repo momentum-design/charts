@@ -1,0 +1,18 @@
+.hljs {
+}
+
+.hljs-tag {
+  color: var(--ifm-color-primary);
+}
+
+.hljs-name {
+  color: var(--ifm-color-success);
+}
+
+.hljs-attr {
+  color: var(--ifm-color-info);
+}
+
+.hljs-string {
+  color: var(--ifm-color-gray-400);
+}

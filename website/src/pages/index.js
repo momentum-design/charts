@@ -4,6 +4,7 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import bg from '@site/static/img/hero-bg.gif';
+import HomepageDemo from '@site/src/components/HomepageDemo';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
 
 import styles from './index.module.css';
@@ -19,7 +20,7 @@ function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="/docs/tutorials/getting-started">
-            Get Started - 1min ⏱️
+            Get Started 🚀
           </Link>
         </div>
       </div>
@@ -35,6 +36,7 @@ export default function Home() {
       description={`${siteConfig.tagline}`}>
       <HomepageHeader />
       <main>
+        <HomepageDemo />
         <HomepageFeatures />
       </main>
     </Layout>
