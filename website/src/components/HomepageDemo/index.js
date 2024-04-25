@@ -10,16 +10,14 @@ export default function HomepageDemo() {
   const winRef = React.createRef();
   const bwRef = React.createRef();
   const codeRef = React.createRef();
-  const [theme, setTheme] = React.useState(window.getCurrentTheme());
+  const [theme, setTheme] = React.useState(null);
   const copy = () => {
     const copyText = codeRef.current.innerText.replace(/\\x3/g, '<');
     console.log('Below context copied.', copyText);
     navigator.clipboard.writeText(copyText);
   };
+
   let code;
-
-
-
   let timeoutId;
   const setCode = () => {
     code = code ??
@@ -41,6 +39,7 @@ export default function HomepageDemo() {
   }
   useEffect(() => {
     setCode();
+    setTheme(window.getCurrentTheme());
     window.listenThemeChange((theme) => {
       setTheme(theme);
       timeoutId = setTimeout(() => {
