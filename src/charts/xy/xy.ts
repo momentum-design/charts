@@ -8,6 +8,7 @@ import {
   FontSpec,
   LegendItem as CJLegendItem,
   Plugin as CJPlugin,
+  ScaleOptionsByType,
   ScriptableLineSegmentContext,
   Tick,
   TooltipModel as CJTooltipModel,
@@ -41,6 +42,7 @@ import { BarScrollable } from './xy.bar-scrollable';
 import { CategoryLabelSelectable } from './xy.category-label-selectable';
 import {
   CategoryAxisOptions,
+  ScaleAxisType,
   ScaleKeys,
   SeriesStyleOptions,
   ValueAxisOptions,
@@ -302,6 +304,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
         } else {
           options.scales.categoryAxis.position = this.isHorizontal() ? Position.Left : Position.Bottom;
         }
+        options.scales.categoryAxis.type = this.options.categoryAxis.type ?? ScaleAxisType.Category;
         this.assembleCategoryAxisTicks(options);
       }
     }
@@ -311,22 +314,20 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
     if (!options?.scales?.categoryAxis || !this.options.categoryAxis) {
       return;
     }
+    const scaleAxisType = this.options.categoryAxis.type ?? ScaleAxisType.Category;
     options.scales.categoryAxis.ticks = options.scales.categoryAxis.ticks || {};
-    if (this.options.categoryAxis.type) {
-      options.scales.categoryAxis.type = this.options.categoryAxis.type;
-      if (options.scales.categoryAxis.type === 'time' && this.options.categoryAxis) {
-        options.scales.categoryAxis.time = { unit: this.options.categoryAxis.timeUnit };
 
-        if (this.options.categoryAxis.labelFormat) {
-          options.scales.categoryAxis.time.displayFormats = {
-            [this.options.categoryAxis.timeUnit as string]: this.options.categoryAxis.labelFormat,
-          };
-          options.scales.categoryAxis.time.tooltipFormat = this.options.categoryAxis.labelFormat;
-        }
+    if (scaleAxisType === ScaleAxisType.Time) {
+      options.scales.categoryAxis = options.scales.categoryAxis as ScaleOptionsByType<ScaleAxisType.Time>;
+      options.scales.categoryAxis.time = { unit: this.options.categoryAxis.timeUnit };
+      if (this.options.categoryAxis.labelFormat) {
+        options.scales.categoryAxis.time.displayFormats = {
+          [this.options.categoryAxis.timeUnit as string]: this.options.categoryAxis.labelFormat,
+        };
+        options.scales.categoryAxis.time.tooltipFormat = this.options.categoryAxis.labelFormat;
       }
-    }
-
-    if (!this.options.categoryAxis.type || this.options.categoryAxis.type === 'category') {
+    } else if (scaleAxisType === ScaleAxisType.Category) {
+      options.scales.categoryAxis = options.scales.categoryAxis as ScaleOptionsByType<ScaleAxisType.Category>;
       if (this.options.categoryAxis.callback) {
         const categoryCallback = this.options.categoryAxis.callback;
         options.scales.categoryAxis.ticks = {
@@ -339,6 +340,9 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
         };
       }
       this.assembleCategoryAxisLabelSelectable(options);
+      if (this.chartData.category.labels?.length === 1) {
+        options.scales.categoryAxis.offset = true;
+      }
     }
   }
 
