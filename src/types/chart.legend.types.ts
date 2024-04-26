@@ -1,7 +1,7 @@
-import { TooltipOptions } from '../charts/tooltip';
-import { ChartEvent } from './chart.event.types';
-import { MarkerStyle, Position } from './chart.types';
-import { Font } from './font.types';
+import type { TooltipOptions } from '../charts/tooltip';
+import type { ChartEvent } from './chart.event.types';
+import type { MarkerStyle, Position } from './chart.types';
+import type { Font } from './font.types';
 
 export const inactiveColor = '#c9c9c9'; // TODO(bndynet): move to options
 export interface LegendItem {
