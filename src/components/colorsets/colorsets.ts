@@ -56,7 +56,7 @@ export class ColorSets extends LitElement {
     return html`${Array.from(settings.colorSets.keys()).map(
       (key) =>
         html`<div class="item ${classMap(this.getClasses(key))}">
-          <div class="item-name">${key}</div>
+          <div class="item-name">${key === settings.colorSet ? '👉' : ''} ${key}</div>
           <div class="item-values">${this.getColorItem(settings.colorSets.get(key) || [])}</div>
         </div>`,
     )} `;

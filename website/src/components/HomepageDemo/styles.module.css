@@ -7,6 +7,16 @@
   color: var(--ifm-color-white);
 }
 
+@media (max-width: 996px) {
+  .demo {
+    padding-right: 1rem !important;
+  }
+  .win {
+    position: static !important;
+    width: 100% !important;
+  }
+}
+
 .demo {
   padding: 1rem 0 0 1rem;
   padding-right: 730px;
@@ -28,20 +38,11 @@
   background-color: transparent;
 }
 
-.btncp path {
-  color: #dedede;
-}
-
 .btncp:hover {
   background-color: var(--ifm-color-primary-darkest);
 }
 
-.btncp:hover path {
-  color: #00ff00;
-}
-
 .pre {
-  /* transform: perspective(1600px) rotateY(25deg) scale(1) translateX(1rem) rotateX(10deg); */
   opacity: 0.8;
   transition: 0.6s ease all;
 

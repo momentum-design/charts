@@ -16,3 +16,13 @@
 .hljs-string {
   color: var(--ifm-color-gray-400);
 }
+
+.dark-bg {
+  color: white;
+  background-color: #1b1b1d;
+}
+
+.light-bg {
+  color: black;
+  background-color: white;
+}
