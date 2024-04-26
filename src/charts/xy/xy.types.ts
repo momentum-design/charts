@@ -195,3 +195,7 @@ export enum ScaleKeys {
   CategoryAxis = 'categoryAxis',
   ValueAxis = 'valueAxis',
 }
+export enum ScaleAxisType {
+  Category = 'category',
+  Time = 'time',
+}
