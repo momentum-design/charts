@@ -9,16 +9,7 @@ import {
 } from 'chart.js/auto';
 import { _DeepPartialObject } from 'chart.js/dist/types/utils';
 import { mergeObjects } from '../../helpers';
-import {
-  ChartData,
-  ChartEvent,
-  ChartEventType,
-  ChartOptions,
-  EventContext,
-  inactiveColor,
-  LegendItem,
-  Position,
-} from '../../types';
+import { ChartData, ChartEvent, ChartEventType, ChartOptions, EventContext, LegendItem, Position } from '../../types';
 import type { Chart } from '../.internal';
 
 export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
@@ -86,7 +77,7 @@ export class Legend<TChart extends Chart<ChartData, ChartOptions>> {
               if (label.hidden) {
                 this.setItemInactiveStyle(legendItem);
                 label.hidden = false;
-                label.fontColor = inactiveColor;
+                label.fontColor = this.chart.getCurrentTheme().inactiveTextColor;
               } else {
                 this.setItemActiveStyle(legendItem);
               }

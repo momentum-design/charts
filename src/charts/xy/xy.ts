@@ -28,7 +28,6 @@ import {
   FontKeys,
   FontValueTypes,
   GenericDataModel,
-  inactiveColor,
   LegendItem,
   MarkerStyle,
   Position,
@@ -374,10 +373,10 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
               return selectedLabels.indexOf(label as string) >= 0
                 ? textColor
                   ? textColors[index]
-                  : this.getCurrentTheme()?.textActiveColor
+                  : this.getCurrentTheme()?.activeTextColor
                 : textColor
                 ? alphaColor(textColors[index], 0.6)
-                : this.getCurrentTheme()?.textInactiveColor;
+                : this.getCurrentTheme()?.inactiveTextColor;
             });
             return (allColors?.slice(firstTickIndex, lastTickIndex + 1) ?? []) as unknown as Color;
           } else {
@@ -633,8 +632,8 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       borderColor: dataset.borderColor as Color,
       backgroundColor: dataset.backgroundColor as Color,
     });
-    dataset.borderColor = inactiveColor;
-    dataset.backgroundColor = inactiveColor;
+    dataset.borderColor = this.getCurrentTheme().inactiveTextColor;
+    dataset.backgroundColor = this.getCurrentTheme().inactiveTextColor;
   }
 
   private setItemActiveStyle(legend: LegendItem): void {

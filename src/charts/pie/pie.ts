@@ -15,7 +15,6 @@ import {
   ChartType,
   CJUnknownChartType,
   GenericDataModel,
-  inactiveColor,
   LegendItem,
   Position,
   TableData,
@@ -256,7 +255,7 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
       backgroundColor: (datasets[0].backgroundColor as Color[])[index],
     });
     datasets.map((dataset) => {
-      (dataset.backgroundColor as Color[]).splice(index, 1, inactiveColor);
+      (dataset.backgroundColor as Color[]).splice(index, 1, this.getCurrentTheme().inactiveTextColor);
     });
   }
 

@@ -11,8 +11,13 @@ export interface Theme {
   legendSelectedBackgroundColor: string;
   textColorPrimary: string;
   textColorSecondary: string;
-  textActiveColor: string;
-  textInactiveColor: string;
+
+  activeTextColor: string;
+  activeBackgroundColor: string;
+
+  inactiveTextColor: string;
+  inactiveBackgroundColor: string;
+
   tooltipTextColor: string;
   tooltipBackgroundColor: string;
 }
@@ -21,33 +26,43 @@ export const themes = new Map<ThemeName | string, Theme>([
   [
     ThemeName.Light,
     {
-      focusColor: '#3267C8',
-      gridColor: '#E5E6E6',
+      focusColor: '#3267c8',
+      gridColor: '#e5e5e5',
       scrollbarBackgroundColor: '#f3f3f3',
       scrollbarThumbBackgroundColor: '#dddddd',
       legendSelectedBackgroundColor: '#2b2b2b1a',
       textColorPrimary: '#535759',
-      textColorSecondary: '#7D7F7F',
-      textActiveColor: 'black',
-      textInactiveColor: '#7D7F7F',
-      tooltipTextColor: '#EFEFEF',
-      tooltipBackgroundColor: '#000000F2',
+      textColorSecondary: '#7d7d7d',
+
+      activeTextColor: '#7D7F7F',
+      activeBackgroundColor: '#7D7F7F',
+
+      inactiveTextColor: '#9d9d9d',
+      inactiveBackgroundColor: '#e9ecef',
+
+      tooltipTextColor: '#efefef',
+      tooltipBackgroundColor: '#000000f2',
     },
   ],
   [
     ThemeName.Dark,
     {
       focusColor: '#3492eb',
-      gridColor: '#535759',
+      gridColor: '#535353',
       scrollbarBackgroundColor: 'transparent',
       scrollbarThumbBackgroundColor: '#ffffff33',
-      legendSelectedBackgroundColor: '#F1EFEF1a',
-      textColorPrimary: '#C5CBCD',
-      textColorSecondary: '#7D7F7F',
-      textActiveColor: '#FFFFFF',
-      textInactiveColor: '#7D7F7F',
+      legendSelectedBackgroundColor: '#f1efef1a',
+      textColorPrimary: '#c5cbcd',
+      textColorSecondary: '#7d7f7f',
+
+      activeTextColor: '#ffffff',
+      activeBackgroundColor: '',
+
+      inactiveTextColor: '#8b8b8b',
+      inactiveBackgroundColor: '#343a40',
+
       tooltipTextColor: '#000000e6',
-      tooltipBackgroundColor: '#EFEFEFF2',
+      tooltipBackgroundColor: '#efefeff2',
     },
   ],
 ]);
