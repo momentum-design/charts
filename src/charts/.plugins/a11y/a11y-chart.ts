@@ -95,7 +95,7 @@ export class A11yChart {
           this.onKeyDown(event, chart);
         } else {
           const activePoint = chart.getElementsAtEventForMode(event, 'index', { intersect: true }, true)[0];
-          this.handleActivePoint(activePoint);
+          this.handleActivePoint(chart, activePoint);
         }
         this.updateA11yLabel(chart);
       },
@@ -115,34 +115,7 @@ export class A11yChart {
     chart.setActiveElements([{ datasetIndex, index }]);
     chart.tooltip && chart.tooltip.setActiveElements([{ datasetIndex, index }], { x: 0, y: 0 });
     this.state.set({ datasetIndex, index });
-
-    if (this.currentChartType === '') {
-      const currentChartDataLength = chart.data.datasets[datasetIndex]?.data.length;
-      this.currentChartType = chart.data.datasets[datasetIndex]?.type || '';
-      const chartAttrWidth = this.getDatasetBorderStyleAttribute('width');
-      this.currentBorderColors = [];
-      this.currentBorderWidths = [];
-      chart.data.datasets.forEach((dataset: any) => {
-        if (this.hasNotXYType()) {
-          //TODO(zupan) need to support gauge chart
-          this.currentBorderColors?.push(Array(currentChartDataLength).fill(this.whiteColor));
-        } else {
-          if (dataset.backgroundColor) {
-            typeof dataset.backgroundColor === 'string'
-              ? this.currentBorderColors?.push(Array(currentChartDataLength).fill(dataset.backgroundColor))
-              : this.currentBorderColors?.push(dataset.backgroundColor);
-          } else {
-            this.currentBorderColors?.push(Array(currentChartDataLength).fill(''));
-          }
-        }
-        this.currentBorderWidths = dataset[chartAttrWidth]
-          ? typeof dataset[chartAttrWidth] === 'number'
-            ? Array(currentChartDataLength).fill(dataset[chartAttrWidth])
-            : (dataset[chartAttrWidth] as number[])
-          : Array(currentChartDataLength).fill(0);
-      });
-    }
-
+    this.initializeBorderColors(chart, datasetIndex);
     this.updateChart(chart, datasetIndex, index);
   }
 
@@ -419,11 +392,13 @@ export class A11yChart {
    * @description updates state with current activePoint, or set default state if no activePoint exists
    * @param {Object} activePoint
    */
-  private handleActivePoint(activePoint: ActivePoint): void {
+  private handleActivePoint(chart: CJ, activePoint: ActivePoint): void {
     if (activePoint && !this.state.get()) {
       this.state.set(activePoint);
+      this.initializeBorderColors(chart, activePoint.datasetIndex);
     } else if (activePoint && !this.state.compare(activePoint)) {
       this.state.set(activePoint);
+      this.initializeBorderColors(chart, activePoint.datasetIndex);
     }
   }
 
@@ -473,5 +448,38 @@ export class A11yChart {
     };
     const type = this.currentChartType ?? 'default';
     return attributeMapping[attributeType][type] || attributeMapping[attributeType].default;
+  }
+  /**
+   * @description get the current chart border colors histogram from the current datasetIndex and initialize the variable.
+   * @param {CJ} chart
+   * @param {number} datasetIndex
+   */
+  private initializeBorderColors(chart: CJ, datasetIndex: number): void {
+    if (this.currentChartType === '') {
+      const currentChartDataLength = chart.data.datasets[datasetIndex]?.data.length;
+      this.currentChartType = chart.data.datasets[datasetIndex]?.type || '';
+      const chartAttrWidth = this.getDatasetBorderStyleAttribute('width');
+      this.currentBorderColors = [];
+      this.currentBorderWidths = [];
+      chart.data.datasets.forEach((dataset: any) => {
+        if (this.hasNotXYType()) {
+          //TODO(zupan) need to support gauge chart
+          this.currentBorderColors?.push(Array(currentChartDataLength).fill(this.whiteColor));
+        } else {
+          if (dataset.backgroundColor) {
+            typeof dataset.backgroundColor === 'string'
+              ? this.currentBorderColors?.push(Array(currentChartDataLength).fill(dataset.backgroundColor))
+              : this.currentBorderColors?.push(dataset.backgroundColor);
+          } else {
+            this.currentBorderColors?.push(Array(currentChartDataLength).fill(''));
+          }
+        }
+        this.currentBorderWidths = dataset[chartAttrWidth]
+          ? typeof dataset[chartAttrWidth] === 'number'
+            ? Array(currentChartDataLength).fill(dataset[chartAttrWidth])
+            : (dataset[chartAttrWidth] as number[])
+          : Array(currentChartDataLength).fill(0);
+      });
+    }
   }
 }
