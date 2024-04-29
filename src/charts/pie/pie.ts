@@ -225,7 +225,7 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
     dataset.label = series.name;
     dataset.type = ChartType.Pie;
     dataset.backgroundColor = chartBG;
-    dataset.borderWidth = 1;
+    dataset.borderWidth = this.getBorderWidth();
     return dataset;
   }
 
@@ -250,12 +250,19 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
     if (index < 0) {
       return;
     }
+    if (
+      !datasets[0] ||
+      this.hiddenDatasets.some((hiddenDataset: { label?: string }) => hiddenDataset.label === legend.text)
+    ) {
+      return;
+    }
     this.hiddenDatasets.push({
       label: legend.text,
       backgroundColor: (datasets[0].backgroundColor as Color[])[index],
     });
     datasets.map((dataset) => {
       (dataset.backgroundColor as Color[]).splice(index, 1, this.getCurrentTheme().inactiveTextColor);
+      dataset.borderWidth = this.getBorderWidth();
     });
   }
 
@@ -271,10 +278,11 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
     const hiddenDataset = this.hiddenDatasets.find((dataset) => dataset.label === legend.text);
     if (hiddenDataset?.backgroundColor) {
       const backgroundColor = hiddenDataset.backgroundColor;
+      this.hiddenDatasets = this.hiddenDatasets.filter((dataset) => dataset.label !== legend.text);
       datasets.map((dataset) => {
         (dataset.backgroundColor as Color[]).splice(index, 1, backgroundColor);
+        dataset.borderWidth = this.getBorderWidth();
       });
-      this.hiddenDatasets = this.hiddenDatasets.filter((dataset) => dataset.label !== legend.text);
     }
   }
 
@@ -324,5 +332,16 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
     });
 
     return this.options.tooltip?.combineItems ? tooltipItems : tooltipItems.filter((item) => item.active);
+  }
+
+  private getBorderWidth(): number {
+    if (
+      this.chartData.category.labels?.length === 1 ||
+      (this.chartData.category.labels?.length &&
+        this.chartData.category.labels?.length - this.hiddenDatasets.length === 1)
+    ) {
+      return 0;
+    }
+    return 1;
   }
 }
