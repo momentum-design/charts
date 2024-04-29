@@ -64,6 +64,11 @@ export class A11yChart {
   private currentActiveBorderColor = '';
   private whiteColor = 'white';
 
+  /**
+   * Gets the plug function call
+   * @param focusColor border color
+   * @returns CJA11y plug instance
+   */
   public toCJPlugin(focusColor = 'blue'): CJA11y {
     this.currentActiveBorderColor = focusColor;
 
@@ -104,9 +109,9 @@ export class A11yChart {
 
   /**
    ** Activate to change the current chart point style
-   * @param {Object} chart
-   * @param {Number} datasetIndex
-   * @param {Number} index
+   * @param chart current chart instance
+   * @param datasetIndex dataset number in the chart
+   * @param index chart series number
    */
   private updateActivePoint(chart: CJ, datasetIndex: number, index: number): void {
     if (datasetIndex < 0 || index < 0) {
@@ -120,8 +125,8 @@ export class A11yChart {
   }
 
   /**
-   * @description sets active point when chart receives focus
-   * @param {Object} chart
+   * Sets active point when chart receives focus
+   * @param chart current chart instance
    */
   private onFocus(chart: CJ): void {
     if (!this.state.get()) {
@@ -134,8 +139,8 @@ export class A11yChart {
   }
 
   /**
-   * @description clears the set active point and resets the variable when Blur
-   * @param {Object} chart
+   * Clears the set active point and resets the variable when Blur
+   * @param chart current chart instance
    */
   private onBlur(chart: any): void {
     const { index } = this.state.get();
@@ -156,9 +161,9 @@ export class A11yChart {
   }
 
   /**
-   * @description controls key up events
-   * @param {KeyboardEvent} event keyup
-   * @param {Object} chart
+   * Controls key down events
+   * @param event keyboard event object
+   * @param chart current chart instance
    */
   private onKeyDown(event: any, chart: any): void {
     const { key } = event.native;
@@ -178,9 +183,9 @@ export class A11yChart {
   }
 
   /**
-   * @description sets up plugin
-   * @param {Object} chart
-   * @param {Object} options
+   * Sets up plugin
+   * @param chart current chart instance
+   * @param options chart options
    */
   private setup(chart: any, options: { chartLabel: string }): void {
     const { canvas } = chart;
@@ -211,7 +216,7 @@ export class A11yChart {
   }
 
   /**
-   * @description creates hidden text element for screen reader
+   * Creates hidden text element for screen reader
    */
   private createA11yElement(): void {
     const a11yElement = document.createElement('div');
@@ -224,10 +229,10 @@ export class A11yChart {
   }
 
   /**
-   * @description update to chart ponit style
-   * @param {Object} chart
-   * @param {number} datasetIndex
-   * @param {number} index
+   * Update to chart ponit style
+   * @param chart current chart instance
+   * @param datasetIndex dataset number in the chart
+   * @param index chart series number
    */
   private updateChart(chart: CJ, datasetIndex: number, index: number): void {
     chart.data.datasets.forEach((dataset: any, dataIndex: number) => {
@@ -259,11 +264,12 @@ export class A11yChart {
   }
 
   /**
-   * @param {Object} chart
-   * @param {Number} datasetIndex
-   * @param {Number} index
-   * @param {Object} currentDataset
-   * @param {Number} datasetLength
+   * Keyboard right key event processing
+   * @param chart current chart instance
+   * @param datasetIndex dataset number in the chart
+   * @param index chart series number
+   * @param currentDataset current chart dataset
+   * @param datasetLength current chart dataset length
    */
   private handleRightKey(
     chart: CJ,
@@ -292,11 +298,12 @@ export class A11yChart {
   }
 
   /**
-   * @param {Object} chart
-   * @param {Number} datasetIndex
-   * @param {Number} index
-   * @param {Object} currentDataset
-   * @param {Number} datasetLength
+   * Keyboard left key event processing
+   * @param chart current chart instance
+   * @param datasetIndex dataset number in the chart
+   * @param index chart series number
+   * @param currentDataset current chart dataset
+   * @param datasetLength current chart dataset length
    */
   private handleLeftKey(
     chart: CJ,
@@ -329,9 +336,10 @@ export class A11yChart {
   }
 
   /**
-   * @param {Object} chart
-   * @param {Number} datasetIndex
-   * @param {Number} index
+   * Keyboard up event processing
+   * @param chart current chart instance
+   * @param datasetIndex dataset number in the chart
+   * @param index chart series number
    */
   private handleUpKey(chart: CJ, datasetIndex: number, index: number): void {
     const newDatasetIndex = this.findPrevVisibleDataset(chart, datasetIndex);
@@ -340,9 +348,10 @@ export class A11yChart {
   }
 
   /**
-   * @param {Object} chart
-   * @param {Number} datasetIndex
-   * @param {Number} index
+   * Keyboard down event processing
+   * @param chart current chart instance
+   * @param datasetIndex dataset number in the chart
+   * @param index chart series number
    */
   private handleDownKey(chart: CJ, datasetIndex: number, index: number): void {
     const newDatasetIndex = this.findNextVisibleDataset(chart, datasetIndex);
@@ -351,9 +360,10 @@ export class A11yChart {
   }
 
   /**
-   * @param {Object} chart
-   * @param {Number} datasetIndex to start from
-   * @returns {Number} prev visible datasetIndex
+   * Recursively gets the index of the last visible dataset
+   * @param chart current chart instance
+   * @param datasetIndex dataset number in the chart
+   * @returns prev visible datasetIndex
    */
   private findPrevVisibleDataset(chart: CJ, datasetIndex: number): number {
     if (datasetIndex === 0) {
@@ -370,9 +380,10 @@ export class A11yChart {
   }
 
   /**
-   * @param {Object} chart
-   * @param {Number} datasetIndex to start from
-   * @returns {Number} next visible datasetIndex
+   * Recursively gets the Index of the next visible dataset
+   * @param chart current chart instance
+   * @param datasetIndex dataset number in the chart
+   * @returns next visible datasetIndex
    */
   private findNextVisibleDataset(chart: CJ, datasetIndex: number): number {
     if (datasetIndex === chart.config.data.datasets.length - 1) {
@@ -389,8 +400,8 @@ export class A11yChart {
   }
 
   /**
-   * @description updates state with current activePoint, or set default state if no activePoint exists
-   * @param {Object} activePoint
+   * Updates state with current activePoint, or set default state if no activePoint exists
+   * @param activePoint the current activation point
    */
   private handleActivePoint(chart: CJ, activePoint: ActivePoint): void {
     if (activePoint && !this.state.get()) {
@@ -403,8 +414,8 @@ export class A11yChart {
   }
 
   /**
-   * @description updates the a11y screen reader element with labelled active points
-   * @param {Object} chart
+   * Updates the a11y screen reader element with labelled active points
+   * @param chart current chart instance
    */
   private updateA11yLabel(chart: CJ): void {
     const { datasetIndex, index } = this.state.get();
@@ -419,21 +430,8 @@ export class A11yChart {
   }
 
   /**
-   * @description determine if not XY chart type
-   * @param {String} chartType
-   */
-  private hasNotXYType(): boolean {
-    return (
-      this.currentChartType === CJType.Donut ||
-      this.currentChartType === CJType.Pie ||
-      this.currentChartType === CJType.Gauge ||
-      this.currentChartType === 'doughnut'
-    );
-  }
-
-  /**
-   * @description by attributeType and currentChartType, get the set attribute
-   * @param {String} attributeType
+   * By attributeType and currentChartType, get the set attribute
+   * @param attributeType the type of the property to be set
    */
   private getDatasetBorderStyleAttribute(attributeType: string): string {
     const attributeMapping: DatasetStyleAttributes = {
@@ -449,10 +447,11 @@ export class A11yChart {
     const type = this.currentChartType ?? 'default';
     return attributeMapping[attributeType][type] || attributeMapping[attributeType].default;
   }
+
   /**
-   * @description get the current chart border colors histogram from the current datasetIndex and initialize the variable.
-   * @param {CJ} chart
-   * @param {number} datasetIndex
+   * Get the current chart border colors histogram from the current datasetIndex and initialize the variable.
+   * @param chart current chart instance to get colors
+   * @param datasetIndex dataset number in the chart
    */
   private initializeBorderColors(chart: CJ, datasetIndex: number): void {
     if (this.currentChartType === '') {
@@ -462,7 +461,7 @@ export class A11yChart {
       this.currentBorderColors = [];
       this.currentBorderWidths = [];
       chart.data.datasets.forEach((dataset: any) => {
-        if (this.hasNotXYType()) {
+        if (this.currentChartType === CJType.Pie) {
           //TODO(zupan) need to support gauge chart
           this.currentBorderColors?.push(Array(currentChartDataLength).fill(this.whiteColor));
         } else {
