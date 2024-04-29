@@ -125,9 +125,10 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
     };
     this.enableSegmentClickable();
     this.enableLegend();
-    let options: ChartOptions = {
+    let options: ChartOptions & { radius?: number | string } = {
       maintainAspectRatio: false,
       responsive: true,
+      radius: this.options.outerRadius,
       onClick: (event, elements, chart) => {
         this.segmentClickable?.onClick(event, elements, chart);
       },
