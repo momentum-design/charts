@@ -37,7 +37,7 @@ export abstract class Chart<TData extends ChartData, TOptions extends ChartOptio
   }
 
   constructor(private container: ChartContainer, protected data: TData, options?: TOptions) {
-    this._options = mergeObjects({}, Chart.defaults, this.getDefaultOptions(), options);
+    this._options = mergeObjects(Chart.defaults, this.getDefaultOptions(), options);
   }
 
   render(): void {
