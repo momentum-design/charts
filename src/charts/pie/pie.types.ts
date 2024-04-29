@@ -2,6 +2,7 @@ import { ChartOptions, JsonData, TableData } from '../../types';
 
 export interface PieChartOptions extends ChartOptions {
   innerRadius?: string | number;
+  outerRadius?: string | number;
   dataKey?: string;
 }
 
