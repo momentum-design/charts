@@ -1,3 +1,22 @@
+# [1.0.0-alpha.19](https://github.com/momentum-design/charts/compare/v1.0.0-alpha.18...v1.0.0-alpha.19) (2024-04-30)
+
+
+### Bug Fixes
+
+* **a11y:** fix chart color loss issue after clicking ([#71](https://github.com/momentum-design/charts/issues/71)) ([b960def](https://github.com/momentum-design/charts/commit/b960def592bd90346398ea9ee418098c4e60040f))
+* **pie/xy:** fix pie chart and donut chart cannot be displayed as a whole ([#72](https://github.com/momentum-design/charts/issues/72)) ([53c5104](https://github.com/momentum-design/charts/commit/53c51048fad6d6980c53d9b87a5b2aa6d424f82f))
+* resolve circular dependencies ([4d3c72b](https://github.com/momentum-design/charts/commit/4d3c72b013730848bfe9e82e81c773ff8be16fcb))
+* resolve circular dependency issues ([c2d6669](https://github.com/momentum-design/charts/commit/c2d666925dee8a2da4d3db8d8df79826a1eafd5e))
+* **xy:** only one point needs to be displayed in the center of the chart ([#70](https://github.com/momentum-design/charts/issues/70)) ([4aafcff](https://github.com/momentum-design/charts/commit/4aafcff57ef00194df31cf254e63c9d871adc237))
+* **xy:** the positioning of the bar chart tooltip is offset ([#68](https://github.com/momentum-design/charts/issues/68)) ([c243dd7](https://github.com/momentum-design/charts/commit/c243dd7706cbcccde9f4e9fb083efdb49f5b7e11))
+
+
+### Features
+
+* **core:** default to use Fetch API ([6660ca8](https://github.com/momentum-design/charts/commit/6660ca822036a5f16d40e66c10765189d24c56a5))
+* **pie:** add outRadius setting for pie chart ([#73](https://github.com/momentum-design/charts/issues/73)) ([d1c1bbf](https://github.com/momentum-design/charts/commit/d1c1bbffd91435714f42b7ea8e1780291c8ec914))
+* **xy:** add scrollbar to bar chart ([#69](https://github.com/momentum-design/charts/issues/69)) ([9243369](https://github.com/momentum-design/charts/commit/9243369399fbd22d6ee867ed623ad735b93c081a))
+
 # [1.0.0-alpha.18](https://github.com/momentum-design/charts/compare/v1.0.0-alpha.17...v1.0.0-alpha.18) (2024-04-17)
 
 
