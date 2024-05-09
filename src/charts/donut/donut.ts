@@ -125,7 +125,9 @@ export class DonutChart extends PieChart<DonutData, DonutChartOptions> {
         // if the font color does not specified
         if (!label.font?.color) {
           // set the muted color
-          label.font.color = this.getCurrentTheme()?.textColorSecondary;
+          label.font.color = this.options.font?.color
+            ? this.options.font?.color
+            : this.getCurrentTheme()?.textColorSecondary;
         }
       }
 
