@@ -327,21 +327,25 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       }
     } else if (scaleAxisType === ScaleAxisType.Category) {
       options.scales.categoryAxis = options.scales.categoryAxis as ScaleOptionsByType<ScaleAxisType.Category>;
-      if (this.options.categoryAxis.callback) {
-        const categoryCallback = this.options.categoryAxis.callback;
-        options.scales.categoryAxis.ticks = {
-          ...options.scales.categoryAxis.ticks,
-          callback: function (val: number | string, index: number, ticks: Tick[]) {
-            return typeof categoryCallback === 'function'
-              ? categoryCallback(this.getLabelForValue(val as number), index, ticks)
-              : this.getLabelForValue(val as number);
-          },
-        };
-      }
       this.assembleCategoryAxisLabelSelectable(options);
       if (this.chartData.category.labels?.length === 1) {
         options.scales.categoryAxis.offset = true;
       }
+    }
+    if (this.options.categoryAxis.callback) {
+      const categoryCallback = this.options.categoryAxis.callback;
+      options.scales.categoryAxis.ticks = {
+        ...options.scales.categoryAxis.ticks,
+        major: { enabled: true },
+        callback: function (val: number | string, index: number, ticks: Tick[]) {
+          ticks[index].label = this.getLabelForValue(val as number);
+          if (typeof categoryCallback === 'function') {
+            return categoryCallback(this.getLabelForValue(val as number), index, ticks);
+          } else {
+            return this.getLabelForValue(val as number);
+          }
+        },
+      };
     }
   }
 
