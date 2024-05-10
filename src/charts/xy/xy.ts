@@ -626,8 +626,14 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
   }
 
   private setItemInactiveStyle(legend: LegendItem): void {
+    if (!this.api?.data?.datasets) {
+      return;
+    }
     let dataset = this.api?.data.datasets.find((dataset) => dataset.label === legend.text);
-    if (!dataset) {
+    if (
+      !dataset ||
+      this.hiddenDatasets.some((hiddenDataset: { label?: string }) => hiddenDataset.label === legend.text)
+    ) {
       return;
     }
     dataset = dataset as ChartDataset<CJType, number[]>;
@@ -641,14 +647,8 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
   }
 
   private setItemActiveStyle(legend: LegendItem): void {
-    if (!this.api?.data?.datasets) {
-      return;
-    }
     let dataset = this.api?.data.datasets.find((dataset) => dataset.label === legend.text);
-    if (
-      !dataset ||
-      this.hiddenDatasets.some((hiddenDataset: { label?: string }) => hiddenDataset.label === legend.text)
-    ) {
+    if (!dataset) {
       return;
     }
     dataset = dataset as ChartDataset<CJType, number[]>;
