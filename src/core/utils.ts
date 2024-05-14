@@ -116,3 +116,35 @@ export function convertToCJType(type: string | ChartType): CJType {
   }
   return chartType;
 }
+
+/**
+ * Checks if the given chart type is a Pie chart.
+ *
+ * This function determines if the provided chart type is one of the Pie charts.
+ * Pie charts include Pie, Donut, and Gauge charts.
+ *
+ * @param {string | ChartType} type - The chart type to check, which can be a string or a ChartType enumeration.
+ * @returns {boolean} - Returns true if the given chart type is a Pie chart; otherwise, returns false.
+ */
+export function isPieChart(type: string | ChartType): boolean {
+  return type === ChartType.Pie || type === ChartType.Donut || type === ChartType.Gauge;
+}
+
+/**
+ * Checks if the given chart type is an XY chart.
+ *
+ * This function determines if the provided chart type is one of the XY charts.
+ * XY charts include Bar, Column, Line, Area, and Range charts.
+ *
+ * @param {string | ChartType} type - The chart type to check, which can be a string or a ChartType enumeration.
+ * @returns {boolean} - Returns true if the given chart type is an XY chart; otherwise, returns false.
+ */
+export function isXYChart(type: string | ChartType): boolean {
+  return (
+    type === ChartType.Bar ||
+    type === ChartType.Column ||
+    type === ChartType.Line ||
+    type === ChartType.Area ||
+    type === ChartType.Range
+  );
+}
