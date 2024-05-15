@@ -1,6 +1,6 @@
 import { ActiveElement, Chart as CJ, ChartEvent as CJChartEvent, LegendItem as CJLegendItem } from 'chart.js/auto';
 import { isPieChart, isXYChart } from '../../../core/utils';
-import { alphaColor, deepClone } from '../../../helpers';
+import { deepClone, fadeColor } from '../../../helpers';
 import { ChartData, ChartEvent, ChartEventType, ChartOptions, EventContext, LegendItem } from '../../../types';
 import type { Chart } from '../../.internal';
 
@@ -82,7 +82,7 @@ export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
                 if (this.selectedSegment?.some((selected: LegendItem) => selected.index === index)) {
                   return color;
                 } else {
-                  return this.getAlphaColors(color) as string | undefined;
+                  return fadeColor(color) as string | undefined;
                 }
               });
               dataset.backgroundColor = result;
@@ -93,7 +93,7 @@ export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
                 (selected: LegendItem) => selected.text === metaData.label,
               )
                 ? originBackgroundColor
-                : this.getAlphaColors(originBackgroundColor);
+                : fadeColor(originBackgroundColor);
             }
             if (this.originBorderColors) {
               const originBorderColor = this.originBorderColors[datasetIndex];
@@ -101,22 +101,11 @@ export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
                 (selected: LegendItem) => selected.text === metaData.label,
               )
                 ? originBorderColor
-                : this.getAlphaColors(originBorderColor);
+                : fadeColor(originBorderColor);
             }
           }
         });
       },
     };
-  }
-
-  private getAlphaColors(colors: string | string[] | undefined): string | string[] | undefined {
-    if (!colors) {
-      return colors;
-    }
-    if (typeof colors === 'string') {
-      return alphaColor(colors, 0.4);
-    } else {
-      return colors.map((color) => alphaColor(color, 0.4));
-    }
   }
 }
