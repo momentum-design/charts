@@ -1,16 +1,18 @@
-import {
-  ActiveElement,
-  Chart as CJ,
-  ChartEvent as CJChartEvent,
-  Element as CJElement,
-  LegendItem as CJLegendItem,
-} from 'chart.js/auto';
-import { alphaColor, deepClone } from '../../../helpers';
+import { ActiveElement, Chart as CJ, ChartEvent as CJChartEvent, LegendItem as CJLegendItem } from 'chart.js/auto';
+import { isPieChart, isXYChart } from '../../../core/utils';
+import { deepClone, fadeColor } from '../../../helpers';
 import { ChartData, ChartEvent, ChartEventType, ChartOptions, EventContext, LegendItem } from '../../../types';
 import type { Chart } from '../../.internal';
 
 export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
   public selectedSegment: LegendItem[] = [];
+
+  private originBackgroundColors: (string | string[])[] = [];
+  private originBorderColors?: (string | string[])[] = [];
+  public setSegmentColors(backgroundColors: (string | string[])[], borderColors?: (string | string[])[]): void {
+    this.originBackgroundColors = backgroundColors;
+    this.originBorderColors = borderColors;
+  }
 
   constructor(public chart: TChart) {}
 
@@ -24,7 +26,7 @@ export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
       text: (chart.data.labels && chart.data.labels[clickedSeriesIndex[0]]) as string,
       index: clickedSeriesIndex[0],
     };
-
+    // TODO(yiwei): apply onClick for xy chart
     if (chart.legend?.options.onClick) {
       chart.legend.options.onClick.call(chart.legend, cjEvent, cjLegendItem, chart.legend);
     }
@@ -39,14 +41,19 @@ export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
   }
 
   public setSegmentStatus(manualTrigger = false): void {
-    // TODO: Pie chart selectedSegment = this.chart.legend?.selectedItems
     this.selectedSegment = deepClone(this.chart.legend?.selectedItems as LegendItem[]);
-
-    const metaData = this.chart.api?.getDatasetMeta(0);
-    if (metaData) {
-      metaData.data.forEach((item: CJElement & { selected?: boolean }, index: number): void => {
-        item.selected = Boolean(this.selectedSegment?.find((selected) => selected.index === index));
+    if (this.selectedSegment.length === 0) {
+      this.chart.api?.data.datasets.forEach((dataset, index) => {
+        if (this.originBackgroundColors) {
+          dataset.backgroundColor = this.originBackgroundColors[index];
+        }
+        if (this.originBorderColors) {
+          dataset.borderColor = this.originBorderColors[index];
+        }
       });
+    }
+    if (!this.chart.api?.data.datasets || this.chart.api.data.datasets.length === 0) {
+      return;
     }
 
     if (manualTrigger) {
@@ -54,33 +61,50 @@ export class SegmentClickable<TChart extends Chart<ChartData, ChartOptions>> {
     }
   }
 
-  public toCJPlugin(segmentColor: string | string[]): any {
+  public toCJPlugin(): any {
     return {
       id: 'segmentClickable',
       beforeUpdate: (chart: CJ): void => {
         const data = chart.config.data;
-        if (!data?.datasets?.length) {
+        if (!data?.datasets?.length || this.selectedSegment.length === 0 || this.originBackgroundColors.length === 0) {
           return;
         }
-        const metaData = chart.getDatasetMeta(0);
-        const originBG = segmentColor;
+        data.datasets.forEach((dataset, datasetIndex) => {
+          const metaData = chart.getDatasetMeta(datasetIndex);
+          const originBackgroundColor = this.originBackgroundColors[datasetIndex];
+          if (!originBackgroundColor || originBackgroundColor.length === 0) {
+            return;
+          }
 
-        const selectedArr = metaData?.data?.map((data: CJElement & { selected?: boolean }) => data?.selected ?? false);
-
-        if (typeof originBG !== 'string' && originBG?.length > 0) {
-          const result = originBG.map((color: string, index: number) => {
-            if (selectedArr[index]) {
-              return color;
-            } else if (color) {
-              return alphaColor(color, 0.4);
+          if (isPieChart(metaData.type)) {
+            if (typeof originBackgroundColor !== 'string') {
+              const result = originBackgroundColor.map((color: string, index: number) => {
+                if (this.selectedSegment?.some((selected: LegendItem) => selected.index === index)) {
+                  return color;
+                } else {
+                  return fadeColor(color) as string | undefined;
+                }
+              });
+              dataset.backgroundColor = result;
             }
-          });
-          data.datasets[0].backgroundColor = result;
-        }
-
-        if (selectedArr.every((selected) => selected === false)) {
-          data.datasets[0].backgroundColor = originBG;
-        }
+          } else if (isXYChart(metaData.type)) {
+            if (originBackgroundColor) {
+              dataset.backgroundColor = this.selectedSegment?.some(
+                (selected: LegendItem) => selected.text === metaData.label,
+              )
+                ? originBackgroundColor
+                : fadeColor(originBackgroundColor);
+            }
+            if (this.originBorderColors) {
+              const originBorderColor = this.originBorderColors[datasetIndex];
+              dataset.borderColor = this.selectedSegment?.some(
+                (selected: LegendItem) => selected.text === metaData.label,
+              )
+                ? originBorderColor
+                : fadeColor(originBorderColor);
+            }
+          }
+        });
       },
     };
   }

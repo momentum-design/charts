@@ -41,3 +41,12 @@ export function lightenColor(color: string, ratio?: number): string {
 export function darkenColor(color: string, ratio?: number): string {
   return chroma(color).darken(ratio).hex();
 }
+
+export function fadeColor(color: string | string[]): string | string[] {
+  const alpha = 0.4;
+  if (typeof color === 'string') {
+    return alphaColor(color, alpha);
+  } else {
+    return color.map((item) => alphaColor(item, alpha));
+  }
+}

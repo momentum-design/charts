@@ -115,10 +115,16 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       }
       chartDatasets = this.getDatasets();
     }
+    this.enableSegmentClickable();
     const plugins: CJPlugin[] = [
       new A11yChart().toCJPlugin(this.getCurrentTheme()?.focusColor),
       new A11yLegend().toCJPlugin(this.getCurrentTheme()?.focusColor),
+      this.segmentClickable?.toCJPlugin(),
     ];
+    this.segmentClickable?.setSegmentColors(
+      chartDatasets.map((dataset) => dataset.backgroundColor as string | string[]),
+      chartDatasets.map((dataset) => dataset.borderColor as string | string[]),
+    );
     if (this.isScrollable) {
       plugins.push(zoomPlugin);
       plugins.push(new BarScrollable(this).toCJPlugin());

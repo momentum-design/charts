@@ -154,7 +154,18 @@ const Example = () =>
         >
           Value Stacked
         </Button>
-        {buttonsRelatedToColor(setOptions)}
+        <Button
+          onClick={() =>
+            setOptions(
+              {
+                legend: { selectable: true },
+              },
+              false,
+            )
+          }
+        >
+          Legend Select
+        </Button>
       </>
     );
 

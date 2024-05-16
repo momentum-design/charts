@@ -61,7 +61,7 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
       this.currentChartOptions = this.getChartOptions();
     }
 
-    return {
+    const chartConfiguration: ChartConfiguration = {
       type: ChartType.Pie,
       data: {
         labels: chartLabels,
@@ -71,9 +71,13 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
       plugins: [
         new A11yChart().toCJPlugin(this.getCurrentTheme()?.focusColor),
         new A11yLegend().toCJPlugin(this.getCurrentTheme()?.focusColor),
-        this.segmentClickable?.toCJPlugin(chartDatasets[0].backgroundColor as string | string[]),
+        this.segmentClickable?.toCJPlugin(),
       ],
     };
+    this.segmentClickable?.setSegmentColors(
+      chartDatasets.map((dataset) => dataset.backgroundColor as string | string[]),
+    );
+    return chartConfiguration;
   }
 
   protected getChartData(): void {

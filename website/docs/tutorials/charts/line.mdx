@@ -90,7 +90,6 @@ const data = [
   },
 ];
 const initialOptions = {
-  legend: { selectable: true },
   categoryAxis: {
     gridDisplay: true,
     dataKey: 'dateTime',
@@ -180,7 +179,18 @@ const Example = () =>
         >
           Dashed Line
         </Button>
-        {buttonsRelatedToColor(setOptions)}
+        <Button
+          onClick={() =>
+            setOptions(
+              {
+                legend: { selectable: true },
+              },
+              false,
+            )
+          }
+        >
+          Legend Select
+        </Button>
       </>
     );
 

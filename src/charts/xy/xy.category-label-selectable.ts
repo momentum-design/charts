@@ -103,7 +103,7 @@ export class CategoryLabelSelectable<TChart extends Chart<ChartData, ChartOption
         }
         if (this.selectedLabels.length > 0) {
           backgroundColors = colorsStatus.map((value, index) =>
-            value ? backgroundColors[index] : alphaColor(backgroundColors[index], 0.4),
+            value ? backgroundColors[index] : (alphaColor(backgroundColors[index], 0.6) as string),
           );
         }
         dataset.backgroundColor = backgroundColors;

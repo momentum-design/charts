@@ -34,7 +34,7 @@ export const themes = new Map<ThemeName | string, Theme>([
       textColorPrimary: '#535759',
       textColorSecondary: '#7d7d7d',
 
-      activeTextColor: '#7D7F7F',
+      activeTextColor: '#000000',
       activeBackgroundColor: '#7D7F7F',
 
       inactiveTextColor: '#9d9d9d',
