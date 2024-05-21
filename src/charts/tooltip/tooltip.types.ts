@@ -23,11 +23,13 @@ export interface TooltipOptions {
   formatTitle?: (title: string) => string;
   beforeBody?: string | ((tooltip: CJTooltipModel<CJUnknownChartType>) => string);
   formatLabel?: (item: string) => string;
-  formatValue?: (value: number) => string;
+  formatValue?: (value: number, tooltip?: CJTooltipModel<CJUnknownChartType>) => string;
   afterBody?: string | ((tooltip: CJTooltipModel<CJUnknownChartType>) => string);
   footer?: string | string[] | ((a: unknown) => string | string[]);
   showPercentage?: boolean;
   showUnit?: boolean;
+  showTotal?: boolean;
+  totalLabel?: string;
   combineItems?: boolean;
   items?: TooltipItem[] | ((tooltip: CJTooltipModel<CJUnknownChartType>) => TooltipItem[]);
   sortItems?: (items: TooltipItem[]) => TooltipItem[];

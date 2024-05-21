@@ -47,6 +47,18 @@ const Example = () =>
           Custom Footer
         </ToggleButton>
         <ToggleButton
+          checked={others.st}
+          onChange={() => toggleOptions('st', { tooltip: { showTotal: true } }, { tooltip: { showTotal: false } })}
+        >
+          Show Total
+        </ToggleButton>
+        <ToggleButton
+          checked={others.ctl}
+          onChange={() => toggleOptions('ctl', { tooltip: { totalLabel: 'Total' } }, { tooltip: { totalLabel: null } })}
+        >
+          Custom Total Label
+        </ToggleButton>
+        <ToggleButton
           checked={others.ci}
           onChange={() =>
             toggleOptions('ci', { tooltip: { combineItems: true } }, { tooltip: { combineItems: false } })
@@ -85,6 +97,8 @@ render(<Example />);
 | maxWidth        | `string`                                                                |                    | The max width of tooltip.                                                                                                    |
 | showPercentage  | `boolean`                                                               |                    | Show the percentage in the tooltip. For **Pie/Donut** charts, the default value is `true`, otherwise false.                  |
 | showUnit        | `boolean`                                                               |                    | If you have given the value of chart options **valueUnit** and want to show it on the tooltip.                               |
+| showTotal       | `boolean`                                                               | `false`            | `true` will show the total of all items in tooltip. If there is only one item, total is hidden.                              |
+| totalLabel      | `string`                                                                |                    | Customized total text.                                                                                                       |
 | title           | `string`<br />`string[]`<br /><code>() => string &#124; string[]</code> |                    | Set the title of tooltip.                                                                                                    |
 | formatTitle     | <code>(title: string) => string</code>                                  |                    | Overwrite the existing title if you want to change current title.                                                            |
 | footer          | `string`<br />`string[]`<br /><code>() => string &#124; string[]</code> |                    | Set the footer of tooltip.                                                                                                   |
