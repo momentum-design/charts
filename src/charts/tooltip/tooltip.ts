@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CoreInteractionOptions as CJCoreInteractionOptions } from 'chart.js/auto';
+import { CoreInteractionOptions as CJCoreInteractionOptions, TooltipModel as CJTooltipModel } from 'chart.js/auto';
 import { COMPONENT_PREFIX } from '../../core';
 import { formatNumber, isNullOrUndefined, mergeObjects } from '../../helpers';
 import { DomElement, findDomElement } from '../../helpers/dom';
-import { ChartData, ChartOptions } from '../../types';
+import { ChartData, ChartOptions, ChartType, CJUnknownChartType } from '../../types';
 import { Chart } from '../.internal';
 import { TooltipItem, TooltipOptions } from './tooltip.types';
 
@@ -15,6 +15,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
     fontSize: '13px',
     borderRadius: '4px',
     padding: '0.5rem 0.75rem',
+    showTotal: false,
   };
 
   private options: TooltipOptions;
@@ -57,6 +58,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
     const { chart, tooltip } = context;
     let tooltipEl = findDomElement(`#${TOOLTIP_ID}`);
 
+    const chartType = chart.config.type;
     // Create element on first render
     if (!tooltipEl) {
       tooltipEl = new DomElement('div')
@@ -110,25 +112,6 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
       }
     }
 
-    titles.forEach((title: string) => {
-      tooltipEl
-        ?.newChild('div')
-        .addClass(`${TOOLTIP_CLASS}-title`)
-        .setStyle('font-weight', 'bold')
-        .setText(this.options.formatTitle ? this.options.formatTitle(title) : title);
-    });
-
-    // beforeBody
-    if (this.options.beforeBody) {
-      let beforeBody = '';
-      if (typeof this.options.beforeBody === 'string') {
-        beforeBody = this.options.beforeBody;
-      } else if (typeof this.options.beforeBody === 'function') {
-        beforeBody = this.options.beforeBody(tooltip);
-      }
-      tooltipEl.newChild('div').addClass(`${TOOLTIP_CLASS}-before-body`).setHtml(beforeBody);
-    }
-
     // items
     let tooltipItems: TooltipItem[] = [];
     if (typeof this.options.items === 'function') {
@@ -139,6 +122,49 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
     if (typeof this.options.sortItems === 'function') {
       tooltipItems = this.options.sortItems(tooltipItems);
     }
+    const reverse = chart?.config?.options?.plugins?.legend?.reverse ?? false;
+    if (reverse) {
+      tooltipItems.reverse();
+    }
+    const datasetLength = chart.data.datasets.length;
+    const tooltipItemsLength = tooltipItems.length;
+    // title
+    let titleExists = false;
+    const hideTitleConditionWithoutTotal =
+      !this.options.showTotal &&
+      JSON.stringify(tooltip.title) === JSON.stringify(titles) &&
+      tooltipItemsLength === 1 &&
+      datasetLength === 1;
+    const hideTitleConditionWithTotal =
+      this.options.showTotal && JSON.stringify(tooltip.title) === JSON.stringify(titles);
+    const hideTitleOnlyForPie = this.options.showTotal && chartType === ChartType.Pie && tooltipItemsLength > 1;
+    if (
+      titles.length > 0 &&
+      ((!hideTitleConditionWithoutTotal && !hideTitleConditionWithTotal && !hideTitleOnlyForPie) ||
+        this.options.beforeBody ||
+        (this.options.showTotal && this.options.totalLabel))
+    ) {
+      titles.forEach((title: string) => {
+        tooltipEl
+          ?.newChild('div')
+          .addClass(`${TOOLTIP_CLASS}-title`)
+          .setStyle('font-weight', 'bold')
+          .setText(this.options.formatTitle ? this.options.formatTitle(title) : title);
+      });
+      titleExists = true;
+    }
+    // beforeBody
+    if (this.options.beforeBody) {
+      let beforeBody = '';
+      if (typeof this.options.beforeBody === 'string') {
+        beforeBody = this.options.beforeBody;
+      } else if (typeof this.options.beforeBody === 'function') {
+        beforeBody = this.options.beforeBody(tooltip);
+      }
+      tooltipEl.newChild('div').addClass(`${TOOLTIP_CLASS}-before-body`).setHtml(beforeBody);
+    }
+    this.addTotalElement(tooltipEl, titles, tooltipItems, titleExists, tooltip, chart);
+
     tooltipItems.forEach((tooltipItem: TooltipItem) => {
       const itemEl = tooltipEl
         ?.newChild('div')
@@ -146,7 +172,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
         .setStyle('display', 'flex')
         .setStyle('align-items', 'center');
 
-      if (tooltipItem.active && tooltipItems.length > 1) {
+      if (tooltipItem.active && tooltipItemsLength > 1) {
         itemEl?.addClass('active');
       }
 
@@ -154,13 +180,19 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
       itemEl?.addChild(this.generateHtmlForIcon(tooltipItem));
 
       // label
-      const labelShouldBeHidden = titles && titles.length === 1 && tooltipItem.label === titles[0];
-      if (tooltipItem.label && !labelShouldBeHidden) {
+      if (datasetLength === 1 && tooltipItemsLength === 1 && chartType === ChartType.Bar) {
+        itemEl?.addChild(
+          new DomElement('span')
+            .addClass(`${TOOLTIP_CLASS}-label`)
+            .setStyle('white-space', 'nowrap')
+            .setHtml(this.options.formatTitle ? this.options.formatTitle(tooltip.title) : tooltip.title),
+        );
+      } else if (tooltipItem.label) {
         itemEl?.addChild(this.generateHtmlForLabel(tooltipItem));
       }
 
       // values
-      itemEl?.addChild(this.generateHtmlForValues(tooltipItem, labelShouldBeHidden));
+      itemEl?.addChild(this.generateHtmlForValues(tooltipItem, tooltip));
     });
 
     // AfterBody
@@ -168,7 +200,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
       let afterBody = '';
       if (typeof this.options.afterBody === 'string') {
         afterBody = this.options.afterBody;
-      } else if (typeof this.options.beforeBody === 'function') {
+      } else if (typeof this.options.afterBody === 'function') {
         afterBody = this.options.afterBody(tooltip);
       }
       tooltipEl.newChild('div').addClass(`${TOOLTIP_CLASS}-after-body`).setHtml(afterBody);
@@ -238,32 +270,103 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
       .setHtml(labelText);
   }
 
-  private generateHtmlForValues(tooltipItem: TooltipItem, labelHidden?: boolean): DomElement {
-    const valuesEl = new DomElement('span').addClass(`${TOOLTIP_CLASS}-values`).setStyle('flex', '1');
-
-    if (!labelHidden) {
-      valuesEl.setStyle('text-align', 'right').setStyle('margin-left', '0.5rem');
-    }
+  private generateHtmlForValues(tooltipItem: TooltipItem, tooltip?: CJTooltipModel<CJUnknownChartType>): DomElement {
+    const valuesEl = new DomElement('span')
+      .addClass(`${TOOLTIP_CLASS}-values`)
+      .setStyle('flex', '1')
+      .setStyle('text-align', 'right')
+      .setStyle('margin-left', '0.5rem');
 
     // value
     if (!isNullOrUndefined(tooltipItem.value)) {
-      const valueText =
-        typeof this.options.formatValue === 'function'
-          ? this.options.formatValue(tooltipItem.value as number)
-          : `<span>${formatNumber(tooltipItem.value!, this.chartOptions.valuePrecision!)}</span>${
-              this.options.showUnit ? this.chartOptions.valueUnit || '' : ''
-            }`;
-      valuesEl.setHtml(valueText);
-    }
-
-    // percentage
-    if (this.options.showPercentage) {
-      const percentageEl = valuesEl.newChild('span').setStyle('margin-left', '0.25rem');
-      if (typeof tooltipItem.percent !== 'undefined') {
-        percentageEl.setText('(' + formatNumber(tooltipItem.percent, this.chartOptions.valuePrecision!) + '%)');
+      if (typeof this.options.formatValue === 'function') {
+        valuesEl.setHtml(this.options.formatValue(tooltipItem.value as number, tooltip));
+      } else {
+        const valueText = `<span>${formatNumber(tooltipItem.value!, this.chartOptions.valuePrecision!)}</span>${
+          this.options.showUnit ? ` ` + this.chartOptions.valueUnit || '' : ''
+        }`;
+        valuesEl.setHtml(valueText);
+        // percentage
+        if (this.options.showPercentage) {
+          const percentageEl = valuesEl.newChild('span').setStyle('margin-left', '0.25rem');
+          if (typeof tooltipItem.percent !== 'undefined') {
+            percentageEl.setText('(' + formatNumber(tooltipItem.percent, this.chartOptions.valuePrecision!) + '%)');
+          }
+        }
       }
     }
 
     return valuesEl;
+  }
+
+  private generateHtmlForTotalValue(
+    tooltipItems: TooltipItem[],
+    tooltip?: CJTooltipModel<CJUnknownChartType>,
+  ): DomElement {
+    let total = 0;
+    tooltipItems.forEach((tooltipItem: TooltipItem) => {
+      total = total + (tooltipItem?.value ?? 0);
+    });
+    const valuesEl = new DomElement('span')
+      .addClass(`${TOOLTIP_CLASS}-values`)
+      .setStyle('flex', '1')
+      .setStyle('text-align', 'right')
+      .setStyle('margin-left', '0.5rem');
+
+    // value
+    if (typeof this.options.formatValue === 'function') {
+      valuesEl.setHtml(this.options.formatValue(total, tooltip));
+    } else {
+      const valueText = `<span>${formatNumber(total, this.chartOptions.valuePrecision!)}</span>${
+        this.options.showUnit ? ` ` + this.chartOptions.valueUnit || '' : ''
+      }`;
+      valuesEl.setHtml(valueText);
+      // percentage
+      if (this.options.showPercentage) {
+        valuesEl
+          .newChild('span')
+          .setStyle('margin-left', '0.25rem')
+          .setText('(' + formatNumber(100, this.chartOptions.valuePrecision!) + '%)');
+      }
+    }
+
+    return valuesEl;
+  }
+
+  private addTotalElement(
+    tooltipEl: DomElement,
+    titles: string[],
+    tooltipItems: TooltipItem[],
+    titleExists: boolean,
+    tooltip: any,
+    chart: any,
+  ): void {
+    if (this.options.showTotal && tooltipItems.length > 1) {
+      const chartType = chart.config.type;
+      let titleText = '';
+      // Use "," to join multiple titles together.
+      if (this.options.totalLabel) {
+        titleText = this.options.totalLabel;
+      } else if (chartType === ChartType.Pie) {
+        titleText = titles && JSON.stringify(tooltip.title) !== JSON.stringify(titles) ? titles.toString() : '';
+      } else {
+        titleText = tooltip.title ? tooltip.title.toString() : '';
+      }
+      const totalEl = new DomElement('div')
+        .addClass(`${TOOLTIP_CLASS}-total`)
+        .setStyle('display', 'flex')
+        .setStyle('align-items', 'center');
+
+      totalEl?.addChild(
+        new DomElement('span')
+          .addClass(`${TOOLTIP_CLASS}-label`)
+          .setStyle('white-space', 'nowrap')
+          .setStyle('font-weight', `${titleExists ? 'normal' : 'bold'}`)
+          .setHtml(this.options.formatTitle ? this.options.formatTitle(titleText) : titleText),
+      );
+
+      totalEl?.addChild(this.generateHtmlForTotalValue(tooltipItems, tooltip));
+      tooltipEl.addChild(totalEl);
+    }
   }
 }

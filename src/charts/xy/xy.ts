@@ -846,7 +846,7 @@ export abstract class XYChart extends Chart<XYData, XYChartOptions> {
       mergeObjects(
         {
           useNative: false,
-          showPercentage: true,
+          showPercentage: false,
           combineItems: false,
           title: (tooltip: CJTooltipModel<CJUnknownChartType>) => tooltip.title || [],
           items: this.getTooltipItems.bind(this),

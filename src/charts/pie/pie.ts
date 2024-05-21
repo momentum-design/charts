@@ -304,26 +304,26 @@ export class PieChart<TData extends PieData, TOptions extends PieChartOptions> e
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private getTooltipItems(tooltip: CJTooltipModel<CJUnknownChartType>): TooltipItem[] {
+    const datasetIndex = tooltip.dataPoints[0].datasetIndex;
     const currentLabel = tooltip.title[0];
     const chart = tooltip.chart;
     const chartData = chart.config.data;
     const tooltipItems: TooltipItem[] = [];
     let sum = 0;
-    chartData.datasets.forEach((dataset: any) => {
-      dataset.data.forEach((dataItem: number, dataIndex: number) => {
-        const label = chartData.labels![dataIndex] as string;
-        const color = (dataset.backgroundColor as string[])[dataIndex] as string;
-        const value = dataItem;
-        sum += value;
-        tooltipItems.push({
-          label,
-          value,
-          colors: {
-            backgroundColor: color,
-            borderColor: color,
-          },
-          active: currentLabel === label,
-        });
+    const dataset = chartData.datasets[datasetIndex] as ChartDataset<CJType, number[]>;
+    dataset.data.forEach((dataItem: number, dataIndex: number) => {
+      const label = chartData.labels![dataIndex] as string;
+      const color = (dataset.backgroundColor as string[])[dataIndex] as string;
+      const value = dataItem;
+      sum += value;
+      tooltipItems.push({
+        label,
+        value,
+        colors: {
+          backgroundColor: color,
+          borderColor: color,
+        },
+        active: currentLabel === label,
       });
     });
     tooltipItems.forEach((tooltipItem) => {
