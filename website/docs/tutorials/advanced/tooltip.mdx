@@ -66,6 +66,12 @@ const Example = () =>
         >
           Combine Items
         </ToggleButton>
+        <ToggleButton
+          checked={others.unt}
+          onChange={() => toggleOptions('unt', { tooltip: { useNative: true } }, { tooltip: { useNative: false } })}
+        >
+          Use Native Tooltip
+        </ToggleButton>
       </>
     );
 

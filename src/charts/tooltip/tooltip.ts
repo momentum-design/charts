@@ -63,16 +63,13 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
     if (!tooltipEl) {
       tooltipEl = new DomElement('div')
         .setAttribute('id', TOOLTIP_ID)
-        .setStyle('border-radius', this.options.borderRadius)
-        .setStyle('padding', this.options.padding)
         .setStyle('opacity', 0)
         .setStyle('pointer-events', 'none')
         .setStyle('position', 'absolute')
-        .setStyle('transform', 'translate(-50%, 0)')
         .setStyle('transition', 'all .1s ease')
-        .appendToBody();
-      // below will append the tooltip element to container, but it may be cut by container.
-      // .appendTo(chart.canvas.parentNode as HTMLElement);
+        // .appendToBody();
+        // below will append the tooltip element to container, but it may be cut by container.
+        .appendTo(chart.canvas.parentNode as HTMLElement);
       if (this.options.maxWidth) {
         tooltipEl.setStyle('max-width', this.options.maxWidth);
       }
@@ -94,6 +91,14 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
     } else {
       tooltipEl.addClass('no-transform');
     }
+
+    const tooltipContainer = new DomElement('div')
+      .addClass(`${TOOLTIP_CLASS}-container`)
+      .setStyle('border-radius', this.options.borderRadius)
+      .setStyle('padding', this.options.padding)
+      .setStyle('font-size', this.options.fontSize)
+      .setStyle('background-color', this.chart.getCurrentTheme()?.tooltipBackgroundColor)
+      .setStyle('color', this.chart.getCurrentTheme()?.tooltipTextColor);
 
     // title
     let titles: string[] = [];
@@ -128,7 +133,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
     }
     const datasetLength = chart.data.datasets.length;
     const tooltipItemsLength = tooltipItems.length;
-    // title
+
     let titleExists = false;
     const hideTitleConditionWithoutTotal =
       !this.options.showTotal &&
@@ -145,7 +150,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
         (this.options.showTotal && this.options.totalLabel))
     ) {
       titles.forEach((title: string) => {
-        tooltipEl
+        tooltipContainer
           ?.newChild('div')
           .addClass(`${TOOLTIP_CLASS}-title`)
           .setStyle('font-weight', 'bold')
@@ -161,12 +166,12 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
       } else if (typeof this.options.beforeBody === 'function') {
         beforeBody = this.options.beforeBody(tooltip);
       }
-      tooltipEl.newChild('div').addClass(`${TOOLTIP_CLASS}-before-body`).setHtml(beforeBody);
+      tooltipContainer.newChild('div').addClass(`${TOOLTIP_CLASS}-before-body`).setHtml(beforeBody);
     }
-    this.addTotalElement(tooltipEl, titles, tooltipItems, titleExists, tooltip, chart);
+    this.addTotalElement(tooltipContainer, titles, tooltipItems, titleExists, tooltip, chart);
 
     tooltipItems.forEach((tooltipItem: TooltipItem) => {
-      const itemEl = tooltipEl
+      const itemEl = tooltipContainer
         ?.newChild('div')
         .addClass(`${TOOLTIP_CLASS}-item`)
         .setStyle('display', 'flex')
@@ -203,7 +208,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
       } else if (typeof this.options.afterBody === 'function') {
         afterBody = this.options.afterBody(tooltip);
       }
-      tooltipEl.newChild('div').addClass(`${TOOLTIP_CLASS}-after-body`).setHtml(afterBody);
+      tooltipContainer.newChild('div').addClass(`${TOOLTIP_CLASS}-after-body`).setHtml(afterBody);
     }
 
     // footer
@@ -222,23 +227,95 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
         }
       }
 
-      const footerEl = tooltipEl.newChild('div').addClass(`${TOOLTIP_CLASS}-footer`).setStyle('text-align', 'center');
+      const footerEl = tooltipContainer
+        .newChild('div')
+        .addClass(`${TOOLTIP_CLASS}-footer`)
+        .setStyle('text-align', 'center');
       footers.forEach((text: string) => {
         footerEl.newChild('div').setHtml(text);
       });
     }
 
-    const position = context.chart.canvas.getBoundingClientRect();
-    const left = position.left + window.scrollX + tooltip.x + tooltip.width / 2 + 'px';
-    const top = position.top + window.scrollY + tooltip.y + 'px';
+    const arrowEl = new DomElement('div')
+      .addClass(`${TOOLTIP_CLASS}-arrow`)
+      .setStyle('position', 'absolute')
+      .setStyle('border-style', 'solid')
+      .setStyle('border-color', 'transparent')
+      .setStyle('border-width', '6px');
 
+    this.setPosition(context, tooltip, arrowEl, tooltipEl);
+
+    // add arrow and container for tooltip
+    tooltipEl.addChild(arrowEl);
+    tooltipEl.addChild(tooltipContainer);
+  }
+
+  // set the position of the tooltip dynamically
+  private setPosition(context: any, tooltip: any, arrowEl: DomElement, tooltipEl: DomElement): void {
+    const position = context.chart.canvas.getBoundingClientRect();
+    const left = position.left + window.scrollX + tooltip.caretX + 'px';
+    const top = position.top + window.scrollY + tooltip.caretY + 'px';
     // display, position, and set styles
-    tooltipEl.setStyle('font-size', this.options.fontSize);
-    tooltipEl.setStyle('background-color', this.chart.getCurrentTheme()?.tooltipBackgroundColor);
-    tooltipEl.setStyle('color', this.chart.getCurrentTheme()?.tooltipTextColor);
     tooltipEl.setStyle('opacity', '1');
     tooltipEl.setStyle('left', left);
     tooltipEl.setStyle('top', top);
+
+    const xAlign = tooltip.xAlign;
+    const yAlign = tooltip.yAlign;
+    const arrowColor = this.chart.getCurrentTheme()?.tooltipBackgroundColor;
+
+    const alignments: {
+      [position: string]: {
+        arrow?: { [key: string]: string };
+        tooltip?: string;
+      };
+    } = {
+      'center-top': {
+        arrow: { top: '0', left: '50%', 'border-bottom-color': arrowColor, transform: 'translate(-50%, -11px)' },
+        tooltip: 'translate(-50%, 6px)',
+      },
+      'right-top': {
+        arrow: { top: '0', left: '100%', 'border-bottom-color': arrowColor, transform: 'translate(-18px, -11px)' },
+        tooltip: 'translate(calc(-100% + 12px), 6px)',
+      },
+      'right-center': {
+        arrow: { top: '50%', left: '100%', 'border-left-color': arrowColor, transform: 'translate(-1px, -50%)' },
+        tooltip: 'translate(calc(-100% - 6px), -50%)',
+      },
+      'right-bottom': {
+        arrow: { top: '100%', left: '100%', 'border-top-color': arrowColor, transform: 'translate(-18px, -1px)' },
+        tooltip: 'translate(calc(-100% + 12px), calc(-100% - 6px))',
+      },
+      'center-bottom': {
+        arrow: { top: '100%', left: '50%', 'border-top-color': arrowColor, transform: 'translate(-50%, -1px)' },
+        tooltip: 'translate(-50%, calc(-100% - 6px))',
+      },
+      'left-bottom': {
+        arrow: { top: '100%', left: '0', 'border-top-color': arrowColor, transform: 'translate(6px, -1px)' },
+        tooltip: 'translate(-12px, calc(-100% - 6px))',
+      },
+      'left-center': {
+        arrow: { top: '50%', left: '0', 'border-right-color': arrowColor, transform: 'translate(-11px, -50%)' },
+        tooltip: 'translate(6px, -50%)',
+      },
+      'left-top': {
+        arrow: { top: '0', left: '0', 'border-bottom-color': arrowColor, transform: 'translate(6px, -11px)' },
+        tooltip: 'translate(-12px, 6px)',
+      },
+      'center-center': {
+        tooltip: 'translate(-50%, -50%)',
+      },
+    };
+
+    const alignKey = `${xAlign}-${yAlign}`;
+    if (alignments[alignKey]) {
+      if (alignments[alignKey].arrow) {
+        Object.entries(alignments[alignKey].arrow as { [key: string]: string }).forEach(([key, value]) =>
+          arrowEl.setStyle(key, value),
+        );
+      }
+      tooltipEl.setStyle('transform', alignments[alignKey].tooltip);
+    }
   }
 
   private generateHtmlForIcon(tooltipItem: TooltipItem): DomElement {
@@ -334,7 +411,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
   }
 
   private addTotalElement(
-    tooltipEl: DomElement,
+    tooltipContainer: DomElement,
     titles: string[],
     tooltipItems: TooltipItem[],
     titleExists: boolean,
@@ -366,7 +443,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
       );
 
       totalEl?.addChild(this.generateHtmlForTotalValue(tooltipItems, tooltip));
-      tooltipEl.addChild(totalEl);
+      tooltipContainer.addChild(totalEl);
     }
   }
 }
