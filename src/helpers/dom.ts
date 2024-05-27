@@ -83,10 +83,7 @@ export class DomElement {
   }
 }
 
-export function findDomElement(selector: string): DomElement | null {
-  if (document.querySelector(selector)) {
-    return new DomElement(document.querySelector(selector) as HTMLElement);
-  }
-
-  return null;
+export function findDomElement(selector: string, parentElement?: HTMLElement): DomElement | null {
+  const element = parentElement ? parentElement.querySelector(selector) : document.querySelector(selector);
+  return element ? new DomElement(element as HTMLElement) : null;
 }

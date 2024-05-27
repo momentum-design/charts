@@ -5,7 +5,8 @@ import { formatNumber, isNullOrUndefined, mergeObjects } from '../../helpers';
 import { DomElement, findDomElement } from '../../helpers/dom';
 import { ChartData, ChartOptions, ChartType, CJUnknownChartType } from '../../types';
 import { Chart } from '../.internal';
-import { TooltipItem, TooltipOptions } from './tooltip.types';
+import { TooltipPositions } from './tooltip.style';
+import { PositionDirection, TooltipItem, TooltipOptions } from './tooltip.types';
 
 const TOOLTIP_ID = `${COMPONENT_PREFIX}-tooltip`;
 const TOOLTIP_CLASS = TOOLTIP_ID;
@@ -16,6 +17,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
     borderRadius: '4px',
     padding: '0.5rem 0.75rem',
     showTotal: false,
+    appendToBody: false,
   };
 
   private options: TooltipOptions;
@@ -56,20 +58,30 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
   generateTooltipHtml(context: any) {
     // Tooltip Element
     const { chart, tooltip } = context;
-    let tooltipEl = findDomElement(`#${TOOLTIP_ID}`);
+    let tooltipEl: DomElement | null;
+    if (this.options.appendToBody) {
+      tooltipEl = findDomElement(`#${TOOLTIP_ID}`);
+    } else {
+      tooltipEl = findDomElement(`.${TOOLTIP_ID}`, chart.canvas.parentElement);
+      // const tooltipHtml = chart.canvas.parentElement?.querySelector(`.${TOOLTIP_ID}`);
+      // tooltipEl = tooltipHtml ? new DomElement(tooltipHtml) : null;
+    }
 
     const chartType = chart.config.type;
     // Create element on first render
     if (!tooltipEl) {
       tooltipEl = new DomElement('div')
-        .setAttribute('id', TOOLTIP_ID)
+        .addClass(`${TOOLTIP_CLASS}`)
         .setStyle('opacity', 0)
         .setStyle('pointer-events', 'none')
         .setStyle('position', 'absolute')
-        .setStyle('transition', 'all .1s ease')
-        // .appendToBody();
+        .setStyle('transition', 'all .1s ease');
+      if (this.options.appendToBody) {
+        tooltipEl.setAttribute('id', TOOLTIP_ID).appendToBody();
+      } else {
         // below will append the tooltip element to container, but it may be cut by container.
-        .appendTo(chart.canvas.parentNode as HTMLElement);
+        tooltipEl.appendTo(chart.canvas.parentNode as HTMLElement);
+      }
       if (this.options.maxWidth) {
         tooltipEl.setStyle('max-width', this.options.maxWidth);
       }
@@ -83,14 +95,6 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
 
     // clear content
     tooltipEl.clearChildren();
-
-    // Set caret Position
-    tooltipEl.removeClass('above', 'below', 'no-transform');
-    if (tooltip.yAlign) {
-      tooltipEl.addClass(tooltip.yAlign);
-    } else {
-      tooltipEl.addClass('no-transform');
-    }
 
     const tooltipContainer = new DomElement('div')
       .addClass(`${TOOLTIP_CLASS}-container`)
@@ -252,69 +256,42 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
 
   // set the position of the tooltip dynamically
   private setPosition(context: any, tooltip: any, arrowEl: DomElement, tooltipEl: DomElement): void {
-    const position = context.chart.canvas.getBoundingClientRect();
-    const left = position.left + window.scrollX + tooltip.caretX + 'px';
-    const top = position.top + window.scrollY + tooltip.caretY + 'px';
+    let left = '';
+    let top = '';
+    if (this.options.appendToBody) {
+      const position = context.chart.canvas.getBoundingClientRect();
+      left = position.left + window.scrollX + tooltip.caretX + 'px';
+      top = position.top + window.scrollY + tooltip.caretY + 'px';
+    } else {
+      left = tooltip.caretX + 'px';
+      top = tooltip.caretY + 'px';
+    }
     // display, position, and set styles
     tooltipEl.setStyle('opacity', '1');
     tooltipEl.setStyle('left', left);
     tooltipEl.setStyle('top', top);
 
-    const xAlign = tooltip.xAlign;
-    const yAlign = tooltip.yAlign;
-    const arrowColor = this.chart.getCurrentTheme()?.tooltipBackgroundColor;
-
-    const alignments: {
-      [position: string]: {
-        arrow?: { [key: string]: string };
-        tooltip?: string;
-      };
-    } = {
-      'center-top': {
-        arrow: { top: '0', left: '50%', 'border-bottom-color': arrowColor, transform: 'translate(-50%, -11px)' },
-        tooltip: 'translate(-50%, 6px)',
-      },
-      'right-top': {
-        arrow: { top: '0', left: '100%', 'border-bottom-color': arrowColor, transform: 'translate(-18px, -11px)' },
-        tooltip: 'translate(calc(-100% + 12px), 6px)',
-      },
-      'right-center': {
-        arrow: { top: '50%', left: '100%', 'border-left-color': arrowColor, transform: 'translate(-1px, -50%)' },
-        tooltip: 'translate(calc(-100% - 6px), -50%)',
-      },
-      'right-bottom': {
-        arrow: { top: '100%', left: '100%', 'border-top-color': arrowColor, transform: 'translate(-18px, -1px)' },
-        tooltip: 'translate(calc(-100% + 12px), calc(-100% - 6px))',
-      },
-      'center-bottom': {
-        arrow: { top: '100%', left: '50%', 'border-top-color': arrowColor, transform: 'translate(-50%, -1px)' },
-        tooltip: 'translate(-50%, calc(-100% - 6px))',
-      },
-      'left-bottom': {
-        arrow: { top: '100%', left: '0', 'border-top-color': arrowColor, transform: 'translate(6px, -1px)' },
-        tooltip: 'translate(-12px, calc(-100% - 6px))',
-      },
-      'left-center': {
-        arrow: { top: '50%', left: '0', 'border-right-color': arrowColor, transform: 'translate(-11px, -50%)' },
-        tooltip: 'translate(6px, -50%)',
-      },
-      'left-top': {
-        arrow: { top: '0', left: '0', 'border-bottom-color': arrowColor, transform: 'translate(6px, -11px)' },
-        tooltip: 'translate(-12px, 6px)',
-      },
-      'center-center': {
-        tooltip: 'translate(-50%, -50%)',
-      },
-    };
-
-    const alignKey = `${xAlign}-${yAlign}`;
-    if (alignments[alignKey]) {
-      if (alignments[alignKey].arrow) {
-        Object.entries(alignments[alignKey].arrow as { [key: string]: string }).forEach(([key, value]) =>
-          arrowEl.setStyle(key, value),
-        );
+    const alignKey = `${tooltip.xAlign}-${tooltip.yAlign}` as PositionDirection;
+    const currentPosition = TooltipPositions[alignKey];
+    // Remove caret position
+    Object.values(PositionDirection).forEach((direction) => {
+      tooltipEl.removeClass(direction);
+    });
+    if (currentPosition) {
+      // Set caret position
+      tooltipEl.addClass(alignKey);
+      if (currentPosition.arrow) {
+        Object.entries(TooltipPositions[alignKey].arrow as { [key: string]: string }).forEach(([key, value]) => {
+          if (key === 'borderDirection') {
+            arrowEl.setStyle('border-' + value + '-color', this.chart.getCurrentTheme()?.tooltipBackgroundColor);
+          } else {
+            arrowEl.setStyle(key, value);
+          }
+        });
       }
-      tooltipEl.setStyle('transform', alignments[alignKey].tooltip);
+      tooltipEl.setStyle('transform', currentPosition.transform);
+    } else {
+      tooltipEl.addClass('no-transform');
     }
   }
 

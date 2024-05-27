@@ -31,6 +31,7 @@ export interface TooltipOptions {
   showTotal?: boolean;
   totalLabel?: string;
   combineItems?: boolean;
+  appendToBody?: boolean;
   items?: TooltipItem[] | ((tooltip: CJTooltipModel<CJUnknownChartType>) => TooltipItem[]);
   sortItems?: (items: TooltipItem[]) => TooltipItem[];
 
@@ -44,4 +45,21 @@ export interface TooltipItem {
   value?: number;
   percent?: number;
   active?: boolean;
+}
+
+export interface PositionStyle {
+  arrow?: { top: string; left: string; borderDirection: string; transform: string };
+  transform: string;
+}
+
+export enum PositionDirection {
+  CenterTop = 'center-top',
+  RightTop = 'right-top',
+  RightCenter = 'right-center',
+  RightBottom = 'right-bottom',
+  CenterBottom = 'center-bottom',
+  LeftBottom = 'left-bottom',
+  LeftCenter = 'left-center',
+  LeftTop = 'left-top',
+  CenterCenter = 'center-center',
 }
