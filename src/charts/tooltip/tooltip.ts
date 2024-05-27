@@ -63,8 +63,6 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
       tooltipEl = findDomElement(`#${TOOLTIP_ID}`);
     } else {
       tooltipEl = findDomElement(`.${TOOLTIP_ID}`, chart.canvas.parentElement);
-      // const tooltipHtml = chart.canvas.parentElement?.querySelector(`.${TOOLTIP_ID}`);
-      // tooltipEl = tooltipHtml ? new DomElement(tooltipHtml) : null;
     }
 
     const chartType = chart.config.type;
