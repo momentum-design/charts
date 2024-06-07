@@ -18,6 +18,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
     padding: '0.5rem 0.75rem',
     showTotal: false,
     appendToBody: false,
+    zIndex: 888,
   };
 
   private options: TooltipOptions;
@@ -268,7 +269,7 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
     tooltipEl.setStyle('opacity', '1');
     tooltipEl.setStyle('left', left);
     tooltipEl.setStyle('top', top);
-    tooltipEl.setStyle('z-index', 9);
+    tooltipEl.setStyle('z-index', this.options.zIndex);
 
     const alignKey = `${tooltip.xAlign}-${tooltip.yAlign}` as PositionDirection;
     const currentPosition = TooltipPositions[alignKey];
