@@ -1,3 +1,20 @@
+# [1.0.0-alpha.20](https://github.com/momentum-design/charts/compare/v1.0.0-alpha.19...v1.0.0-alpha.20) (2024-06-07)
+
+
+### Bug Fixes
+
+* **donut:** global setting font of lib is invalid ([#74](https://github.com/momentum-design/charts/issues/74)) ([47c3426](https://github.com/momentum-design/charts/commit/47c342669bc6f98a3b9f6218bf56a3d464f06801))
+* **tooltip:** add z-index in tooltip component ([#80](https://github.com/momentum-design/charts/issues/80)) ([5dbc31c](https://github.com/momentum-design/charts/commit/5dbc31c51fce7bfdaec5d46e83d87840169830e5))
+* **xy:** add callback for ticks of categoryAxis ([#75](https://github.com/momentum-design/charts/issues/75)) ([64b20f8](https://github.com/momentum-design/charts/commit/64b20f83ed0ad97f6f426a8a9108a0a8016ccd72))
+* **xy:** toggle the legend will lose the corresponding color ([#76](https://github.com/momentum-design/charts/issues/76)) ([d8ed9e7](https://github.com/momentum-design/charts/commit/d8ed9e7682ccc86ec3e3838f1a87d164250e9cb0))
+
+
+### Features
+
+* **tooltip:** add a pointing arrow to the tooltip ([#79](https://github.com/momentum-design/charts/issues/79)) ([cb09cea](https://github.com/momentum-design/charts/commit/cb09ceab8ffcef122ffef069c583e1eefaeac5e4))
+* **tooltip:** show total for combined items ([#78](https://github.com/momentum-design/charts/issues/78)) ([4dcca9b](https://github.com/momentum-design/charts/commit/4dcca9b895902066967eac796126dcc9c629f830))
+* **xy:** add xy chart support the segment-clickable plugin ([#77](https://github.com/momentum-design/charts/issues/77)) ([6634dd7](https://github.com/momentum-design/charts/commit/6634dd743250338dce52b88dad314724047e2292))
+
 # [1.0.0-alpha.19](https://github.com/momentum-design/charts/compare/v1.0.0-alpha.18...v1.0.0-alpha.19) (2024-04-30)
 
 
