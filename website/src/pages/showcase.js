@@ -8,15 +8,15 @@ import styles from './showcase.module.css';
 
 const tabs = [{
   title: 'Dashboard',
-  url: 'https://codepen.io/bndynet/embed/poBwbNY?default-tab=&theme-id=${theme}',
+  url: 'https://codepen.io/bndynet/embed/poBwbNY?default-tab=result&theme-id=${theme}',
+}, {
+  title: 'React',
+  url: 'https://codepen.io/bndynet/embed/QWRWQEW?default-tab=result&theme-id=${theme}',
 }, {
   title: 'Angular',
   url: '',
 }, {
   title: 'Vue',
-  url: '',
-}, {
-  title: 'React',
   url: '',
 }
 ];
@@ -26,7 +26,7 @@ function getTabs(theme) {
     const newItem = { ...item };
     newItem.url = newItem.url.replace('${theme}', theme);
     return newItem;
-  })
+  }).filter(item => item.url);
 }
 
 export default function Showcase() {
