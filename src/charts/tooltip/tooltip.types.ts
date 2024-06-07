@@ -19,6 +19,7 @@ export interface TooltipOptions {
   borderRadius?: string;
   maxWidth?: string;
   padding?: string;
+  zIndex?: number;
   title?: string | string[] | ((tooltip: CJTooltipModel<CJUnknownChartType>) => string | string[]);
   formatTitle?: (title: string) => string;
   beforeBody?: string | ((tooltip: CJTooltipModel<CJUnknownChartType>) => string);
