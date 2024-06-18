@@ -255,20 +255,22 @@ export class Tooltip<TChart extends Chart<ChartData, ChartOptions>> {
 
   // set the position of the tooltip dynamically
   private setPosition(context: any, tooltip: any, arrowEl: DomElement, tooltipEl: DomElement): void {
-    let left = '';
-    let top = '';
+    let left = 0;
+    let top = 0;
     if (this.options.appendToBody) {
       const position = context.chart.canvas.getBoundingClientRect();
-      left = position.left + window.scrollX + tooltip.caretX + 'px';
-      top = position.top + window.scrollY + tooltip.caretY + 'px';
-    } else {
-      left = tooltip.caretX + 'px';
-      top = tooltip.caretY + 'px';
+      left = position.left + window.scrollX;
+      top = position.top + window.scrollY;
     }
+    const styles = getComputedStyle(context.chart.canvas.parentElement);
+    const parentElementPaddingTop = styles.paddingTop;
+    const parentElementPaddingLeft = styles.paddingLeft;
+    left += tooltip.caretX + parseFloat(parentElementPaddingLeft);
+    top += tooltip.caretY + parseFloat(parentElementPaddingTop);
     // display, position, and set styles
     tooltipEl.setStyle('opacity', '1');
-    tooltipEl.setStyle('left', left);
-    tooltipEl.setStyle('top', top);
+    tooltipEl.setStyle('left', left + 'px');
+    tooltipEl.setStyle('top', top + 'px');
     tooltipEl.setStyle('z-index', this.options.zIndex);
 
     const alignKey = `${tooltip.xAlign}-${tooltip.yAlign}` as PositionDirection;
